@@ -307,7 +307,6 @@ function saveMultistreamingPoints() {
       })
       .catch(error => {
         console.error(error);
-        // Handle the error as needed (e.g., display an error message to the user)
       });
   } else {
     alert(`Please enter a valid URL for each multistreaming point (has to start with "rtmp://")`);
