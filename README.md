@@ -1,1 +1,2 @@
-# I've removed the node_modules so make sure you install all of the dependencies 
+# KCN's main files including the panel, streams api and the main website...
+## I've removed the node_modules so make sure you install all of the dependencies 
