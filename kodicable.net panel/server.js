@@ -13,6 +13,7 @@ const connection = mysql2.createConnection({
   user: 'wpeyrliy_root',
   password: 'nDppsjbeXtHg',
   database: 'wpeyrliy_auth',
+  // db pass and user here lol
 });
 
 // Generate a unique secret key for each user
