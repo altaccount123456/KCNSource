@@ -1,0 +1,326 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+:root {
+    --overlay-box-width: 500px;
+    --overlay-box-height: 350px;
+  }
+*{
+    padding:0;
+    margin:0;
+    box-sizing:border-box;
+    font-family: 'Montserrat';
+}
+body {
+    background-color: #0f0f0f;
+    height:100vh;
+    overflow: hidden;
+    width: 100vw;
+}
+#page{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    flex: 1;
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+#navbar{
+    background-color: #212121;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height:4.1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1); 
+    display: flex;
+}
+.mini-logo-holder{
+    height:100%;
+    display: flex;
+    align-items: center;
+    width: 150px;
+}
+.mini-logo{
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    max-width: 100%;
+}
+
+
+
+
+
+
+#body{
+    display: flex;
+    flex: 1;
+    flex-grow: 1;
+    flex-shrink: 1;
+    width: 100%;
+    height: 100%;
+}
+#body-content{
+    display: flex;
+    flex: 1;
+    flex-grow: 1;
+    flex-shrink: 1;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    padding: 1rem;
+    position: relative;
+}
+#body-content-container{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    overflow: auto;
+    scrollbar-width: thin;
+}
+#body-content-container-wrapper{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    flex-basis: 0%;
+    flex-basis: 0.000000001px;
+    padding: 24px;
+    min-width: 1000px;
+}
+#main-content{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+/* Top Box */
+#preview{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 253px;
+    background-color: #212121;
+    margin-bottom: 20px;
+}
+#stream-details{
+    padding: 1em;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+#stream-details-holder{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 20px;
+}
+#video-preview{
+    flex: none;
+    width:449px;
+    height: 100%;
+}
+#my-video{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+
+/* Bottom Box */
+#widgets{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: calc(100% - 253px);
+    min-height: 400px;
+    background-color: #212121;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+.stream-details{
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+    height: 100%;
+    margin: 10px 0 0 10px;
+}
+.stream-details-holder{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+.stream-details-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;   
+}
+.stream-details-text{
+    color: white;
+    background-color: #2e2e2e;
+    outline: none;
+    border: none;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+.multistreaming-details{
+    display: flex;
+    flex-direction: column;
+    width: 450px;
+    height: 100%;
+    margin: 10px 0 0 10px;
+}
+.multistreaming-details-wrapper{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+.multistreaming-details-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;  
+    margin-bottom: 10px;
+}
+.multistreaming-textbox{
+    color: white;
+    background-color: #2e2e2e;
+    outline: none;
+    border: none;
+    font-size: 0.9rem;
+    padding: 4px;
+    width: 100%;
+    border-radius: 4px;
+}
+
+
+
+/* OVERLAY */
+.overlay-box{
+    overflow: hidden;
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    background-color: #0c0c0c;
+    z-index: 100;
+    border-radius: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    transition-duration:0.5s ;
+}
+.overlay-box-content{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 20px;
+}
+.close-button{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    transition-duration: 0.3s;
+}
+.close-button:hover{
+    color: #fff;
+}
+#new-title{
+    color: #fff;
+    font-size: 1.1rem;
+    padding: 8px;
+    outline: none;
+    border: none;
+    background-color: #2e2e2e;
+    border-radius: 5px;
+}
+.overlay-box-header{
+    margin-left: 5px;
+}
+.overlay-box-title-header{
+    margin-left: 20px;
+}
+.overlay-box-wrapper{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+
+
+/* PRE-DEFINED ELEMENTS */
+.greyed-title{
+    color: #b3b3b3;
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+.greyed-header{
+    font-size: 1.3rem;
+    color: #b3b3b3;
+}
+.white-header{
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.white-title{
+    color: #fff;
+    font-size: 1rem;
+}
+.styled-button{
+    color: #fff;
+    padding: 8px;
+    background-color: transparent;
+    border: 1px solid #fff;
+    outline: none;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-left: 10px;
+    transition: all 0.3s ease-in-out;
+}
+.styled-button:hover{
+    background-color: #3f3e3e;
+    color: #f5f5f5;
+}
+.styled-button:active{
+    outline: 2px solid #656363;
+    transition-duration: 0s;
+    color: #ffffff;
+}
+
+
+
+/* PSUEDO ELEMENTS */
+::-webkit-scrollbar {
+    width: 8px; /* width of the scrollbar */
+  }
+  
+::-webkit-scrollbar-track {
+    background: #212121; /* background color of the track */
+}
+  
+::-webkit-scrollbar-thumb {
+    background: #888; /* color of the scrollbar thumb */
+    border-radius: 4px; /* rounded corners for the thumb */
+ }
+  
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* color of the scrollbar thumb on hover */
+}
+
+
+
+/* MEDIA-QUERIES */

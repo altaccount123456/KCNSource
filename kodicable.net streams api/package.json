@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "discord.js": "^12.5.3",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.1",
+    "mysql2": "^3.5.2",
+    "node-fetch": "^2.6.1",
+    "nodemon": "^3.0.1",
+    "y": "^0.3.2"
+  },
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "name": "streamsapikodi",
+  "version": "1.0.0",
+  "main": "server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

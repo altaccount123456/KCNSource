@@ -1,0 +1,11 @@
+# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION BEGIN
+<IfModule Litespeed>
+RewriteEngine on
+<Files .htaccess>
+Order allow,deny
+Deny from all
+</Files>
+ErrorDocument 404 /404.html
+ErrorDocument 502 /502.html
+</IfModule>
+# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION END

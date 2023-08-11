@@ -1,0 +1,5 @@
+User-Agent: * 
+Sitemap: https://kodicable.net/sitemap.xml
+Allow: /about.html
+Allow: /index.html
+Allow: /live.html

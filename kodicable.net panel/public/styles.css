@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+/* LOGIN PAGE */
+*{
+    padding:0;
+    margin:0;
+    box-sizing:border-box;
+    font-family: 'Montserrat';
+}
+body {
+    background-color: #0f0f0f;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+.login-container{
+    width:400px;
+    height:400px;
+    background-color: #212121;
+    border-radius:10px;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+}
+.login-container h1{
+    font-size:2rem;
+    margin-bottom:20px;
+    color:white;
+}
+#login-form{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+.login-button{
+    width:100%;
+    height:40px;
+    background-color: grey;
+    border:none;
+    border-radius:5px;
+    color:white;
+    font-size:1.2rem;
+    margin-top:20px;
+    cursor:pointer;
+}
+.username-field{
+    width:100%;
+    height:40px;
+    border:none;
+    border-radius:5px;
+    padding:10px;
+    margin-bottom:10px;
+    font-size:1.2rem;
+}
+.username-header{
+    color:white;
+    font-size:1.2rem;
+    margin-bottom:10px;
+}
+.password-field{
+    width:100%;
+    height:40px;
+    border:none;
+    border-radius:5px;
+    padding:10px;
+    margin-bottom:10px;
+    font-size:1.2rem;
+}
+.passoword-header{
+    color:white;
+    font-size:1.2rem;
+    margin-bottom:10px;
+}
+/* PROTECTED PAGE STUFFS */
+.top-box{
+    width:100%;
+    height:100px;
+    background-color: #212121;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}

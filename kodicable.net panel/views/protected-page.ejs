@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Protected Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles-protected.css">
+  <script src="index-protected.js" defer></script>
+  <script src="../js/video.js"></script>
+  <link rel="icon" href="/images/KCN_mini.png" type="image/x-icon">
+  <link href="../js/video-js.css" rel="stylesheet" >  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+  <% if (user) { %>
+  <div id="page">
+    <div id="navbar" class="navbar-links">
+      <div class="mini-logo-holder">
+        <img class="mini-logo" src="images/KCN_mini.png">
+      </div>
+    </div>
+    <div id="body">
+      <div id="body-content">
+        <div id="body-content-container">
+          <div id="body-content-container-wrapper">
+            <div id="main-content">
+              <div class="overlay-box" id="overlay">
+                <div class="overlay-box-header">
+                  <p class="white-header overlay-box-header">Edit Stream Details</p>
+                  <p class="greyed-title close-button" onclick="closeEditStreamTitleBox()">Close</p>
+                </div>
+                <p class="greyed-title overlay-box-title-header">Edit Title</p>
+                <div class="overlay-box-wrapper">
+                  <div class="overlay-box-content">
+                    <input type="text" id="new-title" placeholder="Type title here">
+                    <button class="styled-button" onclick="changetitle()">Save</button>
+                  </div>
+                </div>
+              </div>
+              <div id="preview">
+                <div id="video-preview">
+
+                </div>
+                <div id="stream-details">
+                  <p class="greyed-title">Title</p>
+                  <div id="stream-details-holder">
+                    <p class="white-header" id="title">Title</p>
+                    <button id="edit-title" class="styled-button" onclick="openStreamTitleBox()">Edit</button>
+                  </div>
+                  <p class="greyed-title">Stream Health</p>
+                  <p class="white-header" id="stream-health"></p>
+                </div>
+              </div>
+              <div id="widgets">
+                <div class="stream-details">
+                  <p class="greyed-header">Stream Details</p>
+                  <div class="stream-details-holder">
+                    <p class="greyed-title">Stream Key</p>
+                    <div class="stream-details-container">
+                      <input class="stream-details-text" type="text" readonly="" autocomplete="off" id="stream-key" value="">
+                      <button class="styled-button" onclick="copyStreamKey()">Copy</button>
+                    </div>
+                  </div>
+                  <div class="stream-details-holder">
+                    <p class="greyed-title">Stream URL</p>
+                    <div class="stream-details-container">
+                      <input class="stream-details-text" type="text" readonly="" autocomplete="off" id="stream-url" value="">
+                      <button class="styled-button" onclick="copyStreamUrl()">Copy</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="multistreaming-details">
+                  <p class="greyed-header">Multistreaming</p>
+                  <div class="multistreaming-details-wrapper" id="multistreaming-wrapper">
+                    <p class="greyed-title">Multistreaming Points (restart stream to apply)</p>
+                    <p class="greyed-title"></p>
+                    <div class="multistreaming-addpoint">
+                      <button style="margin: 0 0 10px 0;" class="styled-button" onclick="addMultistreamingPoint()">Add</button>
+                      <button style="margin: 0 0 10px 0;" class="styled-button" onclick="removeMultistreamingPoint()">Remove</button>
+                      <button style="margin: 0 0 10px 0;" class="styled-button" onclick="saveMultistreamingPoints()">Save Points</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+
+
+
+
+
+
+
+  <% } else { %>
+    <h1>Access Denied</h1>
+    <p>You do not have permission to access this page.</p>
+  <% } %>
+</body>
+</html>
