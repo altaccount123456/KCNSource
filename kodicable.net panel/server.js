@@ -13,7 +13,6 @@ const connection = mysql2.createConnection({
   user: 'wpeyrliy_root',
   password: 'nDppsjbeXtHg',
   database: 'wpeyrliy_auth',
-  // db pass and user here lol
 });
 
 // Generate a unique secret key for each user
@@ -159,6 +158,25 @@ app.post('/api/changetitle',verifyToken2, setTokenCookie, (req, res) => {
   res.sendStatus(200);
 });
 
+app.post('/api/changerating',verifyToken2, setTokenCookie, (req, res) => {
+  const { username } = req.body;
+  const { newRating } = req.body;
+  try{
+    const query =  `UPDATE user_pass_title SET rating='${newRating}' WHERE callsign='${username}'`;
+    connection.query(query, (error, results, fields) => {
+      if (error) {
+        console.error(`Error updating rating for ${username}:`, error);
+        res.sendStatus(500);
+      } else {
+        console.log(results);
+        res.sendStatus(200);
+      }
+    })
+  } catch(error){
+    res.SendStatus(500);
+  }
+});
+
 app.post('/api/getstreamkey', verifyToken3, setTokenCookie, (req, res) => {
   // get username from cookie provied by verifyToken
   const { username } = req.body;
@@ -239,6 +257,25 @@ app.post('/api/getMultistreamingPoints', verifyToken3, setTokenCookie, (req, res
     res.json({ multistreamingPoints });
   });
 
+});
+
+app.post('/api/changerating', verifyToken2, setTokenCookie, (req, res) => {
+  const { username } = req.body;
+  const { newRating } = req.body;
+  try{
+    const query =  `UPDATE user_pass_title SET rating='${newRating}' WHERE callsign='${username}'`;
+    connection.query(query, (error, results, fields) => {
+      if (error) {
+        console.error(`Error updating rating for ${username}:`, error);
+        res.sendStatus(500);
+      } else {
+        console.log(results);
+        res.sendStatus(200);
+      }
+    })
+  } catch(error){
+    res.SendStatus(500);
+  }
 });
 
 

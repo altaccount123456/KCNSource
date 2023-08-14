@@ -11,6 +11,10 @@ const cors = require('cors');
 const client = require('discord.js')
 const { MessageEmbed, WebhookClient } = require('discord.js');
 
+app.use(cors({
+    origin: '*'
+}));
+
 
 const webhookClient = new WebhookClient('1119420522900504607', 'TEaM_uCWqPcDzYdq9zx8TRuZRSs7gHiMfUG7wwZH9eL_NPz4sDIqAP9m5sVDNKub_dzz');
 
@@ -88,6 +92,7 @@ async function checkStreamAvailability(links) {
         availableStreams.push({
           name: link.name,
           url: link.url,
+          rating: link.rating,
           live: 'Yes',
           title: link.title,
           thumbnail: link.thumbnail,
@@ -97,6 +102,7 @@ async function checkStreamAvailability(links) {
           name: link.name,
           url: link.url,
           live: 'No',
+          rating: link.rating,
           title: link.title,
           thumbnail: link.thumbnail,
         });
@@ -107,6 +113,7 @@ async function checkStreamAvailability(links) {
         name: link.name,
         url: link.url,
         live: 'No',
+        rating: link.rating,
         title: link.title,
         thumbnail: link.thumbnail,
       });
@@ -128,7 +135,6 @@ async function readLinksFromDatabase() {
         }
       });
     });
-    // Do something with rows
   } catch (error) {
     console.error('Error retrieving data:', error);
   }
@@ -140,6 +146,7 @@ async function readLinksFromDatabase() {
       name: row.callsign.toUpperCase(),
       url: `https://live.kodicable.net/hls${row.callsign}/${row.callsign}/index.m3u8`,
       title: row.title,
+      rating: row.rating,
       thumbnail: `https://live.kodicable.net/hls${row.callsign}/out${row.callsign}.png`,
     };
   });

@@ -313,3 +313,20 @@ function saveMultistreamingPoints() {
     alert(`Please enter a valid URL for each multistreaming point (has to start with "rtmp://")`);
   }
 }
+
+function saveContentRating() {
+  const RatingValue = document.getElementById("ratingDropdown").value;
+  const richland = {username: callsign, newRating: RatingValue};
+  if (RatingValue === "") {
+    alert("Select a rating");
+  } else {
+    fetch("https://panel.kodicable.net/api/changerating", {method: "POST", body: JSON.stringify(richland), headers: {"Content-Type": "application/json"}}).then(deiondre => {
+      if (!deiondre.ok) {
+        throw new Error("Failed to update rating");
+      }
+      console.log("Rating updated successfully");
+    }).catch(sirley => {
+      console.log(sirley);
+    });
+  }
+}
