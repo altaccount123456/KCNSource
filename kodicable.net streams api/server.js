@@ -93,6 +93,7 @@ async function checkStreamAvailability(links) {
           name: link.name,
           url: link.url,
           rating: link.rating,
+          viewers: link.viewers,
           live: 'Yes',
           title: link.title,
           thumbnail: link.thumbnail,
@@ -103,6 +104,7 @@ async function checkStreamAvailability(links) {
           url: link.url,
           live: 'No',
           rating: link.rating,
+          viewers: "0",
           title: link.title,
           thumbnail: link.thumbnail,
         });
@@ -114,6 +116,7 @@ async function checkStreamAvailability(links) {
         url: link.url,
         live: 'No',
         rating: link.rating,
+        viewers: "0",
         title: link.title,
         thumbnail: link.thumbnail,
       });
@@ -146,6 +149,7 @@ async function readLinksFromDatabase() {
       name: row.callsign.toUpperCase(),
       url: `https://live.kodicable.net/hls${row.callsign}/${row.callsign}/index.m3u8`,
       title: row.title,
+      viewers: row.viewers,
       rating: row.rating,
       thumbnail: `https://live.kodicable.net/hls${row.callsign}/out${row.callsign}.png`,
     };
