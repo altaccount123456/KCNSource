@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const fetch = require('node-fetch');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3500;
 const mysql2 = require('mysql2');
 
 const connection = mysql2.createConnection({

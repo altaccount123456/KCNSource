@@ -1,6 +1,6 @@
 const liveDiv = document.querySelector('.live-wrapper');
 
-const apiUrl = 'https://streams.kodicable.net/api/streams';
+const apiUrl = 'http://localhost:4000/api/streams';
 
 const loadingSilhouette = document.querySelector('.loading-silhouette');
 
@@ -36,6 +36,8 @@ xhr.onload = () => {
 
       let rating = streams[i].rating;
 
+      let viewers = streams[i].viewers;
+
       let live = streams[i].live;
 
       let title = streams[i].title;
@@ -53,6 +55,8 @@ xhr.onload = () => {
       const infoLogoDiv = document.createElement('div');
 
       infoLogoDiv.classList.add('info-logo');
+
+      
 
 
 
@@ -153,6 +157,11 @@ xhr.onload = () => {
 
       const aTitle = document.createElement('a');
 
+      const viewerCount = document.createElement('p');
+
+      viewerCount.id = 'viewer-count';
+      viewerCount.classList.add('viewer-count');
+      viewerCount.innerHTML = `Viewers: ${viewers}`;
 
 
       aTitle.addEventListener('click', (event) => {
@@ -192,6 +201,7 @@ xhr.onload = () => {
       aTitle.appendChild(titleH1);
 
       streamDetailsDiv.appendChild(aTitle);
+
 
 
       const ratingP = document.createElement('img');

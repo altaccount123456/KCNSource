@@ -244,6 +244,12 @@ a{
     margin-top: 5px;
     margin-bottom: 70px;
 }
+.viewer-count{
+    color: white;
+    margin-left: 5px;
+    margin-top: 5px;
+    
+}
 /* player page */
 .video-container{
     height: 100%;

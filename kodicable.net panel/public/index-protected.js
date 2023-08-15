@@ -4,6 +4,7 @@ document.title = `Live Stream Dashboard for ${callsign}`;
 
 const overlay = document.getElementById('overlay');
 const title = document.getElementById('title');
+const viewerCount = document.getElementById('viewer-count');
 const streamKeyHolder = document.getElementById('stream-key');
 const streamUrlHolder = document.getElementById('stream-url');
 let streamKey = '';
@@ -44,36 +45,40 @@ fetch(`https://live.kodicable.net/hls${callsign}/${callsign}/index.m3u8`)
   });
 
 
-fetch (`https://streams.kodicable.net/api/streams`, {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-})
-.then(response => {
-  if (!response.ok) {
-    throw new Error('Failed to get title');
-  }
-  return response.json();
-})
-.then(data => {
-  const callsignToFind = callsign.toLocaleUpperCase(); 
-  const stream = data.streams.find(stream => stream.name === callsignToFind);
-  if (stream) {
-    title.innerHTML = (`${stream.title}`);
-  } else {
-    console.log(`Stream with callsign ${callsignToFind} not found`);
-  }
-})
-.catch(error => {
-  console.error(error);
-});
+function streamInfo(){
+  fetch (`http://localhost:4000/api/streams`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to get title');
+    }
+    return response.json();
+  })
+  .then(data => {
+    const callsignToFind = callsign.toLocaleUpperCase(); 
+    const stream = data.streams.find(stream => stream.name === callsignToFind);
+    if (stream) {
+      title.innerHTML = (`${stream.title}`);
+      viewerCount.innerHTML = (`${stream.viewers}`);
+    } else {
+      console.log(`Stream with callsign ${callsignToFind} not found`);
+    }
+  })
+  .catch(error => {
+    console.error(error);
+  });
+}
+
+streamInfo();
+setInterval(streamInfo, 5000);
 
 
 
-
-
-fetch(`https://panel.kodicable.net/api/getstreamkey`, {
+fetch(`http://localhost:3500/api/getstreamkey`, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'
@@ -114,7 +119,7 @@ function changetitle() {
   if (newTitle === '') {
     alert('Please enter a title');
   } else{
-    fetch(`https://panel.kodicable.net/api/changetitle`, {
+    fetch(`http://localhost:3500/api/changetitle`, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json' },
@@ -182,7 +187,7 @@ let maxPoints = 5;
 let points = [];
 
 function getMultistreamingPoints(){
-  fetch(`https://panel.kodicable.net/api/getMultistreamingPoints`, {
+  fetch(`http://localhost:3500/api/getMultistreamingPoints`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -287,7 +292,7 @@ function saveMultistreamingPoints() {
       points: points,
     };
 
-    fetch('https://panel.kodicable.net/api/sendMultistreamingPoints', {
+    fetch('http://localhost:3500/api/sendMultistreamingPoints', {
       method: 'POST',
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json' },
@@ -320,7 +325,7 @@ function saveContentRating() {
   if (RatingValue === "") {
     alert("Select a rating");
   } else {
-    fetch("https://panel.kodicable.net/api/changerating", {method: "POST", body: JSON.stringify(richland), headers: {"Content-Type": "application/json"}}).then(deiondre => {
+    fetch("http://localhost:3500/api/changerating", {method: "POST", body: JSON.stringify(richland), headers: {"Content-Type": "application/json"}}).then(deiondre => {
       if (!deiondre.ok) {
         throw new Error("Failed to update rating");
       }
