@@ -10,10 +10,11 @@
     "mysql2": "^3.5.2",
     "node-fetch": "^2.6.1",
     "nodemon": "^3.0.1",
+    "ws": "^8.13.0",
     "y": "^0.3.2"
   },
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon index.js"
   },
   "name": "streamsapikodi",
   "version": "1.0.0",
