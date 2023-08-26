@@ -14,6 +14,7 @@ def gen_thumbnail():
         name = stream["name"].lower()
         ffmpeg_command = [
             # make a thumbnail with the res of 1280 x 720
+            # REPLACE WITH "ffmpeg" THIS IS JUST FOR DEVELOPMENT
             r'C:\PATH_Programs\ffmpeg',
             '-i', f"https://live.kodicable.net/hls{name}/{name}/index.m3u8",
             '-vframes', '1',  
