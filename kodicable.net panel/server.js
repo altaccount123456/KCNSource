@@ -227,6 +227,7 @@ app.post('/api/sendMultistreamingPoints', verifyToken3, setTokenCookie, (req, re
         })
           .then(response => {
             if (!response.ok) {
+              console.log(response)
               console.error('Failed to update multistreaming points');
               res.sendStatus(500);
             } else {

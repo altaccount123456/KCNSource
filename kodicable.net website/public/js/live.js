@@ -230,7 +230,7 @@ xhr.onload = () => {
 
       streamDetailsDiv.appendChild(ratingP);
 
-
+      streamDetailsDiv.appendChild(viewerCount);
       streamDetailsContainerDiv.appendChild(streamDetailsDiv);
 
       streamDiv.appendChild(streamDetailsContainerDiv);

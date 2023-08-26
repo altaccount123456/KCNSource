@@ -17,52 +17,110 @@ a{
     text-decoration: none;
 }
 .navbar{
-    background-color: #212121;
+    position: fixed;
+    top: 0;
     width: 100%;
-    height: 5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    border-top: 1px solid rgba(255, 255, 255, 0.1); 
-    display: flex;
+    height: 50px;
+    background-color: #212121;
+    z-index: 1000;
 }
-.mini-logo-holder{
-    height:100%;
+.sidebar{
+    height: 100%;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 0px;
+    background-color: #212121;
+    overflow: hidden;
+    transition-duration:0.3s;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    width: 150px;
 }
-.mini-logo{
+.sidebar-links{
     height: 100%;
     width: 100%;
-    object-fit: contain;
-    max-width: 100%;
-}
-.navbar-links{
-    height:100%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    flex-direction: column;
+}
+.link{
+    color: white;
+    border-radius: 10px;
     width: 100%;
-}
-.links, .join-link{
-    text-decoration: none;
-    font-size: 1.2rem;
-    margin: 5%;
-    transition-duration: 0.3s;
-    color: rgba(255, 255, 255, 0.7);
-}
-.join-link{
-    background-color:#404040;
-    height:100%;
-    padding: 30px;
+    padding: 10px;
     display: flex;
-    align-items: center;
+    cursor: pointer;
+    transition-duration: 0.2s;
+    margin: 10px 0 10px 0;
+}
+.link i {
+    font-size: 1.5rem;
+}
+.link h2{
+    margin-left: 10px;
+}
+.link:hover{
+    background-color: #747272;
+}
+.hamburger{
+    width: 50px;
+    height: 50px;
+    display: flex;
+    flex: none;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+    transition-duration: 0.2s;
 }
-.join-link:hover{
-    background-color: #303030;
+.hamburger:hover{
+    background-color: #747272;
+    border-radius: 50%;
 }
-.links:hover, .join-link:hover{
-    color: gray;
+.bar{
+    width: 20px;
+    border-radius: 10px;
+    height: 3px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    background-color: white;
+    transition: all 0.3s ease;
+}
+.cluster{
+    display: flex;
+
+}
+.mini-logo{
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    flex: none;
+    transition-duration: 0.2s;
+}
+.mini-logo-hamburger{
+    width: 150px;
+}
+.mini-logo-container{
+    display: flex;
+    justify-content: center;
+    width: 80%;
+    flex-direction:column ;
+    align-items: center;
+}
+.mini-logo-container a {
+    cursor: pointer;
+    width: 70%;
+    height: 50%;
+    flex: none;
+    transition-duration: 0.2s;
+}
+.mini-logo-container-navbar{
+    display: flex;
+    position: absolute;
+    top: 10px;
+    left: 55px;
 }
 .wrapper{
     display: flex;
@@ -148,7 +206,7 @@ a{
 }
 .info-card-right p{
     color: white;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     margin-top: 20px;
     text-align: center;
 }
@@ -185,6 +243,7 @@ a{
 .live-wrapper{
     height: 100%;
     margin-left: 30px;
+    margin-top: 40px;
 }
 .live{
     height: 132px;
@@ -255,19 +314,32 @@ a{
     height: 100%;
     width: 100%;
     display: flex;
-    justify-content: center;
+    overflow: auto;
     align-items: center;
+    flex-direction: column;
+    margin-top: 80px;
 }
 .video-js{
-    display: block;
-    margin: 1em auto;
-    width: 80%;
-    height: calc(.5625 * 80vw);
+    aspect-ratio: 16 / 9;
+    width: 90%;
+    max-width: 1000px;
+    height:auto;
+    flex: none;
 }
 .video-js-stripped{
     display: block;
     width: 100vw;
     height: 100vh;
+}
+.video-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    width: 80%;
+    border: 1px solid white;
+    border-radius: 10px;
 }
 /*Loading stuff */
 .loading-silhouette {
@@ -288,37 +360,6 @@ a{
     transform: rotate(360deg);
   }
 }
-
-/* Audio Streams page */
-.audio-streams-container{
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-}
-.audio{
-    height:150px;
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    flex-direction: column; 
-}
-.audio-stream-name{
-    color: white;
-    font-size: 2rem;
-    text-align: center;
-    margin-bottom: 10px;
-}
-.title-audio{
-    color: white;
-    font-size: 1rem;
-}
-.audio-stream-info{
-    color: white;
-    font-size: 1rem;
-}
-
 /* Media Queries */
 @media screen and (max-width: 1200px) {
     .title {
@@ -329,6 +370,44 @@ a{
     }
     .info-card-right p {
         font-size: 1rem;
+    }
+    /* Guide */
+    .live{
+        flex-direction: column;
+        width: 300px;
+        height: 200px;
+        background-color: #303030;
+        position: relative;
+    }
+    .info-logo{
+        width: 60px;
+        flex: none;
+        border-radius: 50%;
+        height: 60px;
+        object-fit: contain;
+        overflow: hidden;
+        position: absolute;
+
+    }
+    .logo{
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+    .stream-details-container{
+        width: 100%;
+        height: 20px;
+    }
+    .stream-details{
+
+    }
+    .thumbnail{
+    }
+    .live-wrapper{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
     }
 }
 /* Tablets kinda */

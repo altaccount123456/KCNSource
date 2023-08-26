@@ -12,6 +12,13 @@ const pool = mysql.createPool({
 const webhookClient = new WebhookClient('1119420522900504607', 'TEaM_uCWqPcDzYdq9zx8TRuZRSs7gHiMfUG7wwZH9eL_NPz4sDIqAP9m5sVDNKub_dzz');
 
 const wss = new WebSocket.Server({ noServer: true });
+pool.query(`UPDATE user_pass_title SET viewers = 0` , (err, results) => {
+  if (err) {
+    console.error(`Error updating viewer count:`, err);
+  } else {
+    console.log(`Viewer count updated on server startup`);
+  }
+});
 
 wss.on('connection', (ws, request) => {
   const streamID = parseStreamIdFromURL(request.url);

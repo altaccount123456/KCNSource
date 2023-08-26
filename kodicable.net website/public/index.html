@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KODI Cable Network</title>
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://kit.fontawesome.com/913ab3dc19.js" crossorigin="anonymous"></script>
+    <script src = "js/mainpage.js" defer></script>
     <script src="js/index.js" defer></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9154686025915948"
      crossorigin="anonymous">
@@ -25,15 +27,47 @@
 
 <body>
     <div class="navbar">
-        <div class="mini-logo-holder">
-            <img class="mini-logo" src="images/KCN_mini.png">
+        <div class="hamburger" id="hamburger-navbar">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
         </div>
-        <div id="navbar" class="navbar-links">
-            <a class="links" href="index.html">Home</a>
-            <a class="links" href="guide.html">Live</a>
-            <a class="links" href="https://icecast.kodicable.net:8443">Icecast</a>
-            <a class="links" href="aboutus.html">About Us</a>
-            <a class="join-link" href="https://discord.gg/MHZzfdy8D9">JOIN</a>
+        <div class="mini-logo-container-navbar">
+            <a href="index.html">
+                <img src="/images/kodi2023.png" alt="" class="mini-logo-hamburger">
+            </a>
+        </div>
+    </div>
+    <div class="sidebar" id="sidebar">
+        <div class="cluster">
+            <div class="hamburger" id="hamburger-sidebar">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>   
+            <div class="mini-logo-container">
+                <a href="index.html">
+                    <img src="/images/kodi2023.png" alt="" class="mini-logo">
+                </a>
+            </div>
+        </div>
+        <div class="sidebar-links">
+            <a href="index.html" class="link">
+                <i class="fa-solid fa-house"></i>
+                <h2>Home</h2>
+            </a>
+            <a href="guide.html" class="link">
+                <i class="fa-solid fa-tv"></i>
+                <h2>Guide</h2>
+            </a>
+            <a href="https://icecast.kodicable.net:8443" class="link">
+                <i class="fa-solid fa-radio"></i>
+                <h2>Icecast</h2>
+            </a>
+            <a href="about.html" class="link">
+                <i class="fa-solid fa-question"></i>
+                <h2>About</h2>
+            </a>
         </div>
     </div>
     <div class="wrapper"> 

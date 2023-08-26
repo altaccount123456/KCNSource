@@ -91,6 +91,7 @@ async function checkStreamAvailability(links) {
       if (response.status === 200) {
         availableStreams.push({
           name: link.name,
+          description: link.description,
           url: link.url,
           rating: link.rating,
           viewers: link.viewers,
@@ -101,6 +102,7 @@ async function checkStreamAvailability(links) {
       } else {
         availableStreams.push({
           name: link.name,
+          description: link.description,
           url: link.url,
           live: 'No',
           rating: link.rating,
@@ -113,6 +115,7 @@ async function checkStreamAvailability(links) {
       console.error(`Error checking stream at ${link.url}:`, error.message);
       availableStreams.push({
         name: link.name,
+        description: link.description,
         url: link.url,
         live: 'No',
         rating: link.rating,
@@ -150,6 +153,7 @@ async function readLinksFromDatabase() {
       url: `https://live.kodicable.net/hls${row.callsign}/${row.callsign}/index.m3u8`,
       title: row.title,
       viewers: row.viewers,
+      description: row.description,
       rating: row.rating,
       thumbnail: `https://live.kodicable.net/hls${row.callsign}/out${row.callsign}.png`,
     };
@@ -167,7 +171,7 @@ async function updateCachedStreams() {
     console.error('Error updating cached streams:', error);
   }
 
-  setTimeout(updateCachedStreams, 5 * 1000); // Refresh every 30 seconds
+  setTimeout(updateCachedStreams, 5 * 1000); // Refresh every 5 seconds
 }
 
 updateCachedStreams();
