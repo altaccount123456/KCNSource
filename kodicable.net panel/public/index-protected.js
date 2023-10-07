@@ -3,10 +3,15 @@ document.title = `Live Stream Dashboard for ${callsign}`;
 
 
 const overlay = document.getElementById('overlay');
+const body = document.getElementById('body');
+const alertBox = document.getElementById('alertBox');
+const alertBoxText = document.getElementById('alertBoxText');
 const title = document.getElementById('title');
 const viewerCount = document.getElementById('viewer-count');
 const streamKeyHolder = document.getElementById('stream-key');
 const streamUrlHolder = document.getElementById('stream-url');
+const newTitleHolder = document.getElementById('new-title');
+const RatingValueSelector = document.getElementById("ratingDropdown")
 let streamKey = '';
 
 const src = `https://live.kodicable.net/hls${callsign}/${callsign}/index.m3u8`;
@@ -17,6 +22,8 @@ video.id = 'my-video';
 video.className = 'video-js vjs-big-play-centered';
 video.controls = true;
 video.preload = 'auto';
+// video.muted = true;
+// video.autoplay = true;
 video.setAttribute('data-setup', '{"liveui": true}');
 video.setAttribute('width', '');
 video.setAttribute('height', '');
@@ -41,6 +48,7 @@ fetch(`https://live.kodicable.net/hls${callsign}/${callsign}/index.m3u8`)
     }
   })
   .catch(error => {
+    console.error(error);
     streamHealth.textContent = 'Error';
   });
 
@@ -63,9 +71,11 @@ function streamInfo(){
     const stream = data.streams.find(stream => stream.name === callsignToFind);
     if (stream) {
       title.innerHTML = (`${stream.title}`);
+      newTitleHolder.value = (`${stream.title}`);
       viewerCount.innerHTML = (`${stream.viewers}`);
     } else {
       console.log(`Stream with callsign ${callsignToFind} not found`);
+      alert(`We are not able to find the stream with callsign ${callsignToFind}, contact ".plamb" for help`);
     }
   })
   .catch(error => {
@@ -74,7 +84,7 @@ function streamInfo(){
 }
 
 streamInfo();
-setInterval(streamInfo, 5000);
+setInterval(streamInfo, 15000);
 
 
 
@@ -129,6 +139,7 @@ function changetitle() {
           throw new Error('Failed to update title');
         }
         console.log('Title updated successfully');
+        showAlert("Title updated successfully!");
       })
       .catch(error => {
         console.log(error);
@@ -302,11 +313,11 @@ function saveMultistreamingPoints() {
           if (response.status === 413) {
             alert('Too many multistreaming points or too few multistreaming points');
           } else if(response.status === 500){
-            alert('Failed to save multistreaming points due to one of the links being invalid!');
+            showAlert("Failed to save multistreaming points due to one of the links being invalid!")
             throw new Error('Failed to save multistreaming points');
           } 
         } else {
-          alert('Multistreaming points saved successfully!');
+          showAlert("Multistreaming Points Saved!")
           console.log('Multistreaming points saved successfully!');
         }
       })
@@ -319,6 +330,7 @@ function saveMultistreamingPoints() {
   }
 }
 
+
 function saveContentRating() {
   const RatingValue = document.getElementById("ratingDropdown").value;
   const richland = {username: callsign, newRating: RatingValue};
@@ -330,8 +342,41 @@ function saveContentRating() {
         throw new Error("Failed to update rating");
       }
       console.log("Rating updated successfully");
+      showAlert("Rating updated successfully")
     }).catch(sirley => {
       console.log(sirley);
     });
   }
 }
+
+function hideShowKey(){
+  const hiddenEye = document.getElementById('hidden-eye');
+  const visibleEye = document.getElementById('visible-eye');
+
+  // use display none to hide the key
+  if (hiddenEye.style.display === 'none') {
+    hiddenEye.style.display = 'block';
+    visibleEye.style.display = 'none';
+    console.log("Key should be hidden")
+    streamKeyHolder.type = "password";
+  } else {
+    hiddenEye.style.display = 'none';
+    visibleEye.style.display = 'block';
+    console.log("Key should be visible")
+    streamKeyHolder.type = "text";
+  }
+
+}
+
+// the alert box
+
+
+function showAlert(savedText) {
+  alertBoxText.innerHTML = savedText;
+  alertBox.style.transform = 'translateY(-100px)';
+  setTimeout(() => {
+    alertBox.style.transform = 'translateY(100px)';
+  }, 4000)
+
+}
+

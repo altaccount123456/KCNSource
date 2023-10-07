@@ -110,7 +110,7 @@ xhr.onload = () => {
 
         // Redirect to player.html
 
-        window.location.href = 'player.html?stream=' + name;
+        window.location.href = 'player.html';
 
       });
 

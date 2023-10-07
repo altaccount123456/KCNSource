@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <title>Protected Page</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles-protected.css">
+    <script src="https://kit.fontawesome.com/913ab3dc19.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles-protected.css">
   <script src="index-protected.js" defer></script>
   <script src="../js/video.js"></script>
   <link rel="icon" href="/images/KCN_mini.png" type="image/x-icon">
@@ -59,7 +60,9 @@
                   <div class="stream-details-holder">
                     <p class="greyed-title">Stream Key</p>
                     <div class="stream-details-container">
-                      <input class="stream-details-text" type="text" readonly="" autocomplete="off" id="stream-key" value="">
+                      <input class="stream-details-text" type="password" readonly="" autocomplete="off" id="stream-key" value="">
+                      <i style="cursor:pointer; margin-left: 10px; display:none;" id="visible-eye" class="fa-solid fa-eye fa-lg" style="color: #ffffff;" onclick="hideShowKey()"></i>
+                      <i style="cursor:pointer; margin-left: 10px;" id="hidden-eye" class="fa-solid fa-eye-slash fa-lg" onclick="hideShowKey()"></i>
                       <button class="styled-button" onclick="copyStreamKey()">Copy</button>
                     </div>
                   </div>
@@ -98,6 +101,9 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="alert-box" id="alertBox">
+        <h3 class="alert-box-text" id="alertBoxText">Something saved successfully</h3>
       </div>
     </div>
   </div>
