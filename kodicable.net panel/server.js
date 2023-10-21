@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const jwt = require('jsonwebtoken');
@@ -7,16 +8,20 @@ const fetch = require('node-fetch');
 const app = express();
 const PORT = process.env.PORT || 3500;
 const mysql2 = require('mysql2');
+const { MessageEmbed, WebhookClient } = require('discord.js');
+const { connect } = require('http2');
+
+const webhookClient = new WebhookClient('1119420522900504607', 'TEaM_uCWqPcDzYdq9zx8TRuZRSs7gHiMfUG7wwZH9eL_NPz4sDIqAP9m5sVDNKub_dzz');
 
 const connection = mysql2.createConnection({
-  host: '127.0.0.1',
-  user: 'wpeyrliy_root',
-  password: 'nDppsjbeXtHg',
-  database: 'wpeyrliy_auth',
+  host: process.env.DB_URL,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
 });
 
 // Generate a unique secret key for each user
-const secretKeys = {};
+let secretKeys = {}
 const generateSecretKey = (req, res, next) => {
   const { username } = req.user;
   if (!secretKeys[username]) {
@@ -28,13 +33,6 @@ const generateSecretKey = (req, res, next) => {
 };
 
 
-const setTokenCookie = (req, res, next) => {
-  const { username } = req.user;
-  const token = jwt.sign({ username }, secretKeys[username], { expiresIn: '12h' });
-  res.cookie('token', token, { httpOnly: true, secure: true });
-  next();
-};
-
 const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
 
@@ -43,7 +41,7 @@ const verifyToken = (req, res, next) => {
   }
 
   try {
-    const { username } = jwt.verify(token, secretKeys[req.params.username]);
+    const { username } = jwt.verify(token, process.env.SECRET_KEY);
     req.user = { username };
     next();
   } catch (err) {
@@ -59,7 +57,7 @@ const verifyToken2 = (req, res, next) => {
   }
 
   try {
-    const { username } = jwt.verify(token, secretKeys[req.body.username]);
+    const { username } = jwt.verify(token, process.env.SECRET_KEY);
     req.user = { username };
     next();
   } catch (err) {
@@ -76,7 +74,7 @@ const verifyToken3 = (req, res, next) => {
   }
 
   try {
-    const { username } = jwt.verify(token, secretKeys[req.body.username]);
+    const { username } = jwt.verify(token, process.env.SECRET_KEY);
     req.user = { username };
     next();
   } catch (err) {
@@ -102,7 +100,7 @@ app.get('/login', (req, res) => {
 
 
 // Route to handle user login
-app.post('/login', async (req, res) => {
+app.post('/login',  (req, res) => {
   const { username, password } = req.body;
   
   connection.query('SELECT * FROM user_pass_title WHERE callsign = ? AND password = ?', [username, password], (err, results, fields) => {
@@ -119,11 +117,13 @@ app.post('/login', async (req, res) => {
       }
 
       // Generate a JWT token for the user
-      const token = jwt.sign({ username }, secretKeys[username], { expiresIn: '1h' });
+      const token = jwt.sign({ username }, process.env.SECRET_KEY, { expiresIn: '30d' });
 
       // Set the JWT token as a cookie and send a success response
-      res.cookie('token', token).json({ message: 'Login successful' });
+      res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 2592000000 })
+      res.cookie('user', `${username}`, { httpOnly: false, secure: true, maxAge: 2592000000 })
       console.log('User logged in:', username);
+      res.json(`${username}`);
     } else {
       // Send an error response if the username or password is invalid
       res.status(401).json({ error: 'Invalid username or password' });
@@ -131,34 +131,41 @@ app.post('/login', async (req, res) => {
   });
 });
 
-app.post('/api/changetitle',verifyToken2, setTokenCookie, (req, res) => {
-  const { username } = req.body;
-  const { newTitle } = req.body;
+function sendEmbed(username, fieldName1, fieldName2, fieldValue1, fieldValue2) {
+  const embed = new MessageEmbed()
+  .setTitle(`Stream Details Changed for ${username}! `)
+  .setDescription(`${fieldName1}: ${fieldValue1} | ${fieldName2}: ${fieldValue2}`)
+  .setColor('#0099ff')
+  .setTimestamp();
+  console.log(`${fieldName1}: ${fieldValue1} | ${fieldName2}: ${fieldValue2}`);
+  webhookClient.send(embed)
+}
 
-  const data = {
-    username: username,
-    newTitle:  newTitle,
-  };
-  
-  fetch('https://streams.kodicable.net/receiveauthstuff', {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: { 'Content-Type': 'application/json' },
+app.post('/api/changedetails',verifyToken2, (req, res) => {
+  const fieldName1 = "Title"
+  const fieldName2 = "Description"
+  const { username, newTitle, newDesc } = req.body;
+
+
+  const query = `UPDATE user_pass_title SET title='${newTitle}', description='${newDesc}' WHERE callsign='${username}'`;
+  connection.query(query, (error, results, fields) => {
+    if (error){
+      res.sendStatus(500)
+      console.log(error)
+    } else{
+      sendEmbed(username, fieldName1, fieldName2, newTitle, newDesc)
+      res.sendStatus(200)
+    }
   })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to update title');
-      }
-      console.log('Title updated successfully');
-    })
-    .catch(error => {
-      console.log(error);
-    });
 
-  res.sendStatus(200);
 });
 
-app.post('/api/changerating',verifyToken2, setTokenCookie, (req, res) => {
+app.post("/api/checkcookie", verifyToken, (req, res) => {
+  res.sendStatus(200)
+});
+
+
+app.post('/api/changerating',verifyToken2, (req, res) => {
   const { username } = req.body;
   const { newRating } = req.body;
   try{
@@ -177,7 +184,7 @@ app.post('/api/changerating',verifyToken2, setTokenCookie, (req, res) => {
   }
 });
 
-app.post('/api/getstreamkey', verifyToken3, setTokenCookie, (req, res) => {
+app.post('/api/getstreamkey', verifyToken3, (req, res) => {
   // get username from cookie provied by verifyToken
   const { username } = req.body;
 
@@ -196,7 +203,7 @@ app.post('/api/getstreamkey', verifyToken3, setTokenCookie, (req, res) => {
 });
 
 
-app.post('/api/sendMultistreamingPoints', verifyToken3, setTokenCookie, (req, res) => {
+app.post('/api/sendMultistreamingPoints', verifyToken3, (req, res) => {
   const { username } = req.body;
   const { points } = req.body;
   
@@ -244,7 +251,7 @@ app.post('/api/sendMultistreamingPoints', verifyToken3, setTokenCookie, (req, re
   }
 });
 
-app.post('/api/getMultistreamingPoints', verifyToken3, setTokenCookie, (req, res) => {
+app.post('/api/getMultistreamingPoints', verifyToken3, (req, res) => {
 
   const { username } = req.body;
 
@@ -260,7 +267,7 @@ app.post('/api/getMultistreamingPoints', verifyToken3, setTokenCookie, (req, res
 
 });
 
-app.post('/api/changerating', verifyToken2, setTokenCookie, (req, res) => {
+app.post('/api/changerating', verifyToken2, (req, res) => {
   const { username } = req.body;
   const { newRating } = req.body;
   try{
@@ -281,7 +288,7 @@ app.post('/api/changerating', verifyToken2, setTokenCookie, (req, res) => {
 
 
 // Protected route for each user
-app.get('/:username', verifyToken, generateSecretKey, setTokenCookie, (req, res) => {
+app.get('/:username', verifyToken, generateSecretKey, (req, res) => {
   const { username } = req.params;
   const templateData = { user: req.user };
   res.setHeader('Content-Disposition', 'inline');

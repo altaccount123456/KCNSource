@@ -30,3 +30,11 @@ loginForm.addEventListener('submit', async (event) => {
     console.error(error);
   }
 });
+
+function checkCookie(){
+  if(Cookies.get("user")) {
+    window.location.href = `/${Cookies.get("user")}`
+  }
+}
+
+checkCookie();

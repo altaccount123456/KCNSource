@@ -19,25 +19,18 @@
       <div class="mini-logo-holder">
         <img class="mini-logo" src="images/KCN_mini.png">
       </div>
+
+      <div class="account-image-holder-container">
+        <div class="account-image-holder" id="accountImageHolder">
+          <img src="" alt="" class="mini-logo" id="account-image">
+        </div>
+      </div>
     </div>
     <div id="body">
       <div id="body-content">
         <div id="body-content-container">
           <div id="body-content-container-wrapper">
             <div id="main-content">
-              <div class="overlay-box" id="overlay">
-                <div class="overlay-box-header">
-                  <p class="white-header overlay-box-header">Edit Stream Details</p>
-                  <p class="greyed-title close-button" onclick="closeEditStreamTitleBox()">Close</p>
-                </div>
-                <p class="greyed-title overlay-box-title-header">Edit Title</p>
-                <div class="overlay-box-wrapper">
-                  <div class="overlay-box-content">
-                    <input type="text" id="new-title" placeholder="Type title here">
-                    <button class="styled-button" onclick="changetitle()">Save</button>
-                  </div>
-                </div>
-              </div>
               <div id="preview">
                 <div id="video-preview">
 
@@ -87,7 +80,7 @@
                   </div>
                 </div>
                  <div class="stream-details-holder">
-                    <p class="greyed-title">Content Rating (BNU Rating System)</p>
+                    <p class="greyed-title">Content Rating</p>
                      <div class="stream-details-container">
                        <select id="ratingDropdown">
                          <option value="e">Everyone (0+)</option>
@@ -99,6 +92,27 @@
                   </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="overlay-box" id="overlay">
+        <div class="overlay-box-header">
+          <p class="white-header overlay-box-header">Edit Stream Details</p>
+          <p class="greyed-title close-button" onclick="closeEditStreamTitleBox()">Close</p>
+        </div>
+        <div class="overlay-box-wrapper">
+          <div class="overlay-box-title-container">
+            <p class="greyed-title overlay-box-title-header">Edit Title</p>
+            <input type="text" id="new-title" placeholder="Type title here">
+          </div>
+
+          <div class="overlay-box-desc-container">
+            <p class="greyed-title ">Edit Description</p>
+            <textarea type="text" id="new-desc" placeholder="Type Description Here: (Max 2000 characters)"></textarea>
+          </div>
+
+          <div class="overlay-box-button-container">
+            <button class="overlay-save" id="overlaySaveButton" onclick="saveStreamDetails()">Save</button>
           </div>
         </div>
       </div>

@@ -9,14 +9,12 @@ const cookieParser = require('cookie-parser');
 const mysql = require('mysql2');
 const cors = require('cors');
 const client = require('discord.js')
-const { MessageEmbed, WebhookClient } = require('discord.js');
 
 app.use(cors({
     origin: '*'
 }));
 
 
-const webhookClient = new WebhookClient('1119420522900504607', 'TEaM_uCWqPcDzYdq9zx8TRuZRSs7gHiMfUG7wwZH9eL_NPz4sDIqAP9m5sVDNKub_dzz');
 
 
 const connection = mysql.createConnection({
@@ -36,47 +34,9 @@ const streamTitles = {};
 let streamName = {};
 let cachedStreams = [];
 
-app.post("/receiveauthstuff", (req, res) => {
-  let { username, newTitle } = req.body;
-
-  titleData = req.body.newTitle
-  streamName = req.body.username
-
-  // Update title data for the username
-
-  try {
-    const query = `UPDATE user_pass_title SET title='${newTitle}' WHERE callsign='${username}'`;
-    connection.query(query, (error, results, fields) => {
-      if (error) {
-        console.error(`Error updating title for ${username}:`, error);
-        res.sendStatus(500);
-      } else {
-        const embed = new MessageEmbed()
-        .setTitle(`Title Changed for ${username}! `)
-        .setDescription(`New Title: ${newTitle}`)
-        .setColor('#0099ff')
-        .setTimestamp();
-        console.log(`Title updated for ${username}: ${newTitle}`);
-        webhookClient.send(embed)
-          .then(() => {
-            console.log('Message sent successfully');
-            res.sendStatus(200);
-          })
-          .catch((error) => {
-            console.error('Error sending message:', error);
-            res.sendStatus(500);
-          });
-      }
-    });
-  } catch (error) {
-    console.error(`Error updating title for ${username}:`, error);
-    res.sendStatus(500);
-  }
-});
-
 
 async function checkStreamAvailability(links) {
-  const availableStreams = [];
+  const availableStreams = {};
 
   const callsigns = await readLinksFromDatabase();
 
@@ -89,7 +49,7 @@ async function checkStreamAvailability(links) {
       });
 
       if (response.status === 200) {
-        availableStreams.push({
+        const streamMetadata = {
           name: link.name,
           description: link.description,
           url: link.url,
@@ -98,9 +58,10 @@ async function checkStreamAvailability(links) {
           live: 'Yes',
           title: link.title,
           thumbnail: link.thumbnail,
-        });
+        };
+        availableStreams[link.name] = streamMetadata;
       } else {
-        availableStreams.push({
+        const streamMetadata = {
           name: link.name,
           description: link.description,
           url: link.url,
@@ -109,11 +70,11 @@ async function checkStreamAvailability(links) {
           viewers: "0",
           title: link.title,
           thumbnail: link.thumbnail,
-        });
+        };
+        availableStreams[link.name] = streamMetadata;
       }
     } catch (error) {
-      console.error(`Error checking stream at ${link.url}:`, error.message);
-      availableStreams.push({
+      const streamMetadata = {
         name: link.name,
         description: link.description,
         url: link.url,
@@ -122,7 +83,8 @@ async function checkStreamAvailability(links) {
         viewers: "0",
         title: link.title,
         thumbnail: link.thumbnail,
-      });
+      };
+      availableStreams[link.name] = streamMetadata;
     }
   }
 

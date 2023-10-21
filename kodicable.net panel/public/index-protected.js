@@ -1,8 +1,12 @@
 const callsign = window.location.pathname.split('/')[1];
 document.title = `Live Stream Dashboard for ${callsign}`;
+let isError = false;
 
 
 const overlay = document.getElementById('overlay');
+const accountImgHolder = document.getElementById("accountImageHolder");
+const accountOpt = document.getElementById("accountOpt");
+const accountImg = document.getElementById('account-image');
 const body = document.getElementById('body');
 const alertBox = document.getElementById('alertBox');
 const alertBoxText = document.getElementById('alertBoxText');
@@ -11,6 +15,7 @@ const viewerCount = document.getElementById('viewer-count');
 const streamKeyHolder = document.getElementById('stream-key');
 const streamUrlHolder = document.getElementById('stream-url');
 const newTitleHolder = document.getElementById('new-title');
+const newDescHolder = document.getElementById('new-desc');
 const RatingValueSelector = document.getElementById("ratingDropdown")
 let streamKey = '';
 
@@ -22,8 +27,8 @@ video.id = 'my-video';
 video.className = 'video-js vjs-big-play-centered';
 video.controls = true;
 video.preload = 'auto';
-// video.muted = true;
-// video.autoplay = true;
+video.muted = true;
+video.autoplay = true;
 video.setAttribute('data-setup', '{"liveui": true}');
 video.setAttribute('width', '');
 video.setAttribute('height', '');
@@ -67,16 +72,13 @@ function streamInfo(){
     return response.json();
   })
   .then(data => {
-    const callsignToFind = callsign.toLocaleUpperCase(); 
-    const stream = data.streams.find(stream => stream.name === callsignToFind);
-    if (stream) {
-      title.innerHTML = (`${stream.title}`);
-      newTitleHolder.value = (`${stream.title}`);
-      viewerCount.innerHTML = (`${stream.viewers}`);
-    } else {
-      console.log(`Stream with callsign ${callsignToFind} not found`);
-      alert(`We are not able to find the stream with callsign ${callsignToFind}, contact ".plamb" for help`);
-    }
+    const apiCallsign = data.streams[callsign.toUpperCase()]
+
+    title.innerHTML = apiCallsign.title
+    newTitleHolder.value = apiCallsign.title
+    accountImg.src = `https://kodicable.net/images/channel_logos/${apiCallsign.name.toLowerCase()}.png`
+    newDescHolder.innerHTML = apiCallsign.description
+    viewerCount.innerHTML = apiCallsign.viewers
   })
   .catch(error => {
     console.error(error);
@@ -119,29 +121,39 @@ fetch(`http://localhost:3500/api/getstreamkey`, {
 
 
 
-function changetitle() {
+function saveStreamDetails() {
   const newTitle = document.getElementById('new-title').value;
+  const newDesc = document.getElementById('new-desc').value;
   const data = {
     username: callsign,
     newTitle: newTitle,
+    newDesc: newDesc
   };
 
   if (newTitle === '') {
-    alert('Please enter a title');
+    isError = true;
+    showAlert("Please enter a title", isError)
   } else{
-    fetch(`http://localhost:3500/api/changetitle`, {
+    fetch(`http://localhost:3500/api/changedetails`, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json' },
     })
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to update title');
+        if (response.status === 406){
+          isError = true;
+          showAlert("Too many characters!", isError)
+        } else if (response.status === 200){
+          console.log('Stream details updated successfully');
+          showAlert("Stream details updated successfully!");
+        } else {
+          isError = true;
+          showAlert("An error occurred", isError)
         }
-        console.log('Title updated successfully');
-        showAlert("Title updated successfully!");
       })
       .catch(error => {
+        isError = true;
+        showAlert("Failed to update stream details")
         console.log(error);
       });
   
@@ -174,13 +186,13 @@ function closeEditStreamTitleBox(){
 function copyStreamKey() {
   streamKeyHolder.select();
   document.execCommand('copy');
-  alert('Copied stream key to clipboard');
+  showAlert('Copied stream key to clipboard', false);
 }
 
 function copyStreamUrl() {
   streamUrlHolder.select();
   document.execCommand('copy');
-  alert('Copied stream url to clipboard');
+  showAlert('Copied stream url to clipboard', false);
 }
 
 
@@ -259,7 +271,8 @@ function addMultistreamingPoint(){
     multistreamingWrapper.appendChild(newContainer);
     multistreamingPoints.push(newPoint);
   } else {
-    alert('You have reached the maximum number of multistreaming points');
+    isError = true;
+    showAlert('Maximum number of multistreaming points reached!', isError);
   }
 
 }
@@ -270,7 +283,8 @@ function removeMultistreamingPoint(){
     multistreamingWrapper.removeChild(containerToRemove);
     multistreamingPoints.pop();
   } else {
-    alert('You have no multistreaming points to remove');
+    isError = true
+    showAlert('You have no multistreaming points to remove', isError);
   }
 }
 
@@ -371,12 +385,28 @@ function hideShowKey(){
 // the alert box
 
 
-function showAlert(savedText) {
+function showAlert(savedText, isError) {
   alertBoxText.innerHTML = savedText;
   alertBox.style.transform = 'translateY(-100px)';
   setTimeout(() => {
     alertBox.style.transform = 'translateY(100px)';
+    isError = false;
   }, 4000)
 
+  if (isError){
+    alertBox.style.backgroundColor = "red"
+  } else {
+    alertBox.style.backgroundColor = "#0f0f0f"
+  }
+
 }
+
+
+// logic for clicking on account image
+function displayAccountOpt() {
+  console.log("It works")
+}
+
+
+accountImgHolder.addEventListener("click", displayAccountOpt )
 

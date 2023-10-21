@@ -22,28 +22,22 @@ xhr.onload = () => {
 
      loadingSilhouette.style.display = 'none';
 
-    const responseObj = xhr.response;
-
-    const streams = responseObj.streams;
-
-
-
-    for (let i = 0; i < streams.length; i++) {
-
-      let name = streams[i].name;
-
-      let url = streams[i].url;
-
-      let rating = streams[i].rating;
-
-      let viewers = streams[i].viewers;
-
-      let live = streams[i].live;
-
-      let title = streams[i].title;
-
-      let thumbnail = streams[i].thumbnail;
-
+     const responseObj = xhr.response;
+     const keys = Object.keys(responseObj.streams);
+     console.log(responseObj);
+ 
+     for (let i = 0; i < keys.length; i++) {
+         let currentStream = responseObj.streams[keys[i]];
+ 
+         let name = currentStream.name;
+         let url = currentStream.url;
+         let rating = currentStream.rating;
+         let viewers = currentStream.viewers;
+         let live = currentStream.live;
+         let title = currentStream.title;
+         let thumbnail = currentStream.thumbnail;
+ 
+         console.log(title, url, rating, viewers, live);
 
 
       const streamDiv = document.createElement('div');
@@ -55,6 +49,8 @@ xhr.onload = () => {
       const infoLogoDiv = document.createElement('div');
 
       infoLogoDiv.classList.add('info-logo');
+
+
 
       
 
@@ -68,11 +64,7 @@ xhr.onload = () => {
 
       imgLogo.setAttribute('src', `https://kodicable.net/images/channel_logos/${name.toLowerCase()}.png`);
 
-      if (imgLogo.src === "https://kodicable.net/images/channel_logos/wqeh.png"){
 
-        imgLogo.style.margin = '35px 0px 15px 0px';
-
-      }
 
       infoLogoDiv.appendChild(imgLogo);
 
@@ -81,6 +73,8 @@ xhr.onload = () => {
       const callsignP = document.createElement('p');
 
       callsignP.id = 'callsign';
+
+      callsignP.classList.add('callsign');
 
       callsignP.textContent = name;
 
@@ -100,15 +94,12 @@ xhr.onload = () => {
 
         a.addEventListener('click', (event) => {
 
-        // Prevent the link from opening in a new tab
 
         event.preventDefault();
 
-        // Store the callsign in local storage
 
-        localStorage.setItem('callsign', name);
+        localStorage.setItem('callsign', name.toLowerCase());
 
-        // Redirect to player.html
 
         window.location.href = 'player.html';
 
@@ -159,9 +150,13 @@ xhr.onload = () => {
 
       const viewerCount = document.createElement('p');
 
+      viewerCount.classList.add("fa-solid");
+
+      viewerCount.classList.add("fa-eye")
+
       viewerCount.id = 'viewer-count';
       viewerCount.classList.add('viewer-count');
-      viewerCount.innerHTML = `Viewers: ${viewers}`;
+      viewerCount.innerHTML = ` &nbsp ${viewers}`;
 
 
       aTitle.addEventListener('click', (event) => {
@@ -204,38 +199,17 @@ xhr.onload = () => {
 
 
 
-      const ratingP = document.createElement('img');
 
-      
-      if (rating === 'e'){
-        ratingP.src = "https://kodicable.net/images/ratings/everyone.png"
-      } else if (rating === 'p'){
-        ratingP.src = "https://kodicable.net/images/ratings/parental_guidance.png"
-      } else if (rating === "s"){
-        ratingP.src = "https://kodicable.net/images/ratings/suggestive.png"
-      } else if (rating === "m"){
-        ratingP.src = "https://kodicable.net/images/ratings/mature.png"
-      } else {
-        ratingP.src = "https://kodicable.net/images/ratings/pending.png"
-      }
+      infoLogoDiv.appendChild(viewerCount);
 
-      ratingP.width = "40";
-
-      ratingP.height = "40";
-
-      //ratingP.addEventListener('click', (event) => {
-      //  alert('This channel is rated ' + rating + ' for ' + ratingFriendlyName + '.');
-      //});
-      // --- Future use ---
-
-      streamDetailsDiv.appendChild(ratingP);
-
-      streamDetailsDiv.appendChild(viewerCount);
       streamDetailsContainerDiv.appendChild(streamDetailsDiv);
 
       streamDiv.appendChild(streamDetailsContainerDiv);
 
       liveDiv.appendChild(streamDiv);
+
+
+      // START ON CARD VIEW
     }
 
   } else {

@@ -5,12 +5,14 @@
     box-sizing:border-box;
     font-family: 'Montserrat', sans-serif;
 }
+html{
+    scrollbar-width: thin;
+}
 body{
     height:100vh;
     background-color: #121212;
     overflow-x: hidden;
     position: relative;
-
 }
 a{
     color: white;
@@ -136,7 +138,7 @@ a{
 }
 .title{
     color: white;
-    font-size: 3rem;
+    font-size: 3.8vw;
     margin-bottom: 20px;
     text-align: center;
     transition-duration: 0.3s;
@@ -157,7 +159,7 @@ a{
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 10%; 
+    height: 5%; 
     margin-left: 3%;
   }
   #random-subtext span {
@@ -222,7 +224,8 @@ a{
 #slideshow-container {
     position: relative;
     width: 100%;
-    height: 57%;
+    flex: none;
+    height: 100%;
     margin: 0 auto;
     z-index: -2;
   }
@@ -243,7 +246,7 @@ a{
 .live-wrapper{
     height: 100%;
     margin-left: 30px;
-    margin-top: 40px;
+    margin-top: 60px;
 }
 .live{
     height: 132px;
@@ -258,7 +261,7 @@ a{
     text-align: center;
     background-color: #212121;
 }
-.info-logo p {
+.callsign {
     font-size: 75%;
     color: rgba(255, 255, 255, 0.5);
 }
@@ -301,13 +304,13 @@ a{
     color: white;
     margin-left: 5px;
     margin-top: 5px;
-    margin-bottom: 70px;
 }
 .viewer-count{
     color: white;
+    font-size: 0.7rem;
     margin-left: 5px;
-    margin-top: 5px;
-    
+    margin-top: 10px;
+    font-family: 'Montserrat';
 }
 /* player page */
 .video-container{
@@ -317,6 +320,7 @@ a{
     overflow: auto;
     align-items: center;
     flex-direction: column;
+    
     margin-top: 80px;
 }
 .video-js{
@@ -361,60 +365,8 @@ a{
   }
 }
 /* Media Queries */
-@media screen and (max-width: 1200px) {
-    .title {
-        font-size: 3rem;
-    }
-    .info-card-right h1 {
-        font-size: 1.5rem;
-    }
-    .info-card-right p {
-        font-size: 1rem;
-    }
-    /* Guide */
-    .live{
-        flex-direction: column;
-        width: 300px;
-        height: 200px;
-        background-color: #303030;
-        position: relative;
-    }
-    .info-logo{
-        width: 60px;
-        flex: none;
-        border-radius: 50%;
-        height: 60px;
-        object-fit: contain;
-        overflow: hidden;
-        position: absolute;
-
-    }
-    .logo{
-        object-fit: cover;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-    }
-    .stream-details-container{
-        width: 100%;
-        height: 20px;
-    }
-    .stream-details{
-
-    }
-    .thumbnail{
-    }
-    .live-wrapper{
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-}
 /* Tablets kinda */
 @media screen and (max-width: 940px) {
-    .title {
-        font-size: 1.8rem;
-    }
     .info-card-right p {
         font-size: 0.8rem;
     }
@@ -433,9 +385,6 @@ a{
 
 /* Phones kinda */
 @media screen and (max-width: 555px) {
-    .title {
-        font-size: 1.2rem;
-    }
     .links, .join-link{
         font-size: 0.8rem;
     }
