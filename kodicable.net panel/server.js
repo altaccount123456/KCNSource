@@ -120,9 +120,8 @@ app.post('/login',  (req, res) => {
       const token = jwt.sign({ username }, process.env.SECRET_KEY, { expiresIn: '30d' });
 
       // Set the JWT token as a cookie and send a success response
-      res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 2592000000 })
-      res.cookie('user', `${username}`, { httpOnly: false, secure: true, maxAge: 2592000000 })
-      console.log('User logged in:', username);
+      res.cookie('token', token, { httpOnly: true, secure: false, maxAge: 2592000000 })
+      res.cookie('user', `${username}`, { httpOnly: false, secure: false, maxAge: 2592000000 })
       res.json(`${username}`);
     } else {
       // Send an error response if the username or password is invalid
@@ -131,13 +130,18 @@ app.post('/login',  (req, res) => {
   });
 });
 
+app.get('/api/logout', (req, res) => {
+  res.clearCookie("token");
+  res.clearCookie("user");
+  res.json({"logged out?" : "true"});
+})
+
 function sendEmbed(username, fieldName1, fieldName2, fieldValue1, fieldValue2) {
   const embed = new MessageEmbed()
   .setTitle(`Stream Details Changed for ${username}! `)
   .setDescription(`${fieldName1}: ${fieldValue1} | ${fieldName2}: ${fieldValue2}`)
   .setColor('#0099ff')
   .setTimestamp();
-  console.log(`${fieldName1}: ${fieldValue1} | ${fieldName2}: ${fieldValue2}`);
   webhookClient.send(embed)
 }
 
@@ -175,7 +179,6 @@ app.post('/api/changerating',verifyToken2, (req, res) => {
         console.error(`Error updating rating for ${username}:`, error);
         res.sendStatus(500);
       } else {
-        console.log(results);
         res.sendStatus(200);
       }
     })
@@ -225,7 +228,6 @@ app.post('/api/sendMultistreamingPoints', verifyToken3, (req, res) => {
         console.error('Error executing query:', err);
         res.sendStatus(500);
       } else {
-        console.log('Multistreaming points updated successfully');
 
         fetch("https://live.kodicable.net/api/sendMultistreamingPoints/ub4ivor5345", {
           method: 'POST',
@@ -234,7 +236,6 @@ app.post('/api/sendMultistreamingPoints', verifyToken3, (req, res) => {
         })
           .then(response => {
             if (!response.ok) {
-              console.log(response)
               console.error('Failed to update multistreaming points');
               res.sendStatus(500);
             } else {
@@ -277,7 +278,6 @@ app.post('/api/changerating', verifyToken2, (req, res) => {
         console.error(`Error updating rating for ${username}:`, error);
         res.sendStatus(500);
       } else {
-        console.log(results);
         res.sendStatus(200);
       }
     })
@@ -303,3 +303,4 @@ app.get('/logout', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
+ 

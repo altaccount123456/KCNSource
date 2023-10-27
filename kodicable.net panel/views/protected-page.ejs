@@ -26,6 +26,10 @@
         </div>
       </div>
     </div>
+    <div class="account-options" id="account-options-box">
+          <a class="account-options-button account-options-button-logout" id="logoutButton">Logout</a>
+          <a class="account-options-button">More Soon</a>
+    </div>
     <div id="body">
       <div id="body-content">
         <div id="body-content-container">
@@ -79,16 +83,21 @@
                     </div>
                   </div>
                 </div>
-                 <div class="stream-details-holder">
+                  <div class="stream-details-holder">
                     <p class="greyed-title">Content Rating</p>
-                     <div class="stream-details-container">
-                       <select id="ratingDropdown">
-                         <option value="e">Everyone (0+)</option>
-                         <option value="p">Parental Guidance (8+)</option>
-                         <option value="s">Suggestive (13+)</option>
-                         <option value="m">Mature (18+)</option></select>
-                       <button class="styled-button" onclick="saveContentRating()">Save</button>
-                    </div>
+                      <div class="stream-details-container">
+                        <div class="content-rating-selected" id="content-rating-box">
+                          <p class="content-rating-selected-text" id="content-rating-text">
+                            Everyone
+                          </p>
+                          <i class="fa-solid fa-angle-right content-rating-arrow" id="content-rating-arrow"></i>
+                        </div>
+                        <div class="content-rating-dropdown" id="content-rating-dropdown-box">
+
+                        </div>
+                      
+                        <button class="styled-button" onclick="saveContentRating()">Save</button>
+                      </div>
                   </div>
               </div>
             </div>

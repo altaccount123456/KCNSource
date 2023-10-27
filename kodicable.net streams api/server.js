@@ -1,5 +1,6 @@
 const express = require('express');
 const fetch = require('node-fetch');
+require('dotenv').config();
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
@@ -18,10 +19,10 @@ app.use(cors({
 
 
 const connection = mysql.createConnection({
-  host: '127.0.0.1',
-  user: 'wpeyrliy_root',
-  password: 'nDppsjbeXtHg',
-  database: 'wpeyrliy_auth',
+  host: process.env.DB_URL,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
 });
 
 app.use(bodyParser.json());

@@ -4,19 +4,34 @@ let isError = false;
 
 
 const overlay = document.getElementById('overlay');
+
+
 const accountImgHolder = document.getElementById("accountImageHolder");
 const accountOpt = document.getElementById("accountOpt");
+const accountOptBox = document.getElementById("account-options-box");
 const accountImg = document.getElementById('account-image');
+const logoutButton = document.getElementById('logoutButton');
+
+
 const body = document.getElementById('body');
+
+
 const alertBox = document.getElementById('alertBox');
 const alertBoxText = document.getElementById('alertBoxText');
+
+
 const title = document.getElementById('title');
 const viewerCount = document.getElementById('viewer-count');
 const streamKeyHolder = document.getElementById('stream-key');
 const streamUrlHolder = document.getElementById('stream-url');
 const newTitleHolder = document.getElementById('new-title');
 const newDescHolder = document.getElementById('new-desc');
-const RatingValueSelector = document.getElementById("ratingDropdown")
+const contentRatingText = document.getElementById('content-rating-text')
+const contentRatingBox = document.getElementById("content-rating-box")
+const contentRatingArrow = document.getElementById("content-rating-arrow")
+const contentRatingDropdownBox = document.getElementById("content-rating-dropdown-box") 
+
+
 let streamKey = '';
 
 const src = `https://live.kodicable.net/hls${callsign}/${callsign}/index.m3u8`;
@@ -90,33 +105,35 @@ setInterval(streamInfo, 15000);
 
 
 
-fetch(`http://localhost:3500/api/getstreamkey`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({ username: callsign })
-})
-.then((response) => {
-  if (!response.ok) {
-    throw new Error('Failed to get stream key');
-  } else {
-    return response.json(); // Parse the response as JSON and return the Promise
-  }
-})
-.then((data) => {
-  // Handle the parsed JSON data
-  streamKey = data;
-  var streamKeyElement = streamKey['streamKey'];
-  streamKeyHolder.value = (`${callsign}?key=${streamKeyElement}`);
-  // just gonna do both of these here lol
-  streamUrlHolder.value = (`rtmp://live.kodicable.net/${callsign}`);
-})
-.catch((error) => {
-  // Handle any errors that occurred during the fetch or JSON parsing
-  console.error('Error:', error.message);
-});
+function streamDetails(){
+  fetch(`http://localhost:3500/api/getstreamkey`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ username: callsign })
+  })
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error('Failed to get stream key');
+    } else {
+      return response.json();
+    }
+  })
+  .then((data) => {
+    streamKey = `wpey?key=${data.streamKey}`;
+    streamKeyHolder.value = streamKey
+    streamUrlHolder.value = (`rtmp://live.kodicable.net/${callsign}`);
+  })
+  .catch((error) => {
+    console.error('Error:', error.message);
+  });
 
+}
+
+streamDetails()
+
+// I put it in a function just to be organized 
 
 
 
@@ -184,9 +201,9 @@ function closeEditStreamTitleBox(){
 }
 
 function copyStreamKey() {
-  streamKeyHolder.select();
-  document.execCommand('copy');
-  showAlert('Copied stream key to clipboard', false);
+  console.log(streamKey)
+  navigator.clipboard.writeText(streamKey).then(showAlert('Copied stream key to clipboard', false))
+  
 }
 
 function copyStreamUrl() {
@@ -291,14 +308,11 @@ function removeMultistreamingPoint(){
 function isUrlValid(urls) {
   for (let i = 0; i < urls.length; i++) {
     if (urls[i] === '') {
-      // Skip empty URLs and continue to the next iteration
       continue;
     } else if (!urls[i].startsWith('rtmp://')) {
-      // If any URL is not an RTMP URL, return false immediately
       return false;
     }
   }
-  // If all URLs are either empty or start with 'rtmp://', return true
   return true;
 }
 
@@ -344,23 +358,35 @@ function saveMultistreamingPoints() {
   }
 }
 
+let rotated = false;
+let dropped = false;
+
+function contentRatingDropdown(){
+  // stuff for arrow
+  if (rotated){
+    contentRatingArrow.style.transform = ''
+    rotated = false;
+  } else {
+    contentRatingArrow.style.transform = 'rotate(90deg)';
+    rotated = true
+  }
+
+  // stuff for dropdown 
+
+  if (dropped){
+    contentRatingDropdownBox.style.height = "0"
+    dropped = false
+  } else {
+    contentRatingDropdownBox.style.height = "120px"
+    dropped = true
+  }
+}
+
+contentRatingBox.addEventListener('click', contentRatingDropdown)
+
 
 function saveContentRating() {
-  const RatingValue = document.getElementById("ratingDropdown").value;
-  const richland = {username: callsign, newRating: RatingValue};
-  if (RatingValue === "") {
-    alert("Select a rating");
-  } else {
-    fetch("http://localhost:3500/api/changerating", {method: "POST", body: JSON.stringify(richland), headers: {"Content-Type": "application/json"}}).then(deiondre => {
-      if (!deiondre.ok) {
-        throw new Error("Failed to update rating");
-      }
-      console.log("Rating updated successfully");
-      showAlert("Rating updated successfully")
-    }).catch(sirley => {
-      console.log(sirley);
-    });
-  }
+
 }
 
 function hideShowKey(){
@@ -404,9 +430,37 @@ function showAlert(savedText, isError) {
 
 // logic for clicking on account image
 function displayAccountOpt() {
-  console.log("It works")
+  if (accountOptBox.style.height == "70px") {
+    accountOptBox.style.height = "0px"
+  } else {
+    accountOptBox.style.height = "70px"
+  }
 }
 
 
 accountImgHolder.addEventListener("click", displayAccountOpt )
 
+
+
+// logout logic 
+
+function logout() {
+  fetch(`http://localhost:3500/api/logout`, {
+    method: 'GET',
+  })
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error('Failed to logout');
+    } else {
+      console.log('Logged out');
+      window.location.href = "/"
+    }
+  })
+  .catch((error) => {
+    console.error('Error:', error.message);
+  });
+
+}
+
+
+logoutButton.addEventListener("click", logout)

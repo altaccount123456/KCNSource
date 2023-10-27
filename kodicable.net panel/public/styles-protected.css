@@ -70,7 +70,40 @@ body {
     outline: 1px solid rgba(255, 255, 255, 0.507);
     transition-duration:0.2s ;
 }
+.account-options{
+    position: absolute;
+    width: 100px;
+    height: 0px;
+    right: 55px;
+    top: 62px;
+    z-index: 4585095089734;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #181818;
+    transition-duration: 0.2s;
 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.account-options-button{
+    width: 100%;
+    height: 35px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    background-color: #0f0f0f;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.account-options-button-logout{
+    background-color: rgb(211, 0, 0);
+}
+.account-options-button-logout:hover{
+    background-color: rgb(119, 0, 0);
+}
 
 
 
@@ -145,7 +178,6 @@ body {
     flex-direction: row;
     width: 100%;
     align-items: center;
-    margin-bottom: 20px;
 }
 #video-preview{
     flex: none;
@@ -170,6 +202,7 @@ body {
     background-color: #212121;
     overflow-y: auto;
     scrollbar-width: thin;
+    position: relative;
 }
 .stream-details{
     display: flex;
@@ -222,18 +255,37 @@ body {
     border: none;
     font-size: 0.9rem;
     padding: 4px;
-    width: 100%;
+    width: 75%;
     border-radius: 4px;
 }
-#ratingDropdown{
-    background-color: #2e2e2e;
-    color: white;
+.content-rating-dropdown{
+    width: 110px;
+    height: 0px;
     border-radius: 10px;
-    outline: none;
-    border: none;
-    padding: 8px;
-    font-size: 0.9rem;
-    width: 100%;
+    background-color: #2e2e2e;
+    transition: height linear 0.05s;
+    position: absolute;
+    top: 70px;
+}
+.content-rating-selected{
+    width: 110px;
+    height: 30px;
+    background-color: #2e2e2e;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: row;
+}
+.content-rating-selected-text{
+    font-size: 0.8rem;
+}
+.content-rating-selected:hover{
+    background-color: #242424;
+}
+.content-rating-arrow{
+    transition: transform linear 0.05s;
 }
 
 
@@ -373,7 +425,6 @@ body {
 .white-header{
     font-size: 1.3rem;
     margin-bottom: 10px;
-    margin-top: 10px;
     color: #fff;
     overflow: hidden;
     text-overflow: ellipsis;
