@@ -2,6 +2,9 @@ const callsign = window.location.pathname.split('/')[1];
 document.title = `Live Stream Dashboard for ${callsign}`;
 let isError = false;
 
+// Values are checked server side BTW.
+let maxTitleCharCount = 100
+let maxDescCharCount = 2000
 
 const overlay = document.getElementById('overlay');
 
@@ -26,6 +29,12 @@ const streamKeyHolder = document.getElementById('stream-key');
 const streamUrlHolder = document.getElementById('stream-url');
 const newTitleHolder = document.getElementById('new-title');
 const newDescHolder = document.getElementById('new-desc');
+
+
+const titleCharacterCount = document.getElementById('title-character-count');
+const descCharacterCount = document.getElementById('desc-character-count');
+
+
 const contentRatingText = document.getElementById('content-rating-text')
 const contentRatingBox = document.getElementById("content-rating-box")
 const contentRatingArrow = document.getElementById("content-rating-arrow")
@@ -158,7 +167,7 @@ function saveStreamDetails() {
       .then(response => {
         if (response.status === 406){
           isError = true;
-          showAlert("Too many characters!", isError)
+          showAlert("Too many characters in title!", isError)
         } else if (response.status === 200){
           console.log('Stream details updated successfully');
           showAlert("Stream details updated successfully!");
@@ -176,6 +185,15 @@ function saveStreamDetails() {
     title.innerHTML = (`${newTitle}`);
   }
 }
+
+// title and desc character count logic
+newTitleHolder.addEventListener("keydown", function(e) {
+  titleCharacterCount.innerHTML = `(${newTitleHolder.value.length}/${maxTitleCharCount})`
+})
+
+newDescHolder.addEventListener("keydown", function(e) {
+  descCharacterCount.innerHTML = `(${newDescHolder.value.length}/${maxDescCharCount})`
+})
 
 var r = document.querySelector(':root');
 

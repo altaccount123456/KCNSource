@@ -59,8 +59,8 @@
                     <p class="greyed-title">Stream Key</p>
                     <div class="stream-details-container">
                       <input class="stream-details-text" type="password" readonly="" autocomplete="off" id="stream-key" value="">
-                      <i style="cursor:pointer; margin-left: 10px; display:none;" id="visible-eye" class="fa-solid fa-eye fa-lg" style="color: #ffffff;" onclick="hideShowKey()"></i>
-                      <i style="cursor:pointer; margin-left: 10px;" id="hidden-eye" class="fa-solid fa-eye-slash fa-lg" onclick="hideShowKey()"></i>
+                      <i style="cursor:pointer; margin-left: 10px; display:none;" id="visible-eye" class="fa-solid fa-eye fa-lg streamkey-eye" style="color: #ffffff;" onclick="hideShowKey()"></i>
+                      <i style="cursor:pointer; margin-left: 10px;" id="hidden-eye" class="fa-solid fa-eye-slash fa-lg streamkey-eye" onclick="hideShowKey()"></i>
                       <button class="styled-button" onclick="copyStreamKey()">Copy</button>
                     </div>
                   </div>
@@ -116,11 +116,13 @@
         <div class="overlay-box-wrapper">
           <div class="overlay-box-title-container">
             <p class="greyed-title overlay-box-title-header">Edit Title</p>
+            <p class="greyed-title title-character-count" id="title-character-count">(?/?)</p>
             <input type="text" id="new-title" placeholder="Type title here">
           </div>
 
           <div class="overlay-box-desc-container">
             <p class="greyed-title ">Edit Description</p>
+            <p class="greyed-title desc-character-count" id="desc-character-count">(?/?)</p>
             <textarea type="text" id="new-desc" placeholder="Type Description Here: (Max 2000 characters)"></textarea>
           </div>
 

@@ -107,6 +107,51 @@ body {
 
 
 
+/* PRE-DEFINED ELEMENTS */
+.greyed-title{
+    color: #b3b3b3;
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+.greyed-header{
+    font-size: 1.3rem;
+    color: #b3b3b3;
+}
+.white-header{
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.white-title{
+    color: #fff;
+    font-size: 1rem;
+}
+.styled-button{
+    color: #fff;
+    padding: 8px;
+    background-color: transparent;
+    border: 1px solid #fff;
+    outline: none;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-left: 10px;
+    transition: all 0.3s ease-in-out;
+}
+.styled-button:hover{
+    background-color: #3f3e3e;
+    color: #f5f5f5;
+}
+.styled-button:active{
+    outline: 2px solid #656363;
+    transition-duration: 0s;
+    color: #ffffff;
+}
+
+
+
 
 
 #body{
@@ -229,6 +274,10 @@ body {
     padding: 8px;
     border-radius: 5px;
     font-size: 1rem;
+}
+.streamkey-eye{
+    width: 20%;
+    height: auto;
 }
 .multistreaming-details{
     display: flex;
@@ -375,14 +424,27 @@ body {
 }
 .overlay-box-title-container{
     display: flex;
+    position: relative;
     flex-direction: column;
     width: 85%;
     height: 20%;
 }
+.title-character-count{
+    color: white;
+    position: absolute;
+    right: 0px;
+}
 .overlay-box-desc-container{
     width: 85%;
     height: 68%;
+    position: relative;
     flex-direction: column;
+}
+.desc-character-count{
+    color: white;
+    position: absolute;
+    top: 0px;
+    right: 0px;
 }
 .overlay-box-button-container{
     width: 85%;
@@ -409,6 +471,7 @@ body {
     background-color: #181818 ;
 }
 
+
 /* Alert BOX */
 .alert-box{
     position: absolute;
@@ -429,56 +492,6 @@ body {
     color: white;
     font-size: 0.75rem;
 }
-
-
-
-
-
-
-
-/* PRE-DEFINED ELEMENTS */
-.greyed-title{
-    color: #b3b3b3;
-    font-size: 1rem;
-    margin-bottom: 5px;
-}
-.greyed-header{
-    font-size: 1.3rem;
-    color: #b3b3b3;
-}
-.white-header{
-    font-size: 1.3rem;
-    margin-bottom: 10px;
-    color: #fff;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-.white-title{
-    color: #fff;
-    font-size: 1rem;
-}
-.styled-button{
-    color: #fff;
-    padding: 8px;
-    background-color: transparent;
-    border: 1px solid #fff;
-    outline: none;
-    cursor: pointer;
-    border-radius: 2px;
-    margin-left: 10px;
-    transition: all 0.3s ease-in-out;
-}
-.styled-button:hover{
-    background-color: #3f3e3e;
-    color: #f5f5f5;
-}
-.styled-button:active{
-    outline: 2px solid #656363;
-    transition-duration: 0s;
-    color: #ffffff;
-}
-
 
 
 /* PSUEDO ELEMENTS */
