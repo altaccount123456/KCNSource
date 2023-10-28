@@ -97,11 +97,21 @@ function streamInfo(){
   .then(data => {
     const apiCallsign = data.streams[callsign.toUpperCase()]
 
+    const ratings = {
+      "e": "Everyone",
+      "pg": "Parental Guidance",
+      "su": "Suggestive",
+      "m": "Mature"
+    }
+
+    const rating = apiCallsign.rating
+
     title.innerHTML = apiCallsign.title
     newTitleHolder.value = apiCallsign.title
     accountImg.src = `https://kodicable.net/images/channel_logos/${apiCallsign.name.toLowerCase()}.png`
     newDescHolder.innerHTML = apiCallsign.description
     viewerCount.innerHTML = apiCallsign.viewers
+    contentRatingText.innerHTML = ratings[rating]
   })
   .catch(error => {
     console.error(error);
@@ -167,7 +177,7 @@ function saveStreamDetails() {
       .then(response => {
         if (response.status === 406){
           isError = true;
-          showAlert("Too many characters in title!", isError)
+          showAlert("Too many characters in title or description!", isError)
         } else if (response.status === 200){
           console.log('Stream details updated successfully');
           showAlert("Stream details updated successfully!");
@@ -187,6 +197,12 @@ function saveStreamDetails() {
 }
 
 // title and desc character count logic
+
+// getting the characters initially 
+titleCharacterCount.innerHTML = `(${newTitleHolder.value.length}/${maxTitleCharCount})`
+descCharacterCount.innerHTML = `(${newDescHolder.value.length}/${maxDescCharCount})`
+
+// for when the user types
 newTitleHolder.addEventListener("keydown", function(e) {
   titleCharacterCount.innerHTML = `(${newTitleHolder.value.length}/${maxTitleCharCount})`
 })
@@ -420,7 +436,24 @@ contentRatingDropdownBox.addEventListener('click', function(e){
 function saveContentRating(){
   const rating = contentRatingText.getAttribute('data-selected-rating');
 
-  console.log(rating);
+  const data = { newRating: rating, username: callsign}
+
+  fetch('http://localhost:3500/api/changerating', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: { 'Content-Type': 'application/json' },
+  })
+  .then(response => {
+    if (response.status === 200) {
+      showAlert("Successfully saved content rating!")
+    }
+  })
+  .catch(error => {
+    isError = true;
+    showAlert("There was an unknown error saving the content rating!", isError)
+    console.error(error);
+  });
+
 }
 
 

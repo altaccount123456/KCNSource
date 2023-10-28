@@ -13,6 +13,10 @@ const { connect } = require('http2');
 
 const webhookClient = new WebhookClient('1119420522900504607', 'TEaM_uCWqPcDzYdq9zx8TRuZRSs7gHiMfUG7wwZH9eL_NPz4sDIqAP9m5sVDNKub_dzz');
 
+let maxDescCharCount = 2000
+let maxTitleCharCount = 100
+
+
 const connection = mysql2.createConnection({
   host: process.env.DB_URL,
   user: process.env.DB_USER,
@@ -139,12 +143,14 @@ app.get('/api/logout', (req, res) => {
 function sendEmbed(username, fieldName1, fieldName2, fieldValue1, fieldValue2) {
   const embed = new MessageEmbed()
   .setTitle(`Stream Details Changed for ${username}! `)
-  .setDescription(`${fieldName1}: ${fieldValue1} | ${fieldName2}: ${fieldValue2}`)
+  .setDescription(`**${fieldName1}:** ${fieldValue1} \n \n \n **${fieldName2}:** ${fieldValue2}`)
   .setColor('#0099ff')
   .setTimestamp();
   webhookClient.send(embed)
 }
 
+
+// changes desc and title only
 app.post('/api/changedetails',verifyToken2, (req, res) => {
   const fieldName1 = "Title"
   const fieldName2 = "Description"
@@ -156,7 +162,10 @@ app.post('/api/changedetails',verifyToken2, (req, res) => {
     if (error){
       res.sendStatus(500)
       console.log(error)
-    } else{
+    } else if (newTitle.length > maxTitleCharCount || newDesc.length > maxDescCharCount){
+      // its too long
+      res.sendStatus(406)
+    } else {
       sendEmbed(username, fieldName1, fieldName2, newTitle, newDesc)
       res.sendStatus(200)
     }
