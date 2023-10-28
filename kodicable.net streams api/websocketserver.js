@@ -1,12 +1,13 @@
 const WebSocket = require('ws');
 const mysql = require('mysql2');
+require('dotenv').config();
 const { WebhookClient, MessageEmbed } = require('discord.js');
 
 const pool = mysql.createPool({
-  host: '127.0.0.1',
-  user: 'wpeyrliy_root',
-  password: 'nDppsjbeXtHg',
-  database: 'wpeyrliy_auth',
+  host: process.env.DB_URL,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
 });
 
 const webhookClient = new WebhookClient('1119420522900504607', 'TEaM_uCWqPcDzYdq9zx8TRuZRSs7gHiMfUG7wwZH9eL_NPz4sDIqAP9m5sVDNKub_dzz');
@@ -26,7 +27,6 @@ wss.on('connection', (ws, request) => {
   const incrementQuery = `UPDATE user_pass_title SET viewers = viewers + 1 WHERE callsign = ?`;
   const decrementQuery = `UPDATE user_pass_title SET viewers = viewers - 1 WHERE callsign = ?`;
 
-  // Increment viewer count when a client connects
   pool.query(incrementQuery, [streamID], (err, results) => {
     if (err) {
       console.error(`Error updating viewer count for stream ${streamID}:`, err);
@@ -43,7 +43,6 @@ wss.on('connection', (ws, request) => {
   });
 
   ws.on('close', () => {
-    // Decrement viewer count when a client disconnects
     pool.query(decrementQuery, [streamID], (err, results) => {
       if (err) {
         console.error(`Error updating viewer count for stream ${streamID}:`, err);

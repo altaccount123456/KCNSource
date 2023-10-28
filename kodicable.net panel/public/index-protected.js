@@ -42,7 +42,6 @@ video.id = 'my-video';
 video.className = 'video-js vjs-big-play-centered';
 video.controls = true;
 video.preload = 'auto';
-video.muted = true;
 video.autoplay = true;
 video.setAttribute('data-setup', '{"liveui": true}');
 video.setAttribute('width', '');
@@ -341,7 +340,8 @@ function saveMultistreamingPoints() {
           if (response.status === 413) {
             alert('Too many multistreaming points or too few multistreaming points');
           } else if(response.status === 500){
-            showAlert("Failed to save multistreaming points due to one of the links being invalid!")
+            isError = true;
+            showAlert("Failed to save multistreaming points due to one of the links being invalid!", isError)
             throw new Error('Failed to save multistreaming points');
           } 
         } else {
@@ -354,7 +354,8 @@ function saveMultistreamingPoints() {
         // Handle the error as needed (e.g., display an error message to the user)
       });
   } else {
-    alert(`Please enter a valid URL for each multistreaming point (has to start with "rtmp://")`);
+    isError = true;
+    showAlert(`Please enter a valid URL (has to start with "rtmp://")`, isError);
   }
 }
 
@@ -385,9 +386,25 @@ function contentRatingDropdown(){
 contentRatingBox.addEventListener('click', contentRatingDropdown)
 
 
-function saveContentRating() {
+// content rating logic
 
+contentRatingDropdownBox.addEventListener('click', function(e){
+  const clickedItem = e.target.closest('.content-rating-button');
+
+  if(clickedItem && contentRatingDropdownBox.contains(clickedItem)) {
+    const rating = clickedItem.getAttribute('data-rating-text');
+    const ratingShort = clickedItem.getAttribute('data-rating');
+    contentRatingText.innerHTML = rating
+    contentRatingText.setAttribute("data-selected-rating", ratingShort)
+  }
+})
+
+function saveContentRating(){
+  const rating = contentRatingText.getAttribute('data-selected-rating');
+
+  console.log(rating);
 }
+
 
 function hideShowKey(){
   const hiddenEye = document.getElementById('hidden-eye');
@@ -397,12 +414,10 @@ function hideShowKey(){
   if (hiddenEye.style.display === 'none') {
     hiddenEye.style.display = 'block';
     visibleEye.style.display = 'none';
-    console.log("Key should be hidden")
     streamKeyHolder.type = "password";
   } else {
     hiddenEye.style.display = 'none';
     visibleEye.style.display = 'block';
-    console.log("Key should be visible")
     streamKeyHolder.type = "text";
   }
 

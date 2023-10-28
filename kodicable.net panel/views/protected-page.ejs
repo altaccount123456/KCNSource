@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="styles-protected.css">
   <script src="index-protected.js" defer></script>
   <script src="../js/video.js"></script>
+  <script src = "volumesave.js"></script>
   <link rel="icon" href="/images/KCN_mini.png" type="image/x-icon">
   <link href="../js/video-js.css" rel="stylesheet" >  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -87,13 +88,16 @@
                     <p class="greyed-title">Content Rating</p>
                       <div class="stream-details-container">
                         <div class="content-rating-selected" id="content-rating-box">
-                          <p class="content-rating-selected-text" id="content-rating-text">
-                            Everyone
+                          <p class="content-rating-selected-text" id="content-rating-text" data-selected-rating=""">
+                            
                           </p>
                           <i class="fa-solid fa-angle-right content-rating-arrow" id="content-rating-arrow"></i>
                         </div>
                         <div class="content-rating-dropdown" id="content-rating-dropdown-box">
-
+                          <li data-rating="e" data-rating-text="Everyone" class="content-rating-button">Everyone (E)</li>
+                          <li data-rating="pg" data-rating-text="Parental Guidance" class="content-rating-button">Parental Guidance (PG)</li>
+                          <li data-rating="su" data-rating-text="Suggestive" class="content-rating-button">Suggestive (SU)</li>
+                          <li data-rating="m" data-rating-text="Mature" class="content-rating-button">Mature (M)</li>
                         </div>
                       
                         <button class="styled-button" onclick="saveContentRating()">Save</button>

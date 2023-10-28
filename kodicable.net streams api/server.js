@@ -15,6 +15,8 @@ app.use(cors({
     origin: '*'
 }));
 
+module.exports = app;
+
 
 
 
