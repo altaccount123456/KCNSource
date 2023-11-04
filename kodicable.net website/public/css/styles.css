@@ -327,6 +327,7 @@ a{
 }
 .video-wrapper{
     width: 90%;
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -387,6 +388,35 @@ a{
     margin-top: 5px;
 }
 
+.video-stream-about{
+    height: 100px;
+    margin-top: 20px;
+    border-radius: 10px;
+    width: 90%;
+    background-color: #444444;
+    overflow: hidden;
+    padding: 5px;
+}
+.stream-desc{
+    color: white;
+    margin-left: 10px;
+    font-size: 1.1rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+.show-desc{
+    display: none;
+    color: white;
+    margin: 5px 0 0 10px;
+    cursor: pointer;
+}
+.show-desc:hover{
+    color: #c4c4c4;
+}
 
 /*Loading stuff */
 .loading-silhouette {

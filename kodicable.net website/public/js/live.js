@@ -101,7 +101,7 @@ xhr.onload = () => {
         localStorage.setItem('callsign', name.toLowerCase());
 
 
-        window.location.href = 'player.html';
+        window.location.href = 'player.html?stream=' + name.toLowerCase();
 
       });
 
@@ -171,12 +171,12 @@ xhr.onload = () => {
 
         // Redirect to player.html
 
-        window.location.href = 'player.html';
+        window.location.href = 'player.html?stream=' + name.toLowerCase();
 
       });
 
 
-      aTitle.href = "player.html";
+      aTitle.href = 'player.html?stream=' + name.toLowerCase();
 
 
 
