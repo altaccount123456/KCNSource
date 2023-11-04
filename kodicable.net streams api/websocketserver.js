@@ -17,7 +17,6 @@ pool.query(`UPDATE user_pass_title SET viewers = 0` , (err, results) => {
   if (err) {
     console.error(`Error updating viewer count:`, err);
   } else {
-    console.log(`Viewer count updated on server startup`);
   }
 });
 
@@ -31,7 +30,6 @@ wss.on('connection', (ws, request) => {
     if (err) {
       console.error(`Error updating viewer count for stream ${streamID}:`, err);
     } else {
-      console.log(`Viewer count updated for stream ${streamID}`);
     }
   });
 
@@ -47,11 +45,10 @@ wss.on('connection', (ws, request) => {
       if (err) {
         console.error(`Error updating viewer count for stream ${streamID}:`, err);
       } else {
-        console.log(`Viewer count updated for stream ${streamID}: ${results.affectedRows}`);
+      
       }
     });
 
-    console.log(`WebSocket connection closed for stream: ${streamID}`);
   });
 });
 
