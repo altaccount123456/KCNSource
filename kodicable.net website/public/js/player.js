@@ -48,3 +48,13 @@ socket.addEventListener('open', (event) => {
   });
 
 
+
+// start of logic populating stream details
+
+const videoTitle = document.getElementById('video-title');
+const videoViewers = document.getElementById('video-viewers');
+const streamerPicture = document.getElementById('streamer-picture');
+const streamerName = document.getElementById('streamer-name');
+
+
+
