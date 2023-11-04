@@ -312,6 +312,8 @@ a{
     margin-top: 10px;
     font-family: 'Montserrat';
 }
+
+
 /* player page */
 .video-container{
     height: 100%;
@@ -329,22 +331,33 @@ a{
     max-width: 1000px;
     height:auto;
     flex: none;
+    overflow: hidden;
+    border-radius: 10px;
 }
 .video-js-stripped{
     display: block;
     width: 100vw;
     height: 100vh;
 }
-.video-info{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 300px;
-    width: 80%;
-    border: 1px solid white;
+.video-details{
+    flex: none;
+    max-width: 1000px;
+    width: 90%;
+    height: 100px;
+    margin: 10px 0 0 0;
     border-radius: 10px;
+    background-color: #3d3d3d;
+    
 }
+.main-details-container{
+    border: 1px solid white;
+    margin: 10px 0 0 10px;
+    width: 60%;
+    
+}
+
+
+
 /*Loading stuff */
 .loading-silhouette {
   width: 50px;
