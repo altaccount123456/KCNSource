@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://kit.fontawesome.com/913ab3dc19.js" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles-protected.css">
+    <link rel="stylesheet" href="/admin/admin.css">
+  <link rel="icon" href="/images/KCN_mini.png" type="image/x-icon">
+  <script src="/admin/admin.js" defer></script>
+    <title>KODI ADMIN PANEL</title>
+</head>
+<body>
+    <% if (user) { %>
+        <div id="page">
+            <div id="navbar" class="navbar-links">
+              <div class="mini-logo-holder">
+                <img class="mini-logo" src="../images/KCN_mini.png">
+              </div>
+        
+              <div class="account-image-holder-container">
+                <div class="account-image-holder" id="accountImageHolder">
+                  <img src="" alt="" class="mini-logo" id="account-image">
+                </div>
+              </div>
+            </div>
+            <div class="account-options" id="account-options-box">
+                  <a class="account-options-button">Home</a>
+                  <a class="account-options-button account-options-button-logout" id="logoutButton">Logout</a>
+            </div>
+            <div id="body">
+              <div id="body-content">
+                <div id="body-content-container">
+                  <div id="body-content-container-wrapper">
+                    <div id="main-content">
+                      <div class="main-admin-panel-container">
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="alert-box" id="alertBox">
+                <h3 class="alert-box-text" id="alertBoxText">Something saved successfully</h3>
+              </div>
+            </div>
+          </div>
+  
+
+  
+    <% } else { %>
+        <h1>Access Denied</h1>
+        <p>You do not have permission to access this page.</p>
+    <% } %>
+</body>
+</html>

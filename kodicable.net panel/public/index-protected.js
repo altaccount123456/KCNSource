@@ -112,6 +112,10 @@ function streamInfo(){
     newDescHolder.innerHTML = apiCallsign.description
     viewerCount.innerHTML = apiCallsign.viewers
     contentRatingText.innerHTML = ratings[rating]
+
+    // getting the characters initially 
+    titleCharacterCount.innerHTML = `(${newTitleHolder.value.length}/${maxTitleCharCount})`
+    descCharacterCount.innerHTML = `(${newDescHolder.value.length}/${maxDescCharCount})`
   })
   .catch(error => {
     console.error(error);
@@ -129,7 +133,6 @@ function streamDetails(){
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ username: callsign })
   })
   .then((response) => {
     if (!response.ok) {
@@ -198,9 +201,6 @@ function saveStreamDetails() {
 
 // title and desc character count logic
 
-// getting the characters initially 
-titleCharacterCount.innerHTML = `(${newTitleHolder.value.length}/${maxTitleCharCount})`
-descCharacterCount.innerHTML = `(${newDescHolder.value.length}/${maxDescCharCount})`
 
 // for when the user types
 newTitleHolder.addEventListener("keydown", function(e) {
@@ -530,3 +530,27 @@ function logout() {
 
 
 logoutButton.addEventListener("click", logout)
+
+
+
+
+// ADMIN FUNCTIONS 
+function checkRole() {
+
+  fetch(`http://localhost:3500/perms/check-role`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+
+  })
+  .then((response) => {
+    if (response.statusCode === 403){
+
+    } else if (response.statusCode === 200) {
+      console.log(response);
+    }
+  })
+}
+
+checkRole()

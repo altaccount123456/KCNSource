@@ -28,8 +28,8 @@
       </div>
     </div>
     <div class="account-options" id="account-options-box">
+          <a class="account-options-button">Admin</a>
           <a class="account-options-button account-options-button-logout" id="logoutButton">Logout</a>
-          <a class="account-options-button">More Soon</a>
     </div>
     <div id="body">
       <div id="body-content">
@@ -53,56 +53,66 @@
                 </div>
               </div>
               <div id="widgets">
-                <div class="stream-details">
-                  <p class="greyed-header">Stream Details</p>
-                  <div class="stream-details-holder">
-                    <p class="greyed-title">Stream Key</p>
-                    <div class="stream-details-container">
-                      <input class="stream-details-text" type="password" readonly="" autocomplete="off" id="stream-key" value="">
-                      <i style="cursor:pointer; margin-left: 10px; display:none;" id="visible-eye" class="fa-solid fa-eye fa-lg streamkey-eye" style="color: #ffffff;" onclick="hideShowKey()"></i>
-                      <i style="cursor:pointer; margin-left: 10px;" id="hidden-eye" class="fa-solid fa-eye-slash fa-lg streamkey-eye" onclick="hideShowKey()"></i>
-                      <button class="styled-button" onclick="copyStreamKey()">Copy</button>
-                    </div>
-                  </div>
-                  <div class="stream-details-holder">
-                    <p class="greyed-title">Stream URL</p>
-                    <div class="stream-details-container">
-                      <input class="stream-details-text" type="text" readonly="" autocomplete="off" id="stream-url" value="">
-                      <button class="styled-button" onclick="copyStreamUrl()">Copy</button>
-                    </div>
-                  </div>
+                <div class="widgets-navbar">
+                  <li class="widgets-navbar-navitem" id="widget-navitem-1">Stream Details</li>
+                
                 </div>
-                <div class="multistreaming-details">
-                  <p class="greyed-header">Multistreaming</p>
-                  <div class="multistreaming-details-wrapper" id="multistreaming-wrapper">
-                    <p class="greyed-title">Multistreaming Points (restart stream to apply)</p>
-                    <p class="greyed-title"></p>
-                    <div class="multistreaming-addpoint">
-                      <button style="margin: 0 0 10px 0;" class="styled-button" onclick="addMultistreamingPoint()">Add</button>
-                      <button style="margin: 0 0 10px 0;" class="styled-button" onclick="removeMultistreamingPoint()">Remove</button>
-                      <button style="margin: 0 0 10px 0;" class="styled-button" onclick="saveMultistreamingPoints()">Save Points</button>
-                    </div>
-                  </div>
-                </div>
-                  <div class="stream-details-holder">
-                    <p class="greyed-title">Content Rating</p>
+
+                <div class="widgets-streammeta-tab">
+                  <div class="stream-details">
+                    <p class="greyed-header">Stream Details</p>
+                    <div class="stream-details-holder">
+                      <p class="greyed-title">Stream Key</p>
                       <div class="stream-details-container">
-                        <div class="content-rating-selected" id="content-rating-box">
-                          <p class="content-rating-selected-text" id="content-rating-text" data-selected-rating=""">
-                            
-                          </p>
-                          <i class="fa-solid fa-angle-right content-rating-arrow" id="content-rating-arrow"></i>
-                        </div>
-                        <div class="content-rating-dropdown" id="content-rating-dropdown-box">
-                          <li data-rating="e" data-rating-text="Everyone" class="content-rating-button">Everyone (E)</li>
-                          <li data-rating="pg" data-rating-text="Parental Guidance" class="content-rating-button">Parental Guidance (PG)</li>
-                          <li data-rating="su" data-rating-text="Suggestive" class="content-rating-button">Suggestive (SU)</li>
-                          <li data-rating="m" data-rating-text="Mature" class="content-rating-button">Mature (M)</li>
-                        </div>
-                      
-                        <button class="styled-button" onclick="saveContentRating()">Save</button>
+                        <input class="stream-details-text" type="password" readonly="" autocomplete="off" id="stream-key" value="">
+                        <i style="cursor:pointer; margin-left: 10px; display:none;" id="visible-eye" class="fa-solid fa-eye fa-lg streamkey-eye" style="color: #ffffff;" onclick="hideShowKey()"></i>
+                        <i style="cursor:pointer; margin-left: 10px;" id="hidden-eye" class="fa-solid fa-eye-slash fa-lg streamkey-eye" onclick="hideShowKey()"></i>
+                        <button class="styled-button" onclick="copyStreamKey()">Copy</button>
                       </div>
+                    </div>
+                    <div class="stream-details-holder">
+                      <p class="greyed-title">Stream URL</p>
+                      <div class="stream-details-container">
+                        <input class="stream-details-text" type="text" readonly="" autocomplete="off" id="stream-url" value="">
+                        <button class="styled-button" onclick="copyStreamUrl()">Copy</button>
+                      </div>
+                    </div>
                   </div>
+
+                  <div class="multistreaming-details">
+                    <p class="greyed-header">Multistreaming</p>
+                    <div class="multistreaming-details-wrapper" id="multistreaming-wrapper">
+                      <p class="greyed-title">Multistreaming Points (restart stream to apply)</p>
+                      <p class="greyed-title"></p>
+                      <div class="multistreaming-addpoint">
+                        <button style="margin: 0 0 10px 0;" class="styled-button" onclick="addMultistreamingPoint()">Add</button>
+                        <button style="margin: 0 0 10px 0;" class="styled-button" onclick="removeMultistreamingPoint()">Remove</button>
+                        <button style="margin: 0 0 10px 0;" class="styled-button" onclick="saveMultistreamingPoints()">Save Points</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="stream-details-holder">
+                      <p class="greyed-header">Content Rating</p>
+                        <div class="stream-details-container">
+                          <div class="content-rating-selected" id="content-rating-box">
+                            <p class="content-rating-selected-text" id="content-rating-text" data-selected-rating=""">
+                              
+                            </p>
+                            <i class="fa-solid fa-angle-right content-rating-arrow" id="content-rating-arrow"></i>
+                          </div>
+                          <div class="content-rating-dropdown" id="content-rating-dropdown-box">
+                            <li data-rating="e" data-rating-text="Everyone" class="content-rating-button">Everyone (E)</li>
+                            <li data-rating="pg" data-rating-text="Parental Guidance" class="content-rating-button">Parental Guidance (PG)</li>
+                            <li data-rating="su" data-rating-text="Suggestive" class="content-rating-button">Suggestive (SU)</li>
+                            <li data-rating="m" data-rating-text="Mature" class="content-rating-button">Mature (M)</li>
+                          </div>
+                        
+                          <button class="styled-button" onclick="saveContentRating()">Save</button>
+                        </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>

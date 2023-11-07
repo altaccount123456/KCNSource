@@ -192,13 +192,13 @@ app.post('/api/changerating',verifyToken2, (req, res) => {
       }
     })
   } catch(error){
-    res.SendStatus(500);
+    res.sendStatus(500);
   }
 });
 
 app.post('/api/getstreamkey', verifyToken3, (req, res) => {
   // get username from cookie provied by verifyToken
-  const { username } = req.body;
+  const { username } = req.user;
 
   const data = {
     username: username,
@@ -291,17 +291,170 @@ app.post('/api/changerating', verifyToken2, (req, res) => {
       }
     })
   } catch(error){
-    res.SendStatus(500);
+    res.sendStatus(500);
   }
 });
 
 
+
+// ADMIN POINTS
+// these functions are very powerful if someone gets access to them, make sure we auth them
+
+function checkAdminWeb(req, res) {
+  const callsign = req.user.username;
+
+  connection.query('SELECT roles FROM user_pass_title WHERE callsign = ?', callsign, (err, results, fields) => {
+    if (err) {
+      console.error('An error occurred:', err);
+      return res.status(500).send('An error occurred while fetching the roles.');
+    }
+
+    if (results.length === 0) {
+      return res.status(404).send('User not found.');
+    }
+  
+  
+
+  try {
+    const rolesObject = JSON.parse(results[0].roles);
+
+
+    const isAdmin = rolesObject.admin;
+
+    console.log(isAdmin);  
+
+    if (isAdmin === true) {
+      const templateData = { user: req.user };
+      res.setHeader('Content-Disposition', 'inline');
+      res.render('admin-panel', templateData);
+    } else {
+      return res.status(403).send("False")
+    }
+
+  } catch (parseError) {
+    console.error('JSON parsing error:', parseError);
+    return res.status(500).send('An error occurred while parsing the roles data.');
+  }
+});
+}
+
+
+
+
+
+function checkAdminPost(req, res){
+  const callsign = req.user.username;
+
+  connection.query('SELECT roles FROM user_pass_title WHERE callsign = ?', callsign, (err, results, fields) => {
+    if (err) {
+      console.error('An error occurred:', err);
+      return res.status(500).send('An error occurred while fetching the roles.');
+    }
+
+    if (results.length === 0) {
+      return res.status(404).send('User not found.');
+    }
+  
+  
+
+  try {
+    const rolesObject = JSON.parse(results[0].roles);
+
+
+    const isAdmin = rolesObject.admin;
+
+    console.log(isAdmin);  
+
+    if (isAdmin === true) {
+      return res.status(200).send("True");
+    } else {
+      return res.status(403).send("False")
+    }
+
+  } catch (parseError) {
+    console.error('JSON parsing error:', parseError);
+    return res.status(500).send('An error occurred while parsing the roles data.');
+  }
+});
+}
+
+
+app.post('/perms/check-role', verifyToken, (req, res) => {
+  checkAdminPost(req, res)
+})
+
+
+
+
+
+
+app.post('/admin/remove-stream', verifyToken, (req, res) => {
+  const callsign = req.user.username;
+  
+
+  const { removedStream } = req.body;
+
+  
+  console.log(callsign)
+
+  connection.query('SELECT roles FROM user_pass_title WHERE callsign = ?', callsign, (err, results, fields) => {
+    if (err) {
+      console.error('An error occurred:', err);
+      return res.status(500).send('An error occurred while fetching the roles.');
+    }
+
+    if (results.length === 0) {
+      return res.status(404).send('User not found.');
+    }
+  
+  
+
+  try {
+    const rolesObject = JSON.parse(results[0].roles);
+
+
+    const isAdmin = rolesObject.admin;
+
+    console.log(isAdmin);  
+
+    if (isAdmin === true) {
+      connection.query('DELETE FROM user_pass_title WHERE callsign = ?', removedStream, (err, results, fields) => {
+        if (err) {
+          console.error("An error occurred", err)
+          return res.status(500).send("An error occurred while removing a user");
+        }
+
+        if (results.affectedRows === 0) {
+          return res.status(404).send("User not found!")
+        } else {
+          return res.status(200).send("User successfully removed.")
+        }
+
+      })
+    } else {
+      return res.status(403).send("You arent an admin!")
+    }
+
+  } catch (parseError) {
+    console.error('JSON parsing error:', parseError);
+    return res.status(500).send('An error occurred while parsing the roles data.');
+  }
+});
+
+})
+
+
+
 // Protected route for each user
-app.get('/:username', verifyToken, generateSecretKey, (req, res) => {
+app.get('/:username', verifyToken, (req, res) => {
   const { username } = req.params;
   const templateData = { user: req.user };
   res.setHeader('Content-Disposition', 'inline');
   res.render('protected-page', templateData);  
+});
+
+app.get("/:username/admin-panel", verifyToken, (req, res) => {
+  checkAdminWeb(req, res)
 });
 
 app.get('/logout', (req, res) => {

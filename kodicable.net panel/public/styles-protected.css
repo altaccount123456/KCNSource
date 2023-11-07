@@ -239,16 +239,48 @@ body {
 
 /* Bottom Box */
 #widgets{
+    height: calc(100% - 253px);
+    min-height: 400px;
+}
+.widgets-navbar{
+    width: 100%;
+    background-color: #212121;
+    height: 50px;
+    border-bottom: #a5a5a585 1px solid;
+    display: flex;
+    flex-direction: row;
+}
+.widgets-navbar-navitem{
+    width: 150px;
+    height: 100%;
+    cursor: pointer;
+    border-right: #a5a5a585 solid 1px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    list-style-type: none;
+    text-decoration: none;
+    transition-duration: 0.2s;
+}
+.widgets-navbar-navitem:hover{
+    background-color: #181818;
+}
+.widgets-streammeta-tab{
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: calc(100% - 253px);
-    min-height: 400px;
+    height: 90%;
     background-color: #212121;
     overflow-y: auto;
     scrollbar-width: thin;
     position: relative;
 }
+
+
+
+
+
 .stream-details{
     display: flex;
     flex-direction: column;
@@ -492,6 +524,8 @@ body {
     color: white;
     font-size: 0.75rem;
 }
+
+
 
 
 /* PSUEDO ELEMENTS */

@@ -1,0 +1,8 @@
+.main-admin-panel-container{
+    border: 1px solid white;
+    height:100%;
+    width: 100%;
+    min-height: 550px;
+    min-width: 950px;
+    flex: none;
+}
