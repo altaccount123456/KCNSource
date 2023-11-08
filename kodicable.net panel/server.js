@@ -298,7 +298,48 @@ app.post('/api/changerating', verifyToken2, (req, res) => {
 
 
 // ADMIN POINTS
-// these functions are very powerful if someone gets access to them, make sure we auth them
+// these functions are very powerful, make sure we auth.
+
+
+// FOR ADMIN APP POINTS ONLY (a middleware function that handles auth for admins)
+const checkIfAdmin = (req, res, next) => {
+
+  const callsign = req.user.username;
+
+  connection.query('SELECT roles FROM user_pass_title WHERE callsign = ?', callsign, (err, results, fields) => {
+    if (err) {
+      console.error('An error occurred:', err);
+      return res.status(500).send('An error occurred while fetching the roles.');
+    }
+
+    if (results.length === 0) {
+      return res.status(404).send('User not found.');
+    }
+  
+  
+
+  try {
+    const rolesObject = JSON.parse(results[0].roles);
+
+
+    const isAdmin = rolesObject.admin;
+
+    console.log("yo chat is bro admin????")
+    console.log(isAdmin);  
+
+    if (isAdmin === true) {
+      next();
+    } else {
+      return res.status(403).send("False")
+    }
+
+  } catch (parseError) {
+    console.error('JSON parsing error:', parseError);
+    return res.status(500).send('An error occurred while parsing the roles data.');
+  }
+});
+};
+
 
 function checkAdminWeb(req, res) {
   const callsign = req.user.username;
@@ -384,6 +425,70 @@ app.post('/perms/check-role', verifyToken, (req, res) => {
 })
 
 
+let cachedData = []
+
+async function populateData(links) {
+  const streams = []
+  for (const link of links) {
+    const streamMetadata = {
+      name: link.name,
+      streamkey: link.streamkey,
+      title: link.title,
+      rating: link.rating,
+      roles: link.roles,
+    }
+    streams.push(streamMetadata)
+  }
+
+  return streams
+}
+
+async function readFromDatabase() {
+  let rows = [];
+  try {
+    rows = await new Promise((resolve, reject) => {
+      connection.query('SELECT * FROM user_pass_title', (err, results, fields) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  } catch (error) {
+    console.error('Error retrieving data:', error);
+  }
+
+  const links = rows.map(row => {
+    return {
+      name: row.callsign.toUpperCase(),
+      streamkey: row.streamkey,
+      title: row.title,
+      rating: row.rating,
+      roles: row.roles,
+    };
+  });
+
+  return links;
+}
+
+async function updateCachedData() {
+  try {
+    const links = await readFromDatabase();
+    const availableStreams = await populateData(links);
+    cachedData = availableStreams;
+  } catch (error) {
+    console.error('Error updating cached streams:', error);
+  }
+
+  setTimeout(updateCachedData, 5 * 1000); // Refresh every 5 seconds
+}
+
+updateCachedData();
+
+app.get("/admin/database", verifyToken, checkIfAdmin, async (req, res) => {
+  res.json({ streams: cachedData })
+})
 
 
 

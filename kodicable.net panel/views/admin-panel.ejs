@@ -34,8 +34,64 @@
                   <div id="body-content-container-wrapper">
                     <div id="main-content">
                       <div class="main-admin-panel-container">
-                        
+                        <div class="main-admin-navbar">
+                          <li class="admin-navbar-item" id="admin-nav-manage">Manage Streams</li>
+                          <li class="admin-navbar-item" id="admin-nav-manage">More Soon...</li>
+                        </div>
+                        <div class="main-admin-manage-panel">
+                          <div class="admin-streams-overview">
+                            <div class="streams-overview-columns">
+                              <div class="streams-column" id="callsign-column">
+                                <p class="streams-column-name">Callsign</p>
+                              </div>
+
+                              <div class="streams-column" id="streamkey-column">
+                                <p class="streams-column-name">Streamkey</p>
+                              </div>
+
+                              <div class="streams-column" id="title-column">
+                                <p class="streams-column-name">Title</p>
+                              </div>
+
+                              <div class="streams-column" id="rating-column">
+                                <p class="streams-column-name">Rating</p>
+                              </div>
+
+                              <div class="streams-column" id="roles.column">
+                                <p class="streams-column-name">Roles</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="manage-streams">
+
+                          </div>
+                        </div>
                       </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="overlay-box" id="overlay">
+                  <div class="overlay-box-header">
+                    <p class="white-header overlay-box-header">Edit Stream Details</p>
+                    <p class="greyed-title close-button" onclick="closeEditStreamTitleBox()">Close</p>
+                  </div>
+                  <div class="overlay-box-wrapper">
+                    <div class="overlay-box-title-container">
+                      <p class="greyed-title overlay-box-title-header">Edit Title</p>
+                      <p class="greyed-title title-character-count" id="title-character-count">(?/?)</p>
+                      <input type="text" id="new-title" placeholder="Type title here">
+                    </div>
+          
+                    <div class="overlay-box-desc-container">
+                      <p class="greyed-title ">Edit Description</p>
+                      <p class="greyed-title desc-character-count" id="desc-character-count">(?/?)</p>
+                      <textarea type="text" id="new-desc" placeholder="Type Description Here: (Max 2000 characters)"></textarea>
+                    </div>
+          
+                    <div class="overlay-box-button-container">
+                      <button class="overlay-save" id="overlaySaveButton" onclick="saveStreamDetails()">Save</button>
                     </div>
                   </div>
                 </div>

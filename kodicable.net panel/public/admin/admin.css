@@ -1,8 +1,76 @@
+*{
+    list-style-type: none;
+    text-decoration: none;
+}
 .main-admin-panel-container{
-    border: 1px solid white;
+    background-color: #212121;
     height:100%;
     width: 100%;
     min-height: 550px;
     min-width: 950px;
-    flex: none;
+    display: flex;
+    flex-direction: column;
+}
+.main-admin-navbar{
+    height: 60px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.main-admin-manage-panel{
+    height: 100%;
+    width:100%;
+}
+.admin-streams-overview{
+    width: 100%;
+    height: 40%;
+}
+.streams-overview-columns{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px;
+}
+.streams-column-name{
+    border-bottom: #979797 1px solid;
+}
+.streams-column{
+    height: 100%;
+    width: 100%;
+}
+.streams-callsigns{
+    height: 100%;
+    width: auto;
+}
+
+
+
+
+
+
+
+.manage-streams{
+    width: 100%;
+}
+
+
+
+
+
+.admin-navbar-item{
+    width: auto;
+    padding: 10px;
+    height: 100%;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.267);
+    cursor: pointer;
+}
+.admin-navbar-item:hover{
+    background-color: #181818;
 }
