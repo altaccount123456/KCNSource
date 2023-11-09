@@ -7,11 +7,13 @@ const logoutButton = document.getElementById('logoutButton');
 const callsign = window.location.pathname.split('/')[1];
 
 
-const callsignColumn = document.getElementById("callsign-column");
-const streamkeyColumn = document.getElementById("streamkey-column");
-const titleColumn = document.getElementById("title-column");
-const ratingColumn = document.getElementById("rating-column");
-const rolesColumn = document.getElementById("roles-column");
+// const callsignColumn = document.getElementById("callsign-column");
+// const streamkeyColumn = document.getElementById("streamkey-column");
+// const titleColumn = document.getElementById("title-column");
+// const ratingColumn = document.getElementById("rating-column");
+// const rolesColumn = document.getElementById("roles-column");
+
+const streamColumns = document.getElementById("stream-columns");
 
 
 fetch("http://localhost:3500/admin/database", {
@@ -27,6 +29,55 @@ fetch("http://localhost:3500/admin/database", {
   } else {
       return response.json()
   }
+})
+.then(data => {
+  data.streams.forEach((stream, index) => {
+    const row = document.createElement("div")
+    row.classList.add("streams-row")
+
+    const pName = document.createElement("p")
+    const pStreamkey = document.createElement("p")
+    const pTitle = document.createElement("p")
+    const pRating = document.createElement("p")
+    const pRoles = document.createElement("p")
+
+    const ratings = {
+      e: "Everyone",
+      p: "Parental Guidance",
+      s: "Suggestive",
+      m: "Mature",
+    }
+
+    let rating = ratings[stream.rating]
+
+    console.log(ratings[stream.rating])
+
+    if (rating == undefined) {
+      rating = "None"
+    }
+    console.log(rating)
+
+    pName.innerHTML = stream.name
+    pStreamkey.innerHTML = stream.streamkey
+    pTitle.innerHTML = stream.title
+    pRating.innerHTML = rating
+    pRoles.innerHTML = stream.roles
+
+    pName.classList.add("streams-row-value")
+    pStreamkey.classList.add("streams-row-value")
+    pTitle.classList.add("streams-row-value")
+    pRating.classList.add("streams-row-value")
+    pRoles.classList.add("streams-row-value")
+
+
+    row.appendChild(pName)
+    row.appendChild(pStreamkey)
+    row.appendChild(pTitle)
+    row.appendChild(pRating)
+    row.appendChild(pRoles)
+
+    streamColumns.appendChild(row)
+  })
 })
 
 
