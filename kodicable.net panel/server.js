@@ -492,7 +492,30 @@ app.get("/admin/database", verifyToken, checkIfAdmin, async (req, res) => {
 
 
 app.post("/admin/remove-stream", verifyToken, checkIfAdmin, (req, res) => {
-  res.json({ sowenotdroning: true })
+  let { callsign }  = req.body
+
+  callsign = callsign.toLowerCase();
+  
+  console.log(callsign)
+
+  const query = "DELETE FROM user_pass_title WHERE callsign = ?"
+  connection.query(query, [callsign], (err, results) => {
+    if (err) {
+      console.error(err)
+      return res.status(500).send("An Internal Server Error Occurred")
+    }
+    console.log("Deleted Rows:", results.affectedRows)
+  });
+})
+
+app.post("/admin/add-stream", verifyToken, checkIfAdmin, (req, res) => {
+  let { callsign, streamkey, title} = req.body
+  
+  const query = "INSERT INTO user_pass_title (callsign, streamkey, title) VALUES (?, ?, ?)"
+
+  connection.query(query, (err, results) => {
+    
+  })
 })
 
 // Protected route for each user

@@ -112,6 +112,8 @@ function closeAdminOverlay() {
   if (adminOverlay.clientWidth > 0) {
     adminOverlay.style.width  = 0
     adminOverlay.style.height = 0
+    adminOverlayConfirmEdit.style.width = 0
+    adminOverlayConfirmEdit.style.height = 0
   }
 }
 
@@ -138,8 +140,10 @@ function closeConfirmEditBox() {
 
 
 function adminRemoveStream() {
+  let streamToRemove = selectedStream
   fetch("http://localhost:3500/admin/remove-stream", {
     method: "POST",
+    body: JSON.stringify({ callsign: streamToRemove }) ,
     headers: {
       'Content-Type': 'application/json',
     },
