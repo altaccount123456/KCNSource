@@ -6,6 +6,8 @@
     background-color: #212121;
     height:100%;
     width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
     min-height: 550px;
     min-width: 950px;
     display: flex;
@@ -22,6 +24,8 @@
 .main-admin-manage-panel{
     height: 100%;
     width:100%;
+    display: flex;
+    flex-direction: column;
 }
 .admin-manage-panel-header{
     font-size: 1.5rem;
@@ -29,7 +33,7 @@
 }
 .admin-streams-overview{
     width: 100%;
-    height: 45%;
+    height: 100%;
 }
 .streams-overview-columns{
     width: 100%;
@@ -76,15 +80,15 @@
     height: 100%;
     width: auto;
 }
-
-
-
-
-
-
-
-.manage-streams{
-    width: 100%;
+.streams-options-button{
+    align-self: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+}
+.streams-options-button:hover{
+    background-color: #181818;
 }
 
 
@@ -104,4 +108,100 @@
 }
 .admin-navbar-item:hover{
     background-color: #181818;
+}
+
+.admin-overlay-box{
+    position: absolute;
+    display: flex;
+    width: 80%;
+    max-width: 750px;
+    height: 550px;
+    background-color: #181818;
+    border-radius: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    transition-duration: 0.2s;
+}
+.admin-edit-streams-header{
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 1.5rem;
+}
+.admin-edit-streams-close{
+    color:#b3b3b3;
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    font-size: 1.5rem;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.admin-edit-streams-close:hover{
+    background-color:#333333;
+}
+.admin-overlay-box-options{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    margin-top: 40px;
+}
+.admin-overlay-option{
+    background-color: #333333;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 5px;
+    border-radius: 10px;
+    margin: 0 0 0 5px;
+    cursor: pointer;
+}
+.admin-overlay-option:hover{
+    background-color: #212121;
+}
+.admin-confirm-edit-box{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40%;
+    height: 20%;
+    background-color: #333333;
+    border-radius: 10px;
+    transition-duration: 0.2s;
+    overflow: hidden;
+}
+.admin-overlay-confirm-remove{
+    background-color: #212121;
+}
+.admin-overlay-confirm-remove:hover{
+    background-color: #141414;
+}
+.confim-edit-title{
+    color:#b3b3b3;
+
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+.admin-confirm-remove-stream-close{
+    color:#b3b3b3;
+    position: absolute;
+    top: 0px;
+    right: 5px;
+    padding: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.admin-confirm-remove-stream-close:hover{
+    background-color:#333333;
 }

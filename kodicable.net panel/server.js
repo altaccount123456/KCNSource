@@ -491,64 +491,9 @@ app.get("/admin/database", verifyToken, checkIfAdmin, async (req, res) => {
 })
 
 
-
-
-app.post('/admin/remove-stream', verifyToken, (req, res) => {
-  const callsign = req.user.username;
-  
-
-  const { removedStream } = req.body;
-
-  
-  console.log(callsign)
-
-  connection.query('SELECT roles FROM user_pass_title WHERE callsign = ?', callsign, (err, results, fields) => {
-    if (err) {
-      console.error('An error occurred:', err);
-      return res.status(500).send('An error occurred while fetching the roles.');
-    }
-
-    if (results.length === 0) {
-      return res.status(404).send('User not found.');
-    }
-  
-  
-
-  try {
-    const rolesObject = JSON.parse(results[0].roles);
-
-
-    const isAdmin = rolesObject.admin;
-
-    console.log(isAdmin);  
-
-    if (isAdmin === true) {
-      connection.query('DELETE FROM user_pass_title WHERE callsign = ?', removedStream, (err, results, fields) => {
-        if (err) {
-          console.error("An error occurred", err)
-          return res.status(500).send("An error occurred while removing a user");
-        }
-
-        if (results.affectedRows === 0) {
-          return res.status(404).send("User not found!")
-        } else {
-          return res.status(200).send("User successfully removed.")
-        }
-
-      })
-    } else {
-      return res.status(403).send("You arent an admin!")
-    }
-
-  } catch (parseError) {
-    console.error('JSON parsing error:', parseError);
-    return res.status(500).send('An error occurred while parsing the roles data.');
-  }
-});
-
+app.post("/admin/remove-stream", verifyToken, checkIfAdmin, (req, res) => {
+  res.json({ sowenotdroning: true })
 })
-
-
 
 // Protected route for each user
 app.get('/:username', verifyToken, (req, res) => {
