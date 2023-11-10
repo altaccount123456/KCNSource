@@ -381,50 +381,6 @@ function checkAdminWeb(req, res) {
 
 
 
-
-
-function checkAdminPost(req, res){
-  const callsign = req.user.username;
-
-  connection.query('SELECT roles FROM user_pass_title WHERE callsign = ?', callsign, (err, results, fields) => {
-    if (err) {
-      console.error('An error occurred:', err);
-      return res.status(500).send('An error occurred while fetching the roles.');
-    }
-
-    if (results.length === 0) {
-      return res.status(404).send('User not found.');
-    }
-  
-  
-
-  try {
-    const rolesObject = JSON.parse(results[0].roles);
-
-
-    const isAdmin = rolesObject.admin;
-
-    console.log(isAdmin);  
-
-    if (isAdmin === true) {
-      return res.status(200).send("True");
-    } else {
-      return res.status(403).send("False")
-    }
-
-  } catch (parseError) {
-    console.error('JSON parsing error:', parseError);
-    return res.status(500).send('An error occurred while parsing the roles data.');
-  }
-});
-}
-
-
-app.post('/perms/check-role', verifyToken, (req, res) => {
-  checkAdminPost(req, res)
-})
-
-
 let cachedData = []
 
 async function populateData(links) {
@@ -513,8 +469,12 @@ app.post("/admin/add-stream", verifyToken, checkIfAdmin, (req, res) => {
   
   const query = "INSERT INTO user_pass_title (callsign, streamkey, title) VALUES (?, ?, ?)"
 
-  connection.query(query, (err, results) => {
-    
+  connection.query(query, [callsign, streamkey, title], (err, results) => {
+    if (err) {
+      console.error(err)
+      return;
+    }
+    console.log("Added Stream:" + results)
   })
 })
 

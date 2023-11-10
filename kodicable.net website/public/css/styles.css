@@ -18,6 +18,12 @@ a{
     color: white;
     text-decoration: none;
 }
+.footer{
+    flex: none;
+    height: 90px;
+    width: 100%;
+    border: 1px solid white;
+}
 .navbar{
     position: fixed;
     top: 0;
@@ -128,6 +134,7 @@ a{
     display: flex;
     height: 100%;
     flex-direction: column;
+    flex: 1;
 }
 .welcome{
     height: 100%;
@@ -175,51 +182,90 @@ a{
     opacity: 0.5;
   }
 
-/* INFO CARD */
-.info-card{
-    height: 45%;
-    display: flex;
+/* INFO CARDS */
+.propaganda-card-wrapper{
+    height: 50%;
     width: 100%;
-}
-.info-card-left{
-    height: 100%;
-    width: 60%;
+    flex: none;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 10px;
+    margin-top: 55px;
+}
+.info-card-container {
+    height: 50%;
+    width: 100%;
+    flex: none;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+}
+@keyframes gradient {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+.info-card {
+    height: 200px;
+    width: 200px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
     flex-direction: column;
     background-color: #212121;
+    transition: width 0.3s, height 0.3s; 
 }
-.info-card-right{
-    height: 100%;
+.info-card:hover {
+    width: 220px;
+    height: 220px;
+    background: linear-gradient(70deg, #212121, #242424, #444444, #747272);
+    background-size: 200%;
+    animation: gradient 10s linear infinite; 
+}
+.info-card-icon-box{
     width: 100%;
-    background-color: #121212;
-}
-.info-card-left-txt {
-    color: white;
-    padding: 25px;
-    text-align: center;
-}
-.info-card-right h1{
-    color: white;
-    font-size: 2rem;
-    margin-top: 20px;
-    text-align: center;
-}
-.info-card-right p{
-    color: white;
-    font-size: 1.2rem;
-    margin-top: 20px;
-    text-align: center;
-}
-.info-card-right-text-container{
+    height: 50%;
+    position: relative;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-    height: 100%;
-    padding: 20px;
+    justify-content: center;
 }
+.circle{
+    border-radius: 50%;
+    border: 2px solid white;
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    z-index: 555;
+}
+.line {
+    position: absolute;
+    height: 70px;
+    width: 2px;
+    background-color: white;
+    z-index: 556;
+    transform: rotate(45deg);
+}
+.info-card-icon{
+    color: white;
+    font-size: 3.5rem;
+}
+.info-card-text-box{
+    height: 50%;
+    width: 200px;
+    text-align: center;
+
+}
+.info-card-text{
+    color: white;
+}
+
+
 
 /* SLIDESHOW */
 #slideshow-container {
@@ -441,15 +487,7 @@ a{
 /* Media Queries */
 /* Tablets kinda */
 @media screen and (max-width: 940px) {
-    .info-card-right p {
-        font-size: 0.8rem;
-    }
-    .info-card-right h1 {
-        font-size: 1.2rem;
-    }
-    .info-card-left-h2 {
-        font-size: 1.2rem;
-    }
+
 }
 
 @media screen and (max-width: 650px) {
@@ -459,32 +497,11 @@ a{
     .info-logo{
         margin-right:1px;
     }
-    .info-card-left-h2 {
-        font-size: 0.7rem;
-    }
 }
 
 /* Phones kinda */
 @media screen and (max-width: 555px) {
     .links, .join-link{
         font-size: 0.8rem;
-    }
-    .info-card-right h1 {
-        font-size: 12px;
-    }
-    .info-card-right p {
-        font-size: 10px;
-    }
-    .info-card{
-        flex-direction: column;
-        width: 100%;
-    }
-    .info-card-left{
-        height: 100%;
-        width: 100%;
-    }
-    .info-card-right{
-        height: 100%;
-        width: 100%;
     }
 }
