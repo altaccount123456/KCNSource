@@ -7,5 +7,6 @@ Deny from all
 </Files>
 ErrorDocument 404 /404.html
 ErrorDocument 502 /502.html
+ErrorDocument 403 /403.html
 </IfModule>
 # DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION END

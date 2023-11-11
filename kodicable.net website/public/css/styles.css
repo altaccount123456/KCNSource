@@ -1,9 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
 *{
     padding:0px;
     margin:0px;
     box-sizing:border-box;
     font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
 }
 html{
     scrollbar-width: thin;
@@ -41,8 +42,10 @@ a{
     display: flex;
     flex-direction: row;
     align-items: center;
-    width: 60%;
-    height: 25%;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+    text-align: center;
 }
 .footer-credits-logo{
     width: 170px;
@@ -53,7 +56,13 @@ a{
 .footer-text{
     color: white;
     margin-left: 10px;
+    font-weight: 400;
 }
+.footer-text-logo{
+    color: white;
+    font-size: 1.5rem;
+}
+
 .footer-site-links-box{
     display: flex;
     height: 20%;
@@ -101,7 +110,17 @@ a{
     height: 50px;
     margin-top: 10px;
 }
-
+@media screen and (max-width: 650px) {
+    .footer-text-logo{
+        font-size: 1.2rem;
+    }
+    .footer-credits-logo{
+        width: 100px;
+    }
+    .footer-text{
+        font-size: 0.7rem;
+    }
+}
 
 
 /* NAVBAR */
