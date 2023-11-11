@@ -23,4 +23,17 @@ function animateSubtext() {
 }
 
 animateSubtext();
+document.getElementById("navbar").style.backgroundColor = "transparent"
 setInterval(animateSubtext, 10000);
+
+window.onscroll = function() {
+  var scrollPosition = window.scrollY; 
+
+  if (scrollPosition < thresh) {
+      document.getElementById("navbar").style.backgroundColor = "transparent"
+  } else if(scrollPosition > thresh) {
+    document.getElementById("navbar").style.backgroundColor = "#212121"
+  }
+};
+
+var thresh = 100; 
