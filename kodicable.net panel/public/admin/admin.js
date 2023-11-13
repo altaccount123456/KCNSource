@@ -7,6 +7,8 @@ const logoutButton = document.getElementById('logoutButton');
 const callsign = window.location.pathname.split('/')[1];
 
 const adminOverlay = document.getElementById("admin-overlay");
+const adminOverlayStreamDetails = document.getElementById("admin-overlay-stream-details");
+const loadingRing = document.getElementById("loading-ring");
 const adminOverlayClose = document.getElementById("admin-overlay-close");
 
 const adminRemoveStreamButton = document.getElementById("admin-remove-stream")
@@ -81,6 +83,7 @@ fetch("http://localhost:3500/admin/database", {
     pRating.innerHTML = rating
     pRoles.innerHTML = stream.roles
 
+
     pName.classList.add("streams-row-value")
     pStreamkey.classList.add("streams-row-value")
     pTitle.classList.add("streams-row-value")
@@ -112,10 +115,53 @@ function onOptionsClick(options) {
   let user = options.getAttribute("data-stream-name");
   selectedStream = options.getAttribute("data-stream-name");
 
+
   adminOverlay.style.width = "80%";
   adminOverlay.style.height = "550px";
 
-  fetch("http://localhost:4000/api/streams")
+  adminOverlayStreamDetails.style.display = "none";
+  loadingRing.style.display = "block"
+
+  // yes, we could cache the data in an object, however we need the most current data.
+
+  fetch("http://localhost:4000/api/streams", {
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  })
+  .then (response => {
+    if (!response.status === 200) {
+      throw new Error(response.status)
+    } else {
+        loadingRing.style.display = "none"
+        adminOverlayStreamDetails.style.display = "flex"
+        return response.json()
+    }
+  })
+  .then(data => {
+    const ratings = {
+      e: "Everyone",
+      p: "Parental Guidance",
+      s: "Suggestive",
+      m: "Mature",
+      undefined: "",
+    }
+    
+    let ratingCode = data.streams[user].rating;
+    let rating = "";
+
+    rating = ratings[ratingCode]
+
+    if (rating === undefined) {
+      rating = "None"
+    }
+
+
+    contentRatingText.innerHTML = rating
+    adminTitleInput.value = data.streams[user].title
+    adminDescInput.value = data.streams[user].description
+  })
 
 }
 
@@ -172,6 +218,11 @@ function adminRemoveStream() {
 
   })
 }
+
+
+// fetch to populate the admin overlay box 
+
+// do a fetc
 
 
 adminSaveButton.addEventListener("click", () =>{
