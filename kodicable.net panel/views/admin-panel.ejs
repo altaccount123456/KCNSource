@@ -59,7 +59,6 @@
               <div class="admin-overlay-box" id="admin-overlay">
                 <h1 class="admin-edit-streams-header greyed-header">Edit Stream</h1>
                 <i class="fa-solid fa-xmark admin-edit-streams-close" id="admin-overlay-close"></i>
-                
                 <div class="admin-confirm-edit-box" id="admin-overlay-editConfirm-box">
                   <p class="confim-edit-title">Confirm Edit?</p>
                   <i class="fa-solid fa-xmark admin-confirm-remove-stream-close" id="admin-confirm-remove-stream-close"></i>
@@ -69,6 +68,39 @@
                 <div class="admin-overlay-box-options" id="admin-overlay-options">
                   <li class="admin-overlay-option" id="admin-remove-stream">Remove Stream</li>
                 </div>
+
+                <div class="admin-overlay-stream-details">
+                  <div class="admin-stream-details-title-desc">
+                    <div class="admin-stream-details-title">
+                      <h3 class="admin-stream-details-header">Edit Title</h3>
+                      <input type="text" placeholder="Type Title Here" id="admin-new-title" class="admin-title-input">
+                    </div>
+                    <div class="admin-stream-details-desc">
+                      <h3 class="admin-stream-details-header">Edit Description</h3>
+                      <textarea type="text" placeholder="Type Description Here" id="admin-new-desc" class="admin-desc-input"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="admin-stream-details-content-rating">
+                    <h3 class="admin-content-rating-header">Content Rating<h3>
+                    <div class="content-rating-selected" id="content-rating-box">
+                      <p class="content-rating-selected-text" id="content-rating-text" data-selected-rating=""">
+                        
+                      </p>
+                      <i class="fa-solid fa-angle-right content-rating-arrow" id="content-rating-arrow"></i>
+                    </div>
+                    <div class="content-rating-dropdown" id="content-rating-dropdown-box">
+                      <li data-rating="e" data-rating-text="Everyone" class="content-rating-button">Everyone (E)</li>
+                      <li data-rating="pg" data-rating-text="Parental Guidance" class="content-rating-button">Parental Guidance (PG)</li>
+                      <li data-rating="su" data-rating-text="Suggestive" class="content-rating-button">Suggestive (SU)</li>
+                      <li data-rating="m" data-rating-text="Mature" class="content-rating-button">Mature (M)</li>
+                    </div>
+                  </div>
+                </div>
+                <div class="admin-stream-details-save">
+                  <li class="admin-stream-details-save-button" id="admin-save-details">Save</li>
+                </div>
+
               </div>
               <div class="alert-box" id="alertBox">
                 <h3 class="alert-box-text" id="alertBoxText">Something saved successfully</h3>

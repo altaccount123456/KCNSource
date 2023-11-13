@@ -113,17 +113,122 @@
 .admin-overlay-box{
     position: absolute;
     display: flex;
-    width: 0;
+    width: 80%;
     max-width: 750px;
-    height: 0;
+    height: 550px;
     background-color: #181818;
     border-radius: 10px;
     top: 50%;
     left: 50%;
+    flex-direction: column;
     transform: translate(-50%, -50%);
     overflow: hidden;
     transition-duration: 0.2s;
 }
+.admin-overlay-stream-details{
+    height: 65%;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+.admin-stream-details-title-desc{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60%;
+    border-right: 1px solid #ffffff5e;
+}
+.admin-stream-details-title{
+    height: 20%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.admin-stream-details-desc{
+    height: 75%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.admin-stream-details-header, .admin-content-rating-header{
+    color: #b3b3b3;
+    width: 94%;
+}
+
+
+.admin-title-input {
+    background-color: #2e2e2e;
+    color: white;
+    outline: none;
+    border: none;
+    width: 95%;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.admin-desc-input {
+    background-color: #2e2e2e;
+    color: white;
+    outline: none;
+    border: none;
+    width: 95%;
+    padding: 10px;
+    border-radius: 10px;
+    resize: none;
+    scrollbar-width: thin;
+    height: 100%;
+}
+
+.admin-stream-details-save{
+    width: 100%;
+    height: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-stream-details-save-button{
+    border-radius: 30px;
+    width: 80%;
+    height: 60%;
+    cursor: pointer;
+    background-color: #2e2e2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.25rem;
+}
+.admin-stream-details-save-button:hover{
+    background-color: #333333;
+}
+
+
+
+.admin-stream-details-content-rating{
+    width: 35%;
+    margin:  0 0 0 10px;
+    height: 100%;
+    position: relative;
+}
+.content-rating-dropdown{
+    top: 55px;
+    width: 55%;
+    min-width: 142px;
+}
+
+@media screen and (max-width: 570px) {
+    .admin-content-rating-header{
+        font-size: 0.9rem;
+    }
+}
+
+
+
 .admin-edit-streams-header{
     position: absolute;
     top: 5px;
@@ -147,9 +252,10 @@
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 100%;
+    height: 9%;
     margin-top: 40px;
 }
+
 .admin-overlay-option{
     background-color: #333333;
     height: 40px;

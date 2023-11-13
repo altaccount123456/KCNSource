@@ -15,6 +15,19 @@ const adminConfirmRemoveStreamButton = document.getElementById("admin-confirm-re
 const adminOverlayConfirmEdit = document.getElementById("admin-overlay-editConfirm-box")
 const adminOverlayConfirmClose = document.getElementById("admin-confirm-remove-stream-close")
 
+const adminDescInput = document.getElementById("admin-new-desc");
+const adminTitleInput = document.getElementById("admin-new-title");
+const adminSaveButton = document.getElementById("admin-save-details");
+
+// content rating box
+
+const contentRatingText = document.getElementById('content-rating-text')
+const contentRatingBox = document.getElementById("content-rating-box")
+const contentRatingArrow = document.getElementById("content-rating-arrow")
+const contentRatingDropdownBox = document.getElementById("content-rating-dropdown-box") 
+
+
+
 let selectedStream;
 
 const streamColumns = document.getElementById("stream-columns");
@@ -161,6 +174,56 @@ function adminRemoveStream() {
 }
 
 
+adminSaveButton.addEventListener("click", () =>{
+  adminSaveStreamDetails()
+})
+
+
+function adminSaveStreamDetails(desc, title){
+}
+
+
+
+// CONTENT RATING BOX LOGIC
+let rotated = false;
+let dropped = false;
+
+function contentRatingDropdown(){
+  // stuff for arrow
+  if (rotated){
+    contentRatingArrow.style.transform = ''
+    rotated = false;
+  } else {
+    contentRatingArrow.style.transform = 'rotate(90deg)';
+    rotated = true
+  }
+
+  // stuff for dropdown 
+
+  if (dropped){
+    contentRatingDropdownBox.style.height = "0"
+    dropped = false
+  } else {
+    contentRatingDropdownBox.style.height = "120px"
+    dropped = true
+  }
+}
+
+contentRatingBox.addEventListener('click', contentRatingDropdown)
+
+
+// content rating logic
+
+contentRatingDropdownBox.addEventListener('click', function(e){
+  const clickedItem = e.target.closest('.content-rating-button');
+
+  if(clickedItem && contentRatingDropdownBox.contains(clickedItem)) {
+    const rating = clickedItem.getAttribute('data-rating-text');
+    const ratingShort = clickedItem.getAttribute('data-rating');
+    contentRatingText.innerHTML = rating
+    contentRatingText.setAttribute("data-selected-rating", ratingShort)
+  }
+})
 
 // initial fetch for account data
 fetch("http://localhost:4000/api/streams", {

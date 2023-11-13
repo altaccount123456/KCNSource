@@ -53,6 +53,9 @@ a{
     object-fit: contain;
     margin-left: 10px;
 }
+.sspwxr-logo{
+    width: 120px;
+}
 .footer-text{
     color: white;
     margin-left: 10px;
@@ -112,13 +115,14 @@ a{
 }
 @media screen and (max-width: 650px) {
     .footer-text-logo{
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
     .footer-credits-logo{
         width: 100px;
     }
     .footer-text{
         font-size: 0.7rem;
+        margin: 0;
     }
 }
 
