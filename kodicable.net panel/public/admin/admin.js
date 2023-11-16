@@ -24,6 +24,9 @@ const adminOverlayConfirmClose = document.getElementById("admin-confirm-remove-s
 const adminDescInput = document.getElementById("admin-new-desc");
 const adminTitleInput = document.getElementById("admin-new-title");
 const adminSaveButton = document.getElementById("admin-save-details");
+const addStreamCallsign = document.getElementById("add-stream-callsign")
+const addStreamTitle = document.getElementById("add-stream-title")
+const addStreamRating = document.getElementById("add-stream-rating")
 
 // content rating box
 
@@ -268,6 +271,8 @@ function adminRemoveStream() {
       showAlert("An Error has occurred while removing the stream", isError)
       throw new Error(response.status)
   } else {
+      adminOverlay.style.width = 0
+      adminOverlay.style.height = 0
       showAlert("Removed Stream.")
       return response.json()
   }
@@ -344,6 +349,53 @@ fetch("http://localhost:4000/api/streams", {
   .catch(error => {
     console.error(error);
 });
+
+
+
+
+
+// ADD STREAM LOGIC
+function addStream(){ 
+  let callsign = addStreamCallsign.value;
+  let title = addStreamTitle.value;
+  let rating = addStreamRating.value;
+
+  addStreamLoadingBox.style.display = "flex";
+
+  fetch("http://localhost:3500/admin/add-stream",{
+    method: "POST",
+    body: JSON.stringify({ callsign: callsign, title: title, rating: rating}),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  .then(response => {
+    if (!response.status === 200) {
+      isError = true
+      showAlert("Couldn't add the stream. Please try again", isError)
+      throw new Error(response.status)
+  } else if (response.status === 405) {
+      addStreamLoadingBox.style.display = "none"
+      isError = true
+      showAlert("Invalid rating format", isError)
+      return response
+  } else {
+      addStreamLoadingBox.style.display = "none";
+      showAlert("Stream added successfully!")
+      setTimeout(() => {
+        location.reload()
+      }, 5000)
+      return response
+  }
+  })
+}
+
+addStreamButton.addEventListener("click", () => {
+  addStream()
+})
+
+
+
 
 
 

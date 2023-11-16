@@ -486,16 +486,39 @@ app.post("/admin/remove-stream", verifyToken, checkIfAdmin, (req, res) => {
 })
 
 app.post("/admin/add-stream", verifyToken, checkIfAdmin, (req, res) => {
-  let { callsign, rating, title} = req.body
-  
-  const query = "INSERT INTO user_pass_title (callsign, streamkey, title) VALUES (?, ?, ?)"
 
-  connection.query(query, [callsign, streamkey, title], (err, results) => {
+  // simple password gen for streamkey
+
+  function generatePassword(length) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+  }
+
+  let streamkey = generatePassword(16);
+  console.log(streamkey);
+
+
+  let { callsign, rating, title} = req.body
+
+  if (rating !== "e" && rating !== "p" && rating !== "s" && rating !== "m"){
+    return res.status(405).send("Invalid rating format");
+  }
+  
+  const query = "INSERT INTO user_pass_title (callsign, streamkey, title, rating) VALUES (?, ?, ?, ?)"
+
+  connection.query(query, [callsign, streamkey, title, rating], (err, results) => {
     if (err) {
       console.error(err)
-      return;
+      return res.status(500).send("err")
     }
-    console.log("Added Stream:" + results)
+    res.status(200).send("Added")
   })
 })
 
