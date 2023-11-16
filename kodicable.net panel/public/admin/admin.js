@@ -14,6 +14,10 @@ const adminOverlayClose = document.getElementById("admin-overlay-close");
 const adminRemoveStreamButton = document.getElementById("admin-remove-stream")
 const adminConfirmRemoveStreamButton = document.getElementById("admin-confirm-remove-stream")
 
+const addStreamButton = document.getElementById("add-stream-button");
+const addStreamLoadingCircle = document.getElementById("add-stream-loading-circle");
+const addStreamLoadingBox = document.getElementById("add-stream-loading");
+
 const adminOverlayConfirmEdit = document.getElementById("admin-overlay-editConfirm-box")
 const adminOverlayConfirmClose = document.getElementById("admin-confirm-remove-stream-close")
 
@@ -29,8 +33,15 @@ const contentRatingArrow = document.getElementById("content-rating-arrow")
 const contentRatingDropdownBox = document.getElementById("content-rating-dropdown-box") 
 
 
+const databaseHintButton = document.getElementById('database-hint-button')
+const databaseHintBox = document.getElementById('hint-overlay')
+const databaseHintClose = document.getElementById('database-hint-close')
+
+
 
 let selectedStream;
+
+let isError = false;
 
 const streamColumns = document.getElementById("stream-columns");
 
@@ -70,12 +81,11 @@ fetch("http://localhost:3500/admin/database", {
 
     let rating = ratings[stream.rating]
 
-    console.log(ratings[stream.rating])
 
     if (rating == undefined) {
       rating = "None"
     }
-    console.log(rating)
+
 
     pName.innerHTML = stream.name
     pStreamkey.innerHTML = stream.streamkey
@@ -109,12 +119,21 @@ fetch("http://localhost:3500/admin/database", {
 
     streamColumns.appendChild(row)
   })
+  // add the "add stream button" thingy
+  
 })
+
+
+
 
 function onOptionsClick(options) {
   let user = options.getAttribute("data-stream-name");
   selectedStream = options.getAttribute("data-stream-name");
 
+
+  databaseHintBox.style.width = 0
+  databaseHintBox.style.padding = 0
+  databaseHintBox.style.height = 0
 
   adminOverlay.style.width = "80%";
   adminOverlay.style.height = "550px";
@@ -147,8 +166,13 @@ function onOptionsClick(options) {
       m: "Mature",
       undefined: "",
     }
+
+    
     
     let ratingCode = data.streams[user].rating;
+
+    contentRatingText.setAttribute("data-selected-rating", ratingCode);
+
     let rating = "";
 
     rating = ratings[ratingCode]
@@ -164,6 +188,37 @@ function onOptionsClick(options) {
   })
 
 }
+
+function adminSaveStreamDetails() {
+  let newTitle = adminTitleInput.value
+  let newDesc = adminDescInput.value
+  let newRating = contentRatingText.getAttribute("data-selected-rating")
+  let callsign = selectedStream
+  fetch("http://localhost:3500/admin/save-stream",{
+    method: "POST",
+    body: JSON.stringify({ newTitle: newTitle, newDesc: newDesc, callsign: callsign, newRating: newRating}),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  .then(response => {
+    if (!response.status === 200) {
+      isError = true
+      showAlert("Couldn't save the stream. Please try again", isError)
+      throw new Error(response.status)
+  } else {
+      showAlert("Stream saved successfully!")
+      return response
+  }
+  })
+}
+
+adminSaveButton.addEventListener("click", () => {
+  adminSaveStreamDetails()
+})
+
+
+
 
 adminOverlayClose.addEventListener("click", closeAdminOverlay)
 
@@ -209,13 +264,13 @@ function adminRemoveStream() {
   })
   .then(response => {
     if (!response.status === 200) {
+      isError = true
+      showAlert("An Error has occurred while removing the stream", isError)
       throw new Error(response.status)
   } else {
+      showAlert("Removed Stream.")
       return response.json()
   }
-  })
-  .then(data => {
-
   })
 }
 
@@ -224,14 +279,6 @@ function adminRemoveStream() {
 
 // do a fetc
 
-
-adminSaveButton.addEventListener("click", () =>{
-  adminSaveStreamDetails()
-})
-
-
-function adminSaveStreamDetails(desc, title){
-}
 
 
 
@@ -304,7 +351,7 @@ function showAlert(savedText, isError) {
     alertBoxText.innerHTML = savedText;
     alertBox.style.transform = 'translateY(-100px)';
     setTimeout(() => {
-      alertBox.style.transform = 'translateY(100px)';
+      alertBox.style.transform = 'translateY(75px)';
       isError = false;
     }, 4000)
   
@@ -326,6 +373,33 @@ function showAlert(savedText, isError) {
   }
 
   accountImgHolder.addEventListener("click", displayAccountOpt )
+
+
+
+  // logic for rating button
+
+  function displayDBHint() {
+    if (parseInt(databaseHintBox.style.width) > 0) {
+      databaseHintBox.style.width = 0
+      databaseHintBox.style.padding = 0
+      databaseHintBox.style.height = 0
+    } else {
+      databaseHintBox.style.width = "40%"
+      databaseHintBox.style.height = "350px"
+      databaseHintBox.style.padding = "10px"
+
+      adminOverlay.style.width = "0";
+      adminOverlay.style.height = "0";
+    }
+  }
+
+  databaseHintClose.addEventListener("click", () => {
+    displayDBHint();
+  })
+
+  databaseHintButton.addEventListener("click", () => {
+    displayDBHint();
+  })
 
 
   // logout logic 

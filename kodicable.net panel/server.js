@@ -313,7 +313,7 @@ const checkIfAdmin = (req, res, next) => {
     }
 
     if (results.length === 0) {
-      return res.status(404).send('User not found.');
+      return res.status(403).send('Access Denied');
     }
   
   
@@ -324,8 +324,6 @@ const checkIfAdmin = (req, res, next) => {
 
     const isAdmin = rolesObject.admin;
 
-    console.log("yo chat is bro admin????")
-    console.log(isAdmin);  
 
     if (isAdmin === true) {
       next();
@@ -446,6 +444,25 @@ app.get("/admin/database", verifyToken, checkIfAdmin, async (req, res) => {
   res.json({ streams: cachedData })
 })
 
+app.post("/admin/save-stream", verifyToken, checkIfAdmin, (req, res) => {
+  let { callsign, newTitle, newDesc, newRating } = req.body;
+
+  callsign = callsign.toLowerCase();
+
+  const query = "UPDATE user_pass_title SET title = ?, description = ?, rating = ? WHERE callsign = ?"
+  connection.query(query, [newTitle, newDesc, newRating, callsign], (err, results) => {
+    if (err) {
+      console.error(err)
+      return res.status(500).send("An Internal Server Error Occurred")
+    }
+
+    if (results.affectedRows > 0) {
+      res.status(200).send("Update successful");
+   } else {
+      res.status(404).send("No records updated");
+   }
+  });
+})
 
 app.post("/admin/remove-stream", verifyToken, checkIfAdmin, (req, res) => {
   let { callsign }  = req.body
@@ -460,12 +477,16 @@ app.post("/admin/remove-stream", verifyToken, checkIfAdmin, (req, res) => {
       console.error(err)
       return res.status(500).send("An Internal Server Error Occurred")
     }
-    console.log("Deleted Rows:", results.affectedRows)
+    if (results.affectedRows > 0) {
+      res.status(200).send("Remove successful");
+    } else {
+      res.status(404).send("No records updated");
+    }
   });
 })
 
 app.post("/admin/add-stream", verifyToken, checkIfAdmin, (req, res) => {
-  let { callsign, streamkey, title} = req.body
+  let { callsign, rating, title} = req.body
   
   const query = "INSERT INTO user_pass_title (callsign, streamkey, title) VALUES (?, ?, ?)"
 

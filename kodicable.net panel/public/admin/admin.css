@@ -27,9 +27,29 @@
     display: flex;
     flex-direction: column;
 }
+.manage-panel-header-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
 .admin-manage-panel-header{
     font-size: 1.5rem;
     margin-left: 5px;
+}
+.database-hint{
+    color: white;
+    border: 1px solid white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-left: 5px;
+    cursor: pointer;
 }
 .admin-streams-overview{
     width: 100%;
@@ -53,7 +73,8 @@
 .streams-column-name{
     border-bottom: #979797 1px solid;
     width: 100%;
-
+    display: flex;
+    flex-direction: row;
 }
 .streams-column{
     height: 100%;
@@ -67,6 +88,47 @@
     flex-direction: row;
     justify-content: space-between;
 }
+.streams-overview-add-stream{
+    align-items: center;
+    background-color: #1a1a1a;
+    padding: 10px;
+    border-radius: 10px;
+    position: relative;
+}
+.add-stream-loading-overlay{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    left: 0;
+    background-color: #ffffff31;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.add-stream-input{
+    background-color: #141414;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    height: 20px;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    width: 100%;
+    max-width: 150px;
+}
+.add-stream-button{
+    cursor: pointer;
+    padding: 10px;
+    background-color: #212121;
+    border-radius: 10px;
+}
+.add-stream-button:hover{
+    background-color: #141414;
+}
+
+
 .streams-row-value {
     font-size: 0.6rem;
     width: 100%;
@@ -318,6 +380,39 @@
 
 
 
+.hint-overlay-box{
+    position: absolute;
+    border-radius: 10px;
+    width: 0;
+    height: 0;
+    top: 50%;
+    left: 50%;
+    max-width: 450px;
+    min-width: 250px;
+    transform: translate(-50%, -50%);
+    background-color:#181818 ;
+
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.hint-overlay-header{
+    font-size: 1.2rem;
+}
+.hint-overlay-container{
+    height: 100%;
+    width: 95%;
+}
+.hint-overlay-title{
+    font-size: 1em;
+}
+.hint-overlay-description{
+    font-size: 0.7rem;
+}
+
+
+
+
 
 
 
@@ -358,4 +453,3 @@
       transform: rotate(360deg);
     }
   }
-  

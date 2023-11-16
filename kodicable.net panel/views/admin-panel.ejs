@@ -36,10 +36,12 @@
                       <div class="main-admin-panel-container">
                         <div class="main-admin-navbar">
                           <li class="admin-navbar-item" id="admin-nav-manage">Manage Streams</li>
-                          <li class="admin-navbar-item" id="admin-nav-manage">More Soon...</li>
                         </div>
                         <div class="main-admin-manage-panel">
-                          <h1 class="admin-manage-panel-header greyed-header">Database Overview</h1>
+                          <div class="manage-panel-header-container">
+                            <h1 class="admin-manage-panel-header greyed-header">Database Overview</h1>
+                            <i class="fa-solid fa-question database-hint" id="database-hint-button"></i>
+                          </div>
                           <div class="admin-streams-overview">
                             <div class="streams-overview-columns" id="stream-columns">
                               <div class="column-name">
@@ -48,6 +50,23 @@
                                 <li class="streams-column-name">Title</li>
                                 <li class="streams-column-name">Rating</li>
                                 <li class="streams-column-name">Roles</li>
+                              </div>
+
+
+
+
+                              <div class="streams-overview-add-stream streams-row">
+                                <div class="add-stream-loading-overlay" id="add-stream-loading">
+                                  <div class="lds-ring" id="add-stream-loading-circle"><div></div><div></div><div></div><div></div></div>
+                                </div>
+
+
+                                <input type="text" class="add-stream-input" id="add-stream-name">
+                                <input type="text" placeholder="Automatic" readonly=""class="add-stream-input" id="add-stream-name">
+                                <input type="text" class="add-stream-input" id="add-stream-name">
+                                <input type="text" class="add-stream-input" id="add-stream-name">
+                                <input type="text" placeholder="Not Editable" readonly="" class="add-stream-input" id="add-stream-name">
+                                <li class="add-stream-button" id="add-stream-button">Add</li>
                               </div>
                             </div>
                         </div>
@@ -104,6 +123,23 @@
                   <li class="admin-stream-details-save-button" id="admin-save-details">Save</li>
                 </div>
 
+              </div>
+              <div class="hint-overlay-box" id="hint-overlay">
+                <h3 class="hint-overlay-header">Database How-To</h3>
+                <i class="fa-solid fa-xmark admin-confirm-remove-stream-close" id="database-hint-close"></i>
+                <div class="hint-overlay-container">
+                  <h4 class="hint-overlay-title">Adding Streams</h4>
+                  <p class="hint-overlay-description">
+                    To add a stream, simply type in the text-inputs at the bottom of the database overview. Finally, click the "add" button to finalize the adding process. <br> (Rating Format: <br> e: "Everyone" <br> p: "Parental Guidance" <br> s: "Suggestive" <br> m: "Mature")
+                  </p>
+                </div>
+                <div class="hint-overlay-container">
+                  <h4 class="hint-overlay-title">Managing Streams</h4>
+                  <p class="hint-overlay-description">
+                    To manage streams, click the three dots on the right side of each stream row. If you would like to remove a stream, click "Remove Stream". If you would like to change the title, desc, rating, etc, do so by typing the designated text inputs for each. Finally, click "Save".
+                    <br>
+                  </p>
+                </div>
               </div>
               <div class="alert-box" id="alertBox">
                 <h3 class="alert-box-text" id="alertBoxText">Something saved successfully</h3>
