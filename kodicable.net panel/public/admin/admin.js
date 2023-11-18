@@ -27,6 +27,7 @@ const adminSaveButton = document.getElementById("admin-save-details");
 const addStreamCallsign = document.getElementById("add-stream-callsign")
 const addStreamTitle = document.getElementById("add-stream-title")
 const addStreamRating = document.getElementById("add-stream-rating")
+const addStreamFile = document.getElementById("add-stream-file");
 
 // content rating box
 
@@ -359,15 +360,20 @@ function addStream(){
   let callsign = addStreamCallsign.value;
   let title = addStreamTitle.value;
   let rating = addStreamRating.value;
+  console.log(addStreamFile)
+  let file = addStreamFile.files[0]
 
   addStreamLoadingBox.style.display = "flex";
 
+  let formData = new FormData();
+  formData.append("callsign", callsign);
+  formData.append("title", title);
+  formData.append("rating", rating);
+  formData.append("file", file);
+
   fetch("http://localhost:3500/admin/add-stream",{
     method: "POST",
-    body: JSON.stringify({ callsign: callsign, title: title, rating: rating}),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: formData,
   })
   .then(response => {
     if (!response.status === 200) {
@@ -378,6 +384,11 @@ function addStream(){
       addStreamLoadingBox.style.display = "none"
       isError = true
       showAlert("Invalid rating format", isError)
+      return response
+  } else if (response.status === 422) {
+      addStreamLoadingBox.style.display = "none"
+      isError = true
+      showAlert("Invalid file type (jpeg and png only)", isError)
       return response
   } else {
       addStreamLoadingBox.style.display = "none";

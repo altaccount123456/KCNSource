@@ -95,6 +95,12 @@
     border-radius: 10px;
     position: relative;
 }
+.add-stream-header{
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    font-size: 1.0rem;
+}
 .add-stream-loading-overlay{
     display: none;
     position: absolute;

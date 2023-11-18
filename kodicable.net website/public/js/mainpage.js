@@ -11,7 +11,7 @@ slideshow();
 let slideshowInterval = setInterval(slideshow, 10000);
 let subtextIndex = 0;
 const subtitle = document.getElementById('random-subtext');
-let subtext_words = ["Flexible and Reliable HLS streaming", "Quality Icecast Streaming"];
+let subtext_words = ["Stream weather, news and more on our platform.", "Flexible video streaming allowing to stream to five simultaneous streaming platforms","Not only video, we also provide icecast audio only streaming.","label maker","By the broadcast enthusiasts... for the broadcast enthusiast (and anyone else)!","All KCN services are provided free of charge."];
 
 function animateSubtext() {
   const subtextSpans = subtitle.querySelectorAll('span');

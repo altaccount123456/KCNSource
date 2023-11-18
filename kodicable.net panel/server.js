@@ -1,4 +1,6 @@
 const express = require('express');
+const multer = require('multer');
+const ftp = require('basic-ftp');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
 const path = require('path');
@@ -9,6 +11,7 @@ const app = express();
 const PORT = process.env.PORT || 3500;
 const mysql2 = require('mysql2');
 const { MessageEmbed, WebhookClient } = require('discord.js');
+const bodyParser = require('body-parser');
 const { connect } = require('http2');
 
 const webhookClient = new WebhookClient('1119420522900504607', 'TEaM_uCWqPcDzYdq9zx8TRuZRSs7gHiMfUG7wwZH9eL_NPz4sDIqAP9m5sVDNKub_dzz');
@@ -90,6 +93,7 @@ const verifyToken3 = (req, res, next) => {
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(bodyParser.json()); 
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 
@@ -485,8 +489,42 @@ app.post("/admin/remove-stream", verifyToken, checkIfAdmin, (req, res) => {
   });
 })
 
-app.post("/admin/add-stream", verifyToken, checkIfAdmin, (req, res) => {
 
+const fileFilter = (req, file, cb) => {
+  const whitelist = ['image/png', 'image/jpeg']
+
+  if (whitelist.includes(file.mimetype)) {
+    // accept file
+
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file type:'), false)
+  }
+}
+
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '../kodicable.net website/public/images/channel_logos/')
+  },
+  filename: function (req, file, cb) {
+    const callsign = req.body.callsign.toLowerCase();
+    const fileName = `${callsign}.png`
+    cb(null, fileName)
+  }
+})
+const upload = multer({ 
+  storage: storage,
+  fileFilter: fileFilter,
+})
+
+app.post("/admin/add-stream", upload.single('file'), verifyToken, checkIfAdmin, async (req, res) => {
+
+  let { callsign, rating, title} = req.body
+  const file = req.file
+
+  console.log(callsign, rating, title)
   // simple password gen for streamkey
 
   function generatePassword(length) {
@@ -502,10 +540,13 @@ app.post("/admin/add-stream", verifyToken, checkIfAdmin, (req, res) => {
   }
 
   let streamkey = generatePassword(16);
-  console.log(streamkey);
 
 
-  let { callsign, rating, title} = req.body
+
+
+
+
+
 
   if (rating !== "e" && rating !== "p" && rating !== "s" && rating !== "m"){
     return res.status(405).send("Invalid rating format");
@@ -520,6 +561,13 @@ app.post("/admin/add-stream", verifyToken, checkIfAdmin, (req, res) => {
     }
     res.status(200).send("Added")
   })
+}, (error, req, res, next) => {
+  if (error instanceof multer.MulterError) {
+      res.status(400).send("unknown error");
+      console.log(error);
+  } else if (error) {
+      res.status(422).send(error);
+  }
 })
 
 // Protected route for each user
