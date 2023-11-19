@@ -25,7 +25,7 @@
               </div>
             </div>
             <div class="account-options" id="account-options-box">
-                  <a class="account-options-button">Home</a>
+                  <a href="/" class="account-options-button">Home</a>
                   <a class="account-options-button account-options-button-logout" id="logoutButton">Logout</a>
             </div>
             <div id="body">
@@ -42,6 +42,29 @@
                             <h1 class="admin-manage-panel-header greyed-header">Database Overview</h1>
                             <i class="fa-solid fa-question database-hint" id="database-hint-button"></i>
                           </div>
+                          
+                          <div class="streams-overview-add-stream streams-row">
+                            <div class="add-stream-header-container">
+                              <h1 class="add-stream-header">Title</h1>
+                              <h1 class="add-stream-header">Streamkey</h1>
+                              <h1 class="add-stream-header">Title</h1>
+                              <h1 class="add-stream-header">Rating</h1>
+                              <h1 class="add-stream-header">Logo</h1>
+                            </div>
+                            <div class="add-stream-loading-overlay" id="add-stream-loading">
+                              <div class="lds-ring" id="add-stream-loading-circle"><div></div><div></div><div></div><div></div></div>
+                            </div>
+
+                            <div class="add-stream-input-container">
+                              <input type="text" class="add-stream-input" id="add-stream-callsign">
+                              <input type="text" placeholder="Automatic" readonly=""class="add-stream-input" id="add-stream-name">
+                              <input type="text" class="add-stream-input" id="add-stream-title">
+                              <input type="text" class="add-stream-input" id="add-stream-rating">
+                              <input type="file" class="add-stream-file" id="add-stream-file">
+                              <li class="add-stream-button" id="add-stream-button">Add</li>
+                            </div>
+                          </div>
+
                           <div class="admin-streams-overview">
                             <div class="streams-overview-columns" id="stream-columns">
                               <div class="column-name">
@@ -52,23 +75,6 @@
                                 <li class="streams-column-name">Roles</li>
                               </div>
 
-
-
-
-                              <div class="streams-overview-add-stream streams-row">
-                                <h1 class="add-stream-header">Add Stream</h1>
-                                <div class="add-stream-loading-overlay" id="add-stream-loading">
-                                  <div class="lds-ring" id="add-stream-loading-circle"><div></div><div></div><div></div><div></div></div>
-                                </div>
-
-
-                                <input type="text" class="add-stream-input" id="add-stream-callsign">
-                                <input type="text" placeholder="Automatic" readonly=""class="add-stream-input" id="add-stream-name">
-                                <input type="text" class="add-stream-input" id="add-stream-title">
-                                <input type="text" class="add-stream-input" id="add-stream-rating">
-                                <input type="file" class="add-stream-file" id="add-stream-file">
-                                <li class="add-stream-button" id="add-stream-button">Add</li>
-                              </div>
                             </div>
                         </div>
                       </div>

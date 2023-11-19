@@ -89,18 +89,36 @@
     justify-content: space-between;
 }
 .streams-overview-add-stream{
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    align-self: center;
     background-color: #1a1a1a;
     padding: 10px;
+    margin: 10px;
     border-radius: 10px;
     position: relative;
+    width: 97%;
+}
+.add-stream-input-container{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.add-stream-header-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
 }
 .add-stream-header{
-    position: absolute;
-    left: 5px;
-    top: 5px;
     font-size: 1.0rem;
+    width: 100%;
 }
+
+
 .add-stream-loading-overlay{
     display: none;
     position: absolute;

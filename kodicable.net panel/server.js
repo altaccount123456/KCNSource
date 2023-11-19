@@ -90,7 +90,7 @@ const verifyToken3 = (req, res, next) => {
 };
 
 
-
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.json()); 
@@ -524,43 +524,78 @@ app.post("/admin/add-stream", upload.single('file'), verifyToken, checkIfAdmin, 
   let { callsign, rating, title} = req.body
   const file = req.file
 
+  callsign = callsign.toLowerCase();
+
   console.log(callsign, rating, title)
   // simple password gen for streamkey
 
-  function generatePassword(length) {
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
 
-    for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-
-    return result;
-  }
-
-  let streamkey = generatePassword(16);
-
-
-
-
-
-
-
-
-  if (rating !== "e" && rating !== "p" && rating !== "s" && rating !== "m"){
-    return res.status(405).send("Invalid rating format");
-  }
+  // check if user already exists
+  function userExists() {
+    return new Promise((resolve, reject) => {
+      const existQuery = "SELECT * FROM user_pass_title WHERE callsign = ?"
+      connection.query(existQuery, [callsign], (err, results) => {
+        if (err) {
+          console.error(err)
+          reject (res.status(500).send("An Internal Server Error Occurred"))
+        }
   
-  const query = "INSERT INTO user_pass_title (callsign, streamkey, title, rating) VALUES (?, ?, ?, ?)"
+        console.log(results)
+        if (results.length > 0) {
+          resolve(true)
+        } else {
+          resolve(false)
+        }
+      })
+    })
+  }
 
-  connection.query(query, [callsign, streamkey, title, rating], (err, results) => {
-    if (err) {
-      console.error(err)
-      return res.status(500).send("err")
+  userExists().then((exists) => {
+    if (exists) {
+      console.log("User already exists")
+      return res.status(409).send("User already exists")
+    } else {
+      function generatePassword(length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+    
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+    
+        return result;
+      }
+    
+      let streamkey = generatePassword(16);
+    
+    
+    
+    
+    
+    
+    
+    
+      if (rating !== "e" && rating !== "p" && rating !== "s" && rating !== "m"){
+        return res.status(405).send("Invalid rating format");
+      }
+      
+      const query = "INSERT INTO user_pass_title (callsign, streamkey, title, rating) VALUES (?, ?, ?, ?)"
+    
+      connection.query(query, [callsign, streamkey, title, rating], (err, results) => {
+        if (err) {
+          console.error(err)
+          return res.status(500).send("err")
+        }
+        res.status(200).send("Added")
+      })
     }
-    res.status(200).send("Added")
+  }).catch((err) => {
+    return res.status(500).send("An Internal Server Error Occurred")
   })
+
+
+
 }, (error, req, res, next) => {
   if (error instanceof multer.MulterError) {
       res.status(400).send("unknown error");
@@ -568,6 +603,26 @@ app.post("/admin/add-stream", upload.single('file'), verifyToken, checkIfAdmin, 
   } else if (error) {
       res.status(422).send(error);
   }
+})
+
+// next we do nginx rtmp "on_publish"
+
+app.post("/api/on_publish", (req, res) => {
+
+  const callsign = req.body.name;
+
+  const unixTimestamp = Math.floor(Date.now() / 1000);
+  console.log(unixTimestamp);
+
+  const query = "UPDATE user_pass_title SET last_stream = ? WHERE callsign = ?"
+
+  connection.query(query, [unixTimestamp, callsign], (err, results) => {
+    if (err) {
+      console.error(err)
+      return res.status(500).send("An Internal Server Error Occurred")
+    }
+    res.status(200).send("Added")
+  })
 })
 
 // Protected route for each user

@@ -390,6 +390,11 @@ function addStream(){
       isError = true
       showAlert("Invalid file type (jpeg and png only)", isError)
       return response
+  } else if(response.status === 409) {
+      addStreamLoadingBox.style.display = "none"
+      isError = true
+      showAlert("Stream already exists!", isError)
+      return response
   } else {
       addStreamLoadingBox.style.display = "none";
       showAlert("Stream added successfully!")
