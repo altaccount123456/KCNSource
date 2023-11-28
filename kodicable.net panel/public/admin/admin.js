@@ -26,7 +26,6 @@ const adminTitleInput = document.getElementById("admin-new-title");
 const adminSaveButton = document.getElementById("admin-save-details");
 const addStreamCallsign = document.getElementById("add-stream-callsign")
 const addStreamTitle = document.getElementById("add-stream-title")
-const addStreamRating = document.getElementById("add-stream-rating")
 const addStreamFile = document.getElementById("add-stream-file");
 
 // content rating box
@@ -359,7 +358,6 @@ fetch("http://localhost:4000/api/streams", {
 function addStream(){ 
   let callsign = addStreamCallsign.value;
   let title = addStreamTitle.value;
-  let rating = addStreamRating.value;
   console.log(addStreamFile)
   let file = addStreamFile.files[0]
 
@@ -368,7 +366,6 @@ function addStream(){
   let formData = new FormData();
   formData.append("callsign", callsign);
   formData.append("title", title);
-  formData.append("rating", rating);
   formData.append("file", file);
 
   fetch("http://localhost:3500/admin/add-stream",{

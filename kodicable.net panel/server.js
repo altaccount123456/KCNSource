@@ -48,14 +48,15 @@ const verifyToken = (req, res, next) => {
   }
 
   try {
-    const { username } = jwt.verify(token, process.env.SECRET_KEY);
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const { username } = decoded;
     req.user = { username };
+
     next();
   } catch (err) {
     res.status(400).send('Invalid token.');
   }
 };
-
 const verifyToken2 = (req, res, next) => {
   const token = req.cookies.token;
 
@@ -124,15 +125,13 @@ app.post('/login',  (req, res) => {
         secretKeys[username] = uuidv4();
       }
 
-      // Generate a JWT token for the user
+      console.log(username)
       const token = jwt.sign({ username }, process.env.SECRET_KEY, { expiresIn: '30d' });
 
-      // Set the JWT token as a cookie and send a success response
       res.cookie('token', token, { httpOnly: true, secure: false, maxAge: 2592000000 })
       res.cookie('user', `${username}`, { httpOnly: false, secure: false, maxAge: 2592000000 })
       res.json(`${username}`);
     } else {
-      // Send an error response if the username or password is invalid
       res.status(401).json({ error: 'Invalid username or password' });
     }
   });
@@ -201,18 +200,18 @@ app.post('/api/changerating',verifyToken2, (req, res) => {
 });
 
 app.post('/api/getstreamkey', verifyToken3, (req, res) => {
-  // get username from cookie provied by verifyToken
+
   const { username } = req.user;
 
   const data = {
     username: username,
   };
 
-  // send a request to mysql to get the stream key for the username
+
   connection.query('SELECT streamkey FROM user_pass_title WHERE callsign = ?', [username], (err, results, fields) => {
-    // get the stream key from the results
+
     const streamKey = results[0].streamkey;
-    // send the stream key back to the client
+
     res.json({ streamKey });
   });
 
@@ -628,9 +627,14 @@ app.post("/api/on_publish", (req, res) => {
 // Protected route for each user
 app.get('/:username', verifyToken, (req, res) => {
   const { username } = req.params;
-  const templateData = { user: req.user };
-  res.setHeader('Content-Disposition', 'inline');
-  res.render('protected-page', templateData);  
+  // basic check to see if the verify token's username is the same as the params username
+  if (req.user.username === username) {
+    const templateData = { user: req.user };
+    res.setHeader('Content-Disposition', 'inline');
+    res.render('protected-page', templateData);
+  } else {
+    res.status(403).sendFile(path.join(__dirname, 'public', '403.html'));
+  }
 });
 
 app.get("/:username/admin-panel", verifyToken, (req, res) => {

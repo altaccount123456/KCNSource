@@ -136,7 +136,7 @@ body {
     border: 1px solid #fff;
     outline: none;
     cursor: pointer;
-    border-radius: 2px;
+    border-radius: 20px;
     margin-left: 10px;
     transition: all 0.3s ease-in-out;
 }
