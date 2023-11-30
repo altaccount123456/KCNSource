@@ -2,6 +2,10 @@ const callsign = window.location.pathname.split('/')[1];
 document.title = `Live Stream Dashboard for ${callsign}`;
 let isError = false;
 
+const apiUrl = "http://localhost:4000"
+
+const panelApiUrl = "http://localhost:3500"
+
 // Values are checked server side BTW.
 let maxTitleCharCount = 100
 let maxDescCharCount = 2000
@@ -39,6 +43,12 @@ const contentRatingText = document.getElementById('content-rating-text')
 const contentRatingBox = document.getElementById("content-rating-box")
 const contentRatingArrow = document.getElementById("content-rating-arrow")
 const contentRatingDropdownBox = document.getElementById("content-rating-dropdown-box") 
+
+const widgetNavItem1 = document.getElementById("widget-navitem-1")
+const widgetNavItem2 = document.getElementById("widget-navitem-2")
+
+const widgetsStreamMetaTab = document.getElementById("widgets-streammeta-tab")
+const widgetsStreamStatsTab = document.getElementById("widgets-streamstats-tab")
 
 
 let streamKey = '';
@@ -80,6 +90,27 @@ fetch(`https://live.kodicable.net/hls${callsign}/${callsign}/index.m3u8`)
     streamHealth.textContent = 'Error';
   });
 
+
+  // logic for switching between widget tabs
+  let selectedTab = 1;
+  function switchTab(){
+    if (selectedTab === 1) {
+      widgetsStreamMetaTab.style.display = "none"
+      widgetsStreamStatsTab.style.display = "flex"
+      widgetNavItem1.classList.remove("widget-nav-item-selected")
+      widgetNavItem2.classList.add("widget-nav-item-selected")
+      selectedTab = 2;
+    } else {
+      widgetsStreamMetaTab.style.display = "flex"
+      widgetsStreamStatsTab.style.display = "none"
+      widgetNavItem1.classList.add("widget-nav-item-selected")
+      widgetNavItem2.classList.remove("widget-nav-item-selected")
+      selectedTab = 1;
+    }
+  }
+
+  widgetNavItem1.addEventListener("click", switchTab)
+  widgetNavItem2.addEventListener("click", switchTab)
 
 function streamInfo(){
   fetch (`http://localhost:4000/api/streams`, {
@@ -125,6 +156,28 @@ function streamInfo(){
 streamInfo();
 setInterval(streamInfo, 15000);
 
+function checkIfAdmin() {
+  fetch("http://localhost:3500/api/role_check", {
+    method: 'GET',
+  })
+  .then(async response => {
+    if (!response.ok) {
+      throw new Error('Failed to get title');
+    } 
+    const data = await response.text();
+    if (response.status === 200) {
+      console.log("Admin");
+      $(accountOptBox).append(`<a href="/${callsign}/admin-panel" class="account-options-button">Admin</a>`);
+    } else {
+      console.log("Not admin");
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+
+checkIfAdmin();
 
 
 function streamDetails(){
@@ -456,7 +509,6 @@ function saveContentRating(){
 
 }
 
-
 function hideShowKey(){
   const hiddenEye = document.getElementById('hidden-eye');
   const visibleEye = document.getElementById('visible-eye');
@@ -496,10 +548,10 @@ function showAlert(savedText, isError) {
 
 // logic for clicking on account image
 function displayAccountOpt() {
-  if (accountOptBox.style.height == "70px") {
+  if (accountOptBox.style.height > "0px") {
     accountOptBox.style.height = "0px"
   } else {
-    accountOptBox.style.height = "70px"
+    accountOptBox.style.height = "auto"
   }
 }
 
@@ -532,25 +584,3 @@ function logout() {
 logoutButton.addEventListener("click", logout)
 
 
-
-
-// ADMIN FUNCTIONS 
-function checkRole() {
-
-  fetch(`http://localhost:3500/perms/check-role`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-
-  })
-  .then((response) => {
-    if (response.statusCode === 403){
-
-    } else if (response.statusCode === 200) {
-      console.log(response);
-    }
-  })
-}
-
-checkRole()

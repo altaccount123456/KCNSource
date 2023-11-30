@@ -32,10 +32,68 @@ app.use(cookieParser());
 
 
 
-titleData = {};
-const streamTitles = {};
-let streamName = {};
 let cachedStreams = [];
+
+let callsigns = [];
+let viewers = [];
+let currentViewerScatterData = [];
+
+function populateViewerScatterData() {
+  const query = "SELECT * FROM user_pass_title";
+
+    connection.query(query, (err, rows, fields) => {
+    if (err) {
+      console.error('Error retrieving data:', err);
+    } else {
+      rows.forEach(row => {
+        callsigns.push(row.callsign);
+        viewers.push(row.viewers);
+        currentViewerScatterData.push(row.viewer_graph);
+
+        updateViewerGraph();
+      });
+      function updateViewerGraph() {
+        callsigns.forEach((callsign, i) => {
+          const query = "UPDATE user_pass_title SET viewer_graph = ? WHERE callsign = ?";
+      
+          // do the viewer graph stuff here
+          let viewerGraph = JSON.parse(currentViewerScatterData[callsigns.indexOf(callsign)]);
+  
+  
+          if (viewerGraph.length < 30) {
+            viewerGraph.push({
+              time: Date.now(),
+              viewers: viewers[callsigns.indexOf(callsign)]
+            });
+  
+          } else {
+            viewerGraph.shift();
+            viewerGraph.push({
+              time: Date.now(),
+              viewers: viewers[callsigns.indexOf(callsign)]
+            });
+          }
+      
+          connection.query(query, [JSON.stringify(viewerGraph), callsign], (err, rows, fields) => {
+            if (err) {
+              console.error('Error retrieving data:', err);
+            } else {
+             // console.log("Success!");
+            }
+          });
+        });
+      }
+    }
+  });
+
+
+
+}
+
+setInterval(() => {
+  // populateViewerScatterData()
+}, 5000)
+populateViewerScatterData()
 
 
 async function checkStreamAvailability(links) {
@@ -61,7 +119,8 @@ async function checkStreamAvailability(links) {
           live: 'Yes',
           title: link.title,
           thumbnail: link.thumbnail,
-        };
+          viewer_stats: link.viewer_stats,
+      };
         availableStreams[link.name] = streamMetadata;
       } else {
         const streamMetadata = {
@@ -73,7 +132,8 @@ async function checkStreamAvailability(links) {
           viewers: "0",
           title: link.title,
           thumbnail: link.thumbnail,
-        };
+          viewer_stats: link.viewer_stats,
+      };
         availableStreams[link.name] = streamMetadata;
       }
     } catch (error) {
@@ -86,7 +146,8 @@ async function checkStreamAvailability(links) {
         viewers: "0",
         title: link.title,
         thumbnail: link.thumbnail,
-      };
+        viewer_stats: link.viewer_stats,
+    };
       availableStreams[link.name] = streamMetadata;
     }
   }
@@ -121,11 +182,19 @@ async function readLinksFromDatabase() {
       description: row.description,
       rating: row.rating,
       thumbnail: `https://live.kodicable.net/hls${row.callsign}/out${row.callsign}.png`,
+      viewer_stats: JSON.parse(row.viewer_graph),
     };
   });
 
   return links;
 }
+
+function updateViewerStats() {
+  console.log('Updating viewer stats...');
+  populateViewerScatterData();
+}
+setInterval(updateViewerStats, 5 * 60000); // Refresh every 5 mins
+updateViewerStats();
 
 async function updateCachedStreams() {
   try {
@@ -135,8 +204,7 @@ async function updateCachedStreams() {
   } catch (error) {
     console.error('Error updating cached streams:', error);
   }
-
-  setTimeout(updateCachedStreams, 5 * 1000); // Refresh every 5 seconds
+  setInterval(updateCachedStreams, 5 * 1000); // Refresh every 5 seconds
 }
 
 updateCachedStreams();

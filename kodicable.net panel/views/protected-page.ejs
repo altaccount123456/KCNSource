@@ -5,9 +5,13 @@
   <title>Protected Page</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/913ab3dc19.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="styles-protected.css">
-  <script src="index-protected.js" defer></script>
+  <script src="https://kit.fontawesome.com/913ab3dc19.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="styles-protected.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="index-protected.js" type="module" defer></script>
   <script src="../js/video.js"></script>
   <script src = "volumesave.js"></script>
   <link rel="icon" href="/images/KCN_mini.png" type="image/x-icon">
@@ -29,7 +33,6 @@
       </div>
     </div>
     <div class="account-options" id="account-options-box">
-          <a class="account-options-button">Admin</a>
           <a class="account-options-button account-options-button-logout" id="logoutButton">Logout</a>
     </div>
     <div id="body">
@@ -56,10 +59,11 @@
               <div id="widgets">
                 <div class="widgets-navbar">
                   <li class="widgets-navbar-navitem" id="widget-navitem-1">Stream Details</li>
+                  <li class="widgets-navbar-navitem" id="widget-navitem-2">Statistics</li>
                 
                 </div>
 
-                <div class="widgets-streammeta-tab">
+                <div class="widgets-streammeta-tab" id="widgets-streammeta-tab">
                   <div class="stream-details">
                     <p class="greyed-header">Stream Details</p>
                     <div class="stream-details-holder">
@@ -114,6 +118,9 @@
                   </div>
                 </div>
 
+                <div class="widgets-streamstats-tab" id="widgets-streamstats-tab">
+                  <canvas id="streamStats" class="widgets-streamstats-chart"></canvas>
+                </div>
               </div>
             </div>
           </div>
@@ -151,6 +158,7 @@
 
 
 
+  <script src="chart.js"></script>
 
 
 

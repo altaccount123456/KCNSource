@@ -300,8 +300,10 @@ app.post('/api/changerating', verifyToken2, (req, res) => {
 
 
 
+
+
 // ADMIN POINTS
-// these functions are very powerful, make sure we auth.
+// these functions are very powerful, make sure we auth. use "checkIfAdmin" middleware function
 
 
 // FOR ADMIN APP POINTS ONLY (a middleware function that handles auth for admins)
@@ -419,7 +421,7 @@ async function readFromDatabase() {
   const links = rows.map(row => {
     return {
       name: row.callsign.toUpperCase(),
-      streamkey: row.streamkey,
+      streamkey: `${row.callsign.toLowerCase()}?key=${row.streamkey}`,
       title: row.title,
       rating: row.rating,
       roles: row.roles,
@@ -520,79 +522,78 @@ const upload = multer({
 
 app.post("/admin/add-stream", upload.single('file'), verifyToken, checkIfAdmin, async (req, res) => {
 
-  let { callsign, rating, title} = req.body
+  let { callsign, title} = req.body
   const file = req.file
 
   callsign = callsign.toLowerCase();
 
-  console.log(callsign, rating, title)
-  // simple password gen for streamkey
+  console.log(callsign, title, file)
 
 
-  // check if user already exists
-  function userExists() {
-    return new Promise((resolve, reject) => {
-      const existQuery = "SELECT * FROM user_pass_title WHERE callsign = ?"
-      connection.query(existQuery, [callsign], (err, results) => {
-        if (err) {
-          console.error(err)
-          reject (res.status(500).send("An Internal Server Error Occurred"))
-        }
-  
-        console.log(results)
-        if (results.length > 0) {
-          resolve(true)
-        } else {
-          resolve(false)
-        }
-      })
-    })
-  }
-
-  userExists().then((exists) => {
-    if (exists) {
-      console.log("User already exists")
-      return res.status(409).send("User already exists")
-    } else {
-      function generatePassword(length) {
-        var result = '';
-        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        var charactersLength = characters.length;
+  if (callsign !== "" && file !== undefined) {
+     // check if user already exists
+    function userExists() {
+      return new Promise((resolve, reject) => {
+        const existQuery = "SELECT * FROM user_pass_title WHERE callsign = ?"
+        connection.query(existQuery, [callsign], (err, results) => {
+          if (err) {
+            console.error(err)
+            reject (res.status(500).send("An Internal Server Error Occurred"))
+          }
     
-        for (var i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-    
-        return result;
-      }
-    
-      let streamkey = generatePassword(16);
-    
-    
-    
-    
-    
-    
-    
-    
-      if (rating !== "e" && rating !== "p" && rating !== "s" && rating !== "m"){
-        return res.status(405).send("Invalid rating format");
-      }
-      
-      const query = "INSERT INTO user_pass_title (callsign, streamkey, title, rating) VALUES (?, ?, ?, ?)"
-    
-      connection.query(query, [callsign, streamkey, title, rating], (err, results) => {
-        if (err) {
-          console.error(err)
-          return res.status(500).send("err")
-        }
-        res.status(200).send("Added")
+          console.log(results)
+          if (results.length > 0) {
+            resolve(true)
+          } else {
+            resolve(false)
+          }
+        })
       })
     }
-  }).catch((err) => {
-    return res.status(500).send("An Internal Server Error Occurred")
-  })
-
+  
+    userExists().then((exists) => {
+      if (exists) {
+        console.log("User already exists")
+        return res.status(409).send("User already exists")
+      } else {
+        function generatePassword(length) {
+          var result = '';
+          var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+          var charactersLength = characters.length;
+      
+          for (var i = 0; i < length; i++) {
+              result += characters.charAt(Math.floor(Math.random() * charactersLength));
+          }
+      
+          return result;
+        }
+      
+        let streamkey = generatePassword(16);
+      
+      
+      
+      
+      
+      
+      
+      
+        
+        const query = "INSERT INTO user_pass_title (callsign, streamkey, title, rating) VALUES (?, ?, ?, ?)"
+      
+        connection.query(query, [callsign, streamkey, title, "e"], (err, results) => {
+          if (err) {
+            console.error(err)
+            return res.status(500).send("err")
+          }
+          res.status(200).send("Added")
+        })
+      }
+    }).catch((err) => {
+      return res.status(500).send("An Internal Server Error Occurred")
+    })
+  } else {
+    res.status(400).send("No callsign provided")
+  }
 
 
 }, (error, req, res, next) => {
@@ -623,6 +624,10 @@ app.post("/api/on_publish", (req, res) => {
     res.status(200).send("Added")
   })
 })
+
+app.get("/api/role_check", verifyToken, checkIfAdmin, (req, res) => {
+  res.sendStatus(200)
+});
 
 // Protected route for each user
 app.get('/:username', verifyToken, (req, res) => {

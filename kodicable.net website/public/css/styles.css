@@ -109,6 +109,9 @@ a{
     width: 100%;
     height: 60px;
 }
+.footer-copyright{
+    color: #ffffff;
+}
 .affiliate-img{
     object-fit: contain;
     width: 50px;
@@ -656,7 +659,13 @@ a{
         height: auto;
     }
 }
-
+/* START OF ABOUT US PAGE
+*/
+    .aboutus-page-main {
+        margin: 0 auto;
+        outline: auto;
+        width: 60%;
+    }
 /* Phones kinda */
 @media screen and (max-width: 555px) {
     .links, .join-link{

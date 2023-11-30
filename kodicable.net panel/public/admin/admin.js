@@ -392,6 +392,10 @@ function addStream(){
       isError = true
       showAlert("Stream already exists!", isError)
       return response
+  } else if (response.status === 400) {
+    addStreamLoadingBox.style.display = "none"
+    isError = true
+    showAlert("No callsign or logo provided!", isError)
   } else {
       addStreamLoadingBox.style.display = "none";
       showAlert("Stream added successfully!")
