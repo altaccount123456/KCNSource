@@ -1,3 +1,6 @@
+import { initFetch } from "./chart.js";
+
+
 const callsign = window.location.pathname.split('/')[1];
 document.title = `Live Stream Dashboard for ${callsign}`;
 let isError = false;
@@ -43,6 +46,7 @@ const contentRatingText = document.getElementById('content-rating-text')
 const contentRatingBox = document.getElementById("content-rating-box")
 const contentRatingArrow = document.getElementById("content-rating-arrow")
 const contentRatingDropdownBox = document.getElementById("content-rating-dropdown-box") 
+const contentRatingSaveButton = document.getElementById("content-rating-save-button")
 
 const widgetNavItem1 = document.getElementById("widget-navitem-1")
 const widgetNavItem2 = document.getElementById("widget-navitem-2")
@@ -50,67 +54,53 @@ const widgetNavItem2 = document.getElementById("widget-navitem-2")
 const widgetsStreamMetaTab = document.getElementById("widgets-streammeta-tab")
 const widgetsStreamStatsTab = document.getElementById("widgets-streamstats-tab")
 
+const multistreamingAddButton = document.getElementById("multistreaming-button-add")
+const multistreamingRemoveButton = document.getElementById("multistreaming-button-remove")
+const multistreamingSaveButton = document.getElementById("multistreaming-button-save")
+
+
+const copyButtonKey = document.getElementById("copy-button-key")
+const copyButtonUrl = document.getElementById("copy-button-url")
+
+const hiddenEye = document.getElementById('hidden-eye');
+const visibleEye = document.getElementById('visible-eye');
+
+
+const editTitleButton = document.getElementById('edit-title');
+
+
+const overlayCloseButton = document.getElementById('overlay-close-button');
+const overlaySaveButton = document.getElementById('overlay-save-button');
+
+const streamHealth = document.getElementById('stream-health');
+
+const videoContainer = document.getElementById('video-preview');
+
+
 
 let streamKey = '';
 
-const src = `https://live.kodicable.net/hls${callsign}/${callsign}/index.m3u8`;
-const poster = `https://live.kodicable.net/hls${callsign}/out${callsign}.png`;
+let selectedTab = 1;
 
-const video = document.createElement('video');
-video.id = 'my-video';
-video.className = 'video-js vjs-big-play-centered';
-video.controls = true;
-video.preload = 'auto';
-video.autoplay = true;
-video.setAttribute('data-setup', '{"liveui": true}');
-video.setAttribute('width', '');
-video.setAttribute('height', '');
-
-const source = document.createElement('source');
-source.setAttribute('src', src);
-source.setAttribute('type', 'application/vnd.apple.mpegurl');
-
-video.appendChild(source);
-video.setAttribute('poster', poster);
-
-const videoContainer = document.getElementById('video-preview');
-videoContainer.appendChild(video);
-const streamHealth = document.getElementById('stream-health');
-
-fetch(`https://live.kodicable.net/hls${callsign}/${callsign}/index.m3u8`)
-  .then(response => {
-    if (response.ok) {
-      streamHealth.textContent = 'Good';
-    } else {
-      streamHealth.textContent = ' Poor';
-    }
-  })
-  .catch(error => {
-    console.error(error);
-    streamHealth.textContent = 'Error';
-  });
-
-
-  // logic for switching between widget tabs
-  let selectedTab = 1;
-  function switchTab(){
-    if (selectedTab === 1) {
-      widgetsStreamMetaTab.style.display = "none"
-      widgetsStreamStatsTab.style.display = "flex"
-      widgetNavItem1.classList.remove("widget-nav-item-selected")
-      widgetNavItem2.classList.add("widget-nav-item-selected")
-      selectedTab = 2;
-    } else {
-      widgetsStreamMetaTab.style.display = "flex"
-      widgetsStreamStatsTab.style.display = "none"
-      widgetNavItem1.classList.add("widget-nav-item-selected")
-      widgetNavItem2.classList.remove("widget-nav-item-selected")
-      selectedTab = 1;
-    }
+function switchTab(){
+  if (selectedTab === 1) {
+    widgetsStreamMetaTab.style.display = "none"
+    widgetsStreamStatsTab.style.display = "flex"
+    widgetNavItem1.classList.remove("widget-nav-item-selected")
+    widgetNavItem2.classList.add("widget-nav-item-selected")
+    selectedTab = 2;
+  } else {
+    widgetsStreamMetaTab.style.display = "flex"
+    widgetsStreamStatsTab.style.display = "none"
+    widgetNavItem1.classList.add("widget-nav-item-selected")
+    widgetNavItem2.classList.remove("widget-nav-item-selected")
+    selectedTab = 1;
   }
+}
 
-  widgetNavItem1.addEventListener("click", switchTab)
-  widgetNavItem2.addEventListener("click", switchTab)
+export let videoAppeneded = false;
+let notLiveAppeneded = false;
+let initFetchCalled = false;
 
 function streamInfo(){
   fetch (`http://localhost:4000/api/streams`, {
@@ -137,6 +127,8 @@ function streamInfo(){
 
     const rating = apiCallsign.rating
 
+    console.log(ratings[rating])
+
     title.innerHTML = apiCallsign.title
     newTitleHolder.value = apiCallsign.title
     accountImg.src = `https://kodicable.net/images/channel_logos/${apiCallsign.name.toLowerCase()}.png`
@@ -147,6 +139,90 @@ function streamInfo(){
     // getting the characters initially 
     titleCharacterCount.innerHTML = `(${newTitleHolder.value.length}/${maxTitleCharCount})`
     descCharacterCount.innerHTML = `(${newDescHolder.value.length}/${maxDescCharCount})`
+
+    if(apiCallsign.live === "Yes") {
+      console.log("Stream is live")
+
+      if (!videoAppeneded) {
+        if (!initFetchCalled) {
+          initFetchCalled = true;
+          initFetch()
+        }
+
+          const src = apiCallsign.url;
+          const poster = apiCallsign.thumbnail;
+  
+          const video = document.createElement('video');
+          video.id = 'my-video';
+          video.className = 'video-js vjs-big-play-centered';
+          video.controls = true;
+          video.preload = 'auto';
+          video.autoplay = true;
+          video.setAttribute('data-setup', '{"liveui": true}');
+          video.setAttribute('width', '');
+          video.setAttribute('height', '');
+  
+          const source = document.createElement('source');
+          source.setAttribute('src', src);
+          source.setAttribute('type', 'application/vnd.apple.mpegurl');
+  
+          video.appendChild(source);
+          video.setAttribute('poster', poster);
+  
+          videoContainer.innerHTML = '';
+
+  
+          videoContainer.appendChild(video);
+
+          const player = videojs('my-video', {
+            liveui: true,
+            controlBar: {
+              volumePanel: {
+                inline: false
+              }
+            }
+          });
+  
+          videoAppeneded = true;
+      }
+
+      streamHealth.innerHTML = "Good"
+
+      widgetNavItem1.addEventListener("click", switchTab)
+
+      widgetNavItem2.addEventListener("click", switchTab)
+      widgetNavItem2.classList.toggle("widgets-navbar-navitem-hover")
+      widgetNavItem2.style.cursor = "pointer"
+      widgetNavItem2.style.color = "white";
+      widgetNavItem2.setAttribute("title", "")
+
+    } else {
+      if (!notLiveAppeneded) {
+        $(videoContainer).append(`<i style="color:white; font-size:3rem;" class="fa-solid fa-ban"></i>
+        <p style="color:white; font-size:1.2rem;">Stream is offline</p>`);
+        notLiveAppeneded = true;
+      }
+      if (videoAppeneded) {
+        const video = document.getElementById('my-video');
+        videojs('my-video').dispose()
+        $(videoContainer).append(`<i style="color:white; font-size:3rem;" class="fa-solid fa-ban"></i>
+        <p style="color:white; font-size:1.2rem;">Stream is offline</p>`);
+        notLiveAppeneded = true;
+        videoAppeneded = false;
+      }
+
+
+      streamHealth.innerHTML = "Offline"
+
+      widgetNavItem1.removeEventListener("click", switchTab)
+
+      widgetNavItem2.removeEventListener("click", switchTab)
+      widgetNavItem2.style.cursor = "not-allowed"
+      widgetNavItem2.classList.toggle("widgets-navbar-navitem-hover")
+      widgetNavItem2.style.color = "#b3b3b3"
+      widgetNavItem2.setAttribute("title", "Stream is offline")
+
+    }
   })
   .catch(error => {
     console.error(error);
@@ -195,7 +271,7 @@ function streamDetails(){
     }
   })
   .then((data) => {
-    streamKey = `wpey?key=${data.streamKey}`;
+    streamKey = `${callsign}?key=${data.streamKey}`;
     streamKeyHolder.value = streamKey
     streamUrlHolder.value = (`rtmp://live.kodicable.net/${callsign}`);
   })
@@ -252,6 +328,8 @@ function saveStreamDetails() {
   }
 }
 
+overlaySaveButton.addEventListener('click', saveStreamDetails)
+
 // title and desc character count logic
 
 
@@ -280,23 +358,29 @@ function openStreamTitleBox(){
   }
 }
 
-// its late idk what i am doing anymore
+editTitleButton.addEventListener('click', openStreamTitleBox)
+
 function closeEditStreamTitleBox(){
   overlay.style.width = '0px';
   overlay.style.height = '0px';
 }
+
+overlayCloseButton.addEventListener('click', closeEditStreamTitleBox)
 
 function copyStreamKey() {
   console.log(streamKey)
   navigator.clipboard.writeText(streamKey).then(showAlert('Copied stream key to clipboard', false))
   
 }
+copyButtonKey.addEventListener('click', copyStreamKey)
 
 function copyStreamUrl() {
   streamUrlHolder.select();
   document.execCommand('copy');
   showAlert('Copied stream url to clipboard', false);
 }
+
+copyButtonUrl.addEventListener('click', copyStreamUrl)
 
 
 // START OF MULTISTRAMING FUNCTS
@@ -380,6 +464,8 @@ function addMultistreamingPoint(){
 
 }
 
+multistreamingAddButton.addEventListener('click', addMultistreamingPoint)
+
 function removeMultistreamingPoint(){
   if (multistreamingPoints.length > 0) {
     var containerToRemove = document.getElementById(`multistreaming-container-${multistreamingPoints.length - 1}`);
@@ -390,6 +476,8 @@ function removeMultistreamingPoint(){
     showAlert('You have no multistreaming points to remove', isError);
   }
 }
+
+multistreamingRemoveButton.addEventListener('click', removeMultistreamingPoint)
 
 function isUrlValid(urls) {
   for (let i = 0; i < urls.length; i++) {
@@ -445,6 +533,8 @@ function saveMultistreamingPoints() {
     showAlert(`Please enter a valid URL (has to start with "rtmp://")`, isError);
   }
 }
+
+multistreamingSaveButton.addEventListener('click', saveMultistreamingPoints)
 
 let rotated = false;
 let dropped = false;
@@ -509,9 +599,9 @@ function saveContentRating(){
 
 }
 
+contentRatingSaveButton.addEventListener('click', saveContentRating)
+
 function hideShowKey(){
-  const hiddenEye = document.getElementById('hidden-eye');
-  const visibleEye = document.getElementById('visible-eye');
 
   // use display none to hide the key
   if (hiddenEye.style.display === 'none') {
@@ -526,6 +616,8 @@ function hideShowKey(){
 
 }
 
+visibleEye.addEventListener('click', hideShowKey)
+hiddenEye.addEventListener('click', hideShowKey)
 // the alert box
 
 

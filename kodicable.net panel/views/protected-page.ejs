@@ -7,13 +7,13 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   <script src="https://kit.fontawesome.com/913ab3dc19.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="styles-protected.css">
+  <script src="index-protected.js" type="module" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-  <script src="index-protected.js" type="module" defer></script>
-  <script src="../js/video.js"></script>
-  <script src = "volumesave.js"></script>
+  <script src ="../js/video.js"></script>
+  <script type="module" src = "volumesave.js"></script>
+  <script type="module" defer src="chart.js"></script>
   <link rel="icon" href="/images/KCN_mini.png" type="image/x-icon">
   <link href="../js/video-js.css" rel="stylesheet" >  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -48,7 +48,7 @@
                   <p class="greyed-title">Title</p>
                   <div id="stream-details-holder">
                     <p class="white-header" id="title">Title</p>
-                    <button id="edit-title" class="styled-button" onclick="openStreamTitleBox()">Edit</button>
+                    <button id="edit-title" class="styled-button">Edit</button>
                   </div>
                   <p class="greyed-title">Stream Health</p>
                   <p class="white-header" id="stream-health"></p>
@@ -58,8 +58,8 @@
               </div>
               <div id="widgets">
                 <div class="widgets-navbar">
-                  <li class="widgets-navbar-navitem" id="widget-navitem-1">Stream Details</li>
-                  <li class="widgets-navbar-navitem" id="widget-navitem-2">Statistics</li>
+                  <li class="widgets-navbar-navitem widgets-navbar-navitem-hover" id="widget-navitem-1">Stream Details</li>
+                  <li class="widgets-navbar-navitem widgets-navbar-navitem-hover" id="widget-navitem-2">Statistics</li>
                 
                 </div>
 
@@ -70,16 +70,16 @@
                       <p class="greyed-title">Stream Key</p>
                       <div class="stream-details-container">
                         <input class="stream-details-text" type="password" readonly="" autocomplete="off" id="stream-key" value="">
-                        <i style="cursor:pointer; margin-left: 10px; display:none;" id="visible-eye" class="fa-solid fa-eye fa-lg streamkey-eye" style="color: #ffffff;" onclick="hideShowKey()"></i>
-                        <i style="cursor:pointer; margin-left: 10px;" id="hidden-eye" class="fa-solid fa-eye-slash fa-lg streamkey-eye" onclick="hideShowKey()"></i>
-                        <button class="styled-button" onclick="copyStreamKey()">Copy</button>
+                        <i style="cursor:pointer; margin-left: 10px; display:none;" id="visible-eye" class="fa-solid fa-eye fa-lg streamkey-eye" style="color: #ffffff;"></i>
+                        <i style="cursor:pointer; margin-left: 10px;" id="hidden-eye" class="fa-solid fa-eye-slash fa-lg streamkey-eye" ></i>
+                        <button class="styled-button" id="copy-button-key" id="copy-button-key"">Copy</button>
                       </div>
                     </div>
                     <div class="stream-details-holder">
                       <p class="greyed-title">Stream URL</p>
                       <div class="stream-details-container">
                         <input class="stream-details-text" type="text" readonly="" autocomplete="off" id="stream-url" value="">
-                        <button class="styled-button" onclick="copyStreamUrl()">Copy</button>
+                        <button class="styled-button" id="copy-button-url">Copy</button>
                       </div>
                     </div>
                   </div>
@@ -90,9 +90,9 @@
                       <p class="greyed-title">Multistreaming Points (restart stream to apply)</p>
                       <p class="greyed-title"></p>
                       <div class="multistreaming-addpoint">
-                        <button style="margin: 0 0 10px 0;" class="styled-button" onclick="addMultistreamingPoint()">Add</button>
-                        <button style="margin: 0 0 10px 0;" class="styled-button" onclick="removeMultistreamingPoint()">Remove</button>
-                        <button style="margin: 0 0 10px 0;" class="styled-button" onclick="saveMultistreamingPoints()">Save Points</button>
+                        <button style="margin: 0 0 10px 0;" class="styled-button" id="multistreaming-button-add">Add</button>
+                        <button style="margin: 0 0 10px 0;" class="styled-button" id="multistreaming-button-remove">Remove</button>
+                        <button style="margin: 0 0 10px 0;" class="styled-button" id="multistreaming-button-save">Save Points</button>
                       </div>
                     </div>
                   </div>
@@ -101,7 +101,7 @@
                       <p class="greyed-header">Content Rating</p>
                         <div class="stream-details-container">
                           <div class="content-rating-selected" id="content-rating-box">
-                            <p class="content-rating-selected-text" id="content-rating-text" data-selected-rating=""">
+                            <p class="content-rating-selected-text" id="content-rating-text" data-selected-rating="">
                               
                             </p>
                             <i class="fa-solid fa-angle-right content-rating-arrow" id="content-rating-arrow"></i>
@@ -113,7 +113,7 @@
                             <li data-rating="m" data-rating-text="Mature" class="content-rating-button">Mature (M)</li>
                           </div>
                         
-                          <button class="styled-button" onclick="saveContentRating()">Save</button>
+                          <button id="content-rating-save-button" class="styled-button">Save</button>
                         </div>
                   </div>
                 </div>
@@ -129,7 +129,7 @@
       <div class="overlay-box" id="overlay">
         <div class="overlay-box-header">
           <p class="white-header overlay-box-header">Edit Stream Details</p>
-          <p class="greyed-title close-button" onclick="closeEditStreamTitleBox()">Close</p>
+          <p class="greyed-title close-button" id="overlay-close-button">Close</p>
         </div>
         <div class="overlay-box-wrapper">
           <div class="overlay-box-title-container">
@@ -145,7 +145,7 @@
           </div>
 
           <div class="overlay-box-button-container">
-            <button class="overlay-save" id="overlaySaveButton" onclick="saveStreamDetails()">Save</button>
+            <button class="overlay-save" id="overlay-save-button">Save</button>
           </div>
         </div>
       </div>
@@ -155,10 +155,6 @@
     </div>
   </div>
     
-
-
-
-  <script src="chart.js"></script>
 
 
 

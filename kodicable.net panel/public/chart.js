@@ -1,23 +1,49 @@
+let statsChart;
 const callsign = window.location.pathname.split('/')[1];
-const xyValues = []
+let xyValues = []
 
 
-fetch("http://localhost:4000/api/streams", {
+export function initFetch() {
+  console.log("Fetching data")
+  fetch("http://localhost:4000/api/streams", {
+      method: "GET",
+      headers: {
+          "Content-Type": "application/json"
+      },
+  })
+  .then(response => response.json())
+  .then(data => {
+      data.streams[callsign.toUpperCase()].viewer_stats.forEach((element, index) => {
+          xyValues.push({x: element.time, y: element.viewers})
+      });
+      initChart()
+  })
+}
+
+function fetchDataUpdate() {
+  fetch("http://localhost:4000/api/streams", {
     method: "GET",
     headers: {
         "Content-Type": "application/json"
     },
-})
-.then(response => response.json())
-.then(data => {
+  })
+  .then(response => response.json())
+  .then((data) => {
+    const newXYValues = []
     data.streams[callsign.toUpperCase()].viewer_stats.forEach((element, index) => {
-        xyValues.push({x: element.time, y: element.viewers})
+      newXYValues.push({x: element.time, y: element.viewers})
     });
-    initChart()
-})
+    updateChart(statsChart, newXYValues)
+  })
+}
+
+function updateChart(chart, newData) {
+  chart.data.datasets[0].data = newData
+  chart.update()
+}
 
 function initChart() {
-    const statsChart = new Chart("streamStats", {
+     statsChart = new Chart("streamStats", {
         type: "scatter",
         data: {
           datasets: [{
@@ -38,6 +64,9 @@ function initChart() {
                 },
                 y: {
                   min: 0,
+                  ticks: {
+                    stepSize: 1,
+                  },
                 },
             },
             responsive: true,
@@ -49,4 +78,7 @@ function initChart() {
             },
           }
     })
+
+    fetchDataUpdate()
+    setInterval(fetchDataUpdate, 5000)
 }

@@ -34,38 +34,41 @@ app.use(cookieParser());
 
 let cachedStreams = [];
 
-let callsigns = [];
-let viewers = [];
-let currentViewerScatterData = [];
 
 function populateViewerScatterData() {
-  const query = "SELECT * FROM user_pass_title";
+  return new Promise((resolve, reject) => {
+    let callsigns = [];
+    let viewers = [];
+    let currentViewerScatterData = [];
+
+    const query = "SELECT * FROM user_pass_title";
 
     connection.query(query, (err, rows, fields) => {
-    if (err) {
-      console.error('Error retrieving data:', err);
-    } else {
-      rows.forEach(row => {
-        callsigns.push(row.callsign);
-        viewers.push(row.viewers);
-        currentViewerScatterData.push(row.viewer_graph);
-
+      if (err) {
+        console.error('Error retrieving data:', err);
+        reject(err);
+      } else {
+        rows.forEach(row => {
+          callsigns.push(row.callsign);
+          viewers.push(row.viewers);
+          currentViewerScatterData.push(row.viewer_graph);
+        });
         updateViewerGraph();
-      });
-      function updateViewerGraph() {
-        callsigns.forEach((callsign, i) => {
+      }
+    });
+
+    function updateViewerGraph() {
+      let updatePromises = callsigns.map((callsign, i) => {
+        return new Promise((resolve, reject) => {
           const query = "UPDATE user_pass_title SET viewer_graph = ? WHERE callsign = ?";
-      
-          // do the viewer graph stuff here
+
           let viewerGraph = JSON.parse(currentViewerScatterData[callsigns.indexOf(callsign)]);
-  
-  
+
           if (viewerGraph.length < 30) {
             viewerGraph.push({
               time: Date.now(),
               viewers: viewers[callsigns.indexOf(callsign)]
             });
-  
           } else {
             viewerGraph.shift();
             viewerGraph.push({
@@ -73,28 +76,32 @@ function populateViewerScatterData() {
               viewers: viewers[callsigns.indexOf(callsign)]
             });
           }
-      
+
           connection.query(query, [JSON.stringify(viewerGraph), callsign], (err, rows, fields) => {
             if (err) {
               console.error('Error retrieving data:', err);
+              reject(err);
             } else {
-             // console.log("Success!");
+              resolve();
             }
           });
         });
-      }
+      });
+
+      Promise.all(updatePromises)
+        .then(() => resolve())
+        .catch(err => reject(err));
     }
   });
-
-
-
 }
 
-setInterval(() => {
-  // populateViewerScatterData()
-}, 5000)
 populateViewerScatterData()
 
+
+
+setInterval(() => {
+  populateViewerScatterData()
+}, 3 * 60 * 1000); // Every 5 minutes
 
 async function checkStreamAvailability(links) {
   const availableStreams = {};
@@ -189,12 +196,6 @@ async function readLinksFromDatabase() {
   return links;
 }
 
-function updateViewerStats() {
-  console.log('Updating viewer stats...');
-  populateViewerScatterData();
-}
-setInterval(updateViewerStats, 5 * 60000); // Refresh every 5 mins
-updateViewerStats();
 
 async function updateCachedStreams() {
   try {
@@ -204,8 +205,9 @@ async function updateCachedStreams() {
   } catch (error) {
     console.error('Error updating cached streams:', error);
   }
-  setInterval(updateCachedStreams, 5 * 1000); // Refresh every 5 seconds
 }
+
+setInterval(updateCachedStreams, 5 * 1000);
 
 updateCachedStreams();
 

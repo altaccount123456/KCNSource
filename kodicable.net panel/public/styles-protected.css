@@ -234,6 +234,11 @@ body {
     flex: none;
     width:449px;
     height: 100%;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 #my-video{
     width: 100%;
@@ -271,7 +276,7 @@ body {
     text-decoration: none;
     transition-duration: 0.2s;
 }
-.widgets-navbar-navitem:hover{
+.widgets-navbar-navitem-hover:hover{
     background-color: #181818;
 }
 .widgets-streammeta-tab{
