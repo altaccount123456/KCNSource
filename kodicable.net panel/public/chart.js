@@ -1,3 +1,9 @@
+import {
+  apiUrl,
+}
+from './index-protected.js'
+
+
 let statsChart;
 const callsign = window.location.pathname.split('/')[1];
 let xyValues = []
@@ -7,7 +13,7 @@ let chartVis = false;
 
 export function initFetch() {
   console.log("Fetching data")
-  fetch("http://localhost:4000/api/streams", {
+  fetch(`${apiUrl}/api/streams`, {
       method: "GET",
       headers: {
           "Content-Type": "application/json"
@@ -23,7 +29,7 @@ export function initFetch() {
 }
 
 function fetchDataUpdate() {
-  fetch("http://localhost:4000/api/streams", {
+  fetch(`${apiUrl}/api/streams`, {
     method: "GET",
     headers: {
         "Content-Type": "application/json"

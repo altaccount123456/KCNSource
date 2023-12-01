@@ -6,11 +6,11 @@ const callsign = window.location.pathname.split('/')[1];
 document.title = `Live Stream Dashboard for ${callsign}`;
 let isError = false;
 
-const apiUrl = "http://localhost:4000"
+export const apiUrl = "http://localhost:4000"
 
-const panelApiUrl = "http://localhost:3500"
+export const panelApiUrl = "http://localhost:3500"
 
-// Values are checked server side BTW.
+// Values are checked server side aswell BTW.
 let maxTitleCharCount = 100
 let maxDescCharCount = 2000
 
@@ -104,7 +104,7 @@ let notLiveAppeneded = false;
 let volumeSavedCalled = false;
 
 function streamInfo(){
-  fetch (`http://localhost:4000/api/streams`, {
+  fetch (`${apiUrl}/api/streams`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -243,7 +243,7 @@ streamInfo();
 setInterval(streamInfo, 15000);
 
 function checkIfAdmin() {
-  fetch("http://localhost:3500/api/role_check", {
+  fetch(`${panelApiUrl}/api/role_check`, {
     method: 'GET',
   })
   .then(async response => {
@@ -267,7 +267,7 @@ checkIfAdmin();
 
 
 function streamDetails(){
-  fetch(`http://localhost:3500/api/getstreamkey`, {
+  fetch(`${panelApiUrl}/api/getstreamkey`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -311,7 +311,7 @@ function saveStreamDetails() {
     isError = true;
     showAlert("Please enter a title", isError)
   } else{
-    fetch(`http://localhost:3500/api/changedetails`, {
+    fetch(`${panelApiUrl}/api/changedetails`, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json' },
@@ -407,7 +407,7 @@ let maxPoints = 5;
 let points = [];
 
 function getMultistreamingPoints(){
-  fetch(`http://localhost:3500/api/getMultistreamingPoints`, {
+  fetch(`${panelApiUrl}/api/getMultistreamingPoints`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -515,7 +515,7 @@ function saveMultistreamingPoints() {
       points: points,
     };
 
-    fetch('http://localhost:3500/api/sendMultistreamingPoints', {
+    fetch(`${panelApiUrl}/api/sendMultistreamingPoints`, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json' },
@@ -591,7 +591,7 @@ function saveContentRating(){
 
   const data = { newRating: rating, username: callsign}
 
-  fetch('http://localhost:3500/api/changerating', {
+  fetch(`${panelApiUrl}/api/changerating`, {
     method: 'POST',
     body: JSON.stringify(data),
     headers: { 'Content-Type': 'application/json' },
@@ -665,7 +665,7 @@ accountImgHolder.addEventListener("click", displayAccountOpt )
 // logout logic 
 
 function logout() {
-  fetch(`http://localhost:3500/api/logout`, {
+  fetch(`${panelApiUrl}/api/logout`, {
     method: 'GET',
   })
   .then((response) => {

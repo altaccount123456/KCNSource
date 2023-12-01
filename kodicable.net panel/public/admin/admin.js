@@ -40,6 +40,10 @@ const databaseHintButton = document.getElementById('database-hint-button')
 const databaseHintBox = document.getElementById('hint-overlay')
 const databaseHintClose = document.getElementById('database-hint-close')
 
+const apiUrl = "http://localhost:4000"
+
+const panelApiUrl = "http://localhost:3500"
+
 
 
 let selectedStream;
@@ -49,7 +53,7 @@ let isError = false;
 const streamColumns = document.getElementById("stream-columns");
 
 
-fetch("http://localhost:3500/admin/database", {
+fetch(`${panelApiUrl}/admin/database`, {
   method: "GET",
   headers: {
     'Content-Type': 'application/json'
@@ -146,7 +150,7 @@ function onOptionsClick(options) {
 
   // yes, we could cache the data in an object, however we need the most current data.
 
-  fetch("http://localhost:4000/api/streams", {
+  fetch(`${apiUrl}/api/streams`, {
     method: "GET",
     headers: {
       'Content-Type': 'application/json'
@@ -197,7 +201,7 @@ function adminSaveStreamDetails() {
   let newDesc = adminDescInput.value
   let newRating = contentRatingText.getAttribute("data-selected-rating")
   let callsign = selectedStream
-  fetch("http://localhost:3500/admin/save-stream",{
+  fetch(`${panelApiUrl}/admin/save-stream`,{
     method: "POST",
     body: JSON.stringify({ newTitle: newTitle, newDesc: newDesc, callsign: callsign, newRating: newRating}),
     headers: {
@@ -258,7 +262,7 @@ function closeConfirmEditBox() {
 
 function adminRemoveStream() {
   let streamToRemove = selectedStream
-  fetch("http://localhost:3500/admin/remove-stream", {
+  fetch(`${panelApiUrl}/admin/remove-stream`, {
     method: "POST",
     body: JSON.stringify({ callsign: streamToRemove }) ,
     headers: {
@@ -329,7 +333,7 @@ contentRatingDropdownBox.addEventListener('click', function(e){
 })
 
 // initial fetch for account data
-fetch("http://localhost:4000/api/streams", {
+fetch(`${apiUrl}/api/streams`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -368,7 +372,7 @@ function addStream(){
   formData.append("title", title);
   formData.append("file", file);
 
-  fetch("http://localhost:3500/admin/add-stream",{
+  fetch(`${panelApiUrl}/admin/add-stream`,{
     method: "POST",
     body: formData,
   })
@@ -474,7 +478,7 @@ function showAlert(savedText, isError) {
   // logout logic 
 
 function logout() {
-  fetch(`http://localhost:3500/api/logout`, {
+  fetch(`${panelApiUrl}/api/logout`, {
     method: 'GET',
   })
   .then((response) => {
