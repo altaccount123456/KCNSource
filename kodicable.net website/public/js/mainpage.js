@@ -2,11 +2,20 @@ const images = document.querySelectorAll('.slideshow-image');
 let currentIndex = 0;
 
 function slideshow() {
-    images[currentIndex].style.opacity = 0;
-    currentIndex = (currentIndex + 1) % images.length;
-    images[currentIndex].style.opacity = 0.2;
-}
+  setTimeout(() => {
+    images[currentIndex].classList.remove('image-zoom');
+  }, 300)
+  images[currentIndex].style.opacity = 0;
 
+  currentIndex = (currentIndex + 1) % images.length;
+
+  setTimeout(() => {
+      images[currentIndex].style.opacity = 0.3;
+      setTimeout(() => {
+          images[currentIndex].classList.add('image-zoom');
+      }, 100); 
+  }, 1000); 
+}
 slideshow();
 let slideshowInterval = setInterval(slideshow, 10000);
 let subtextIndex = 0;
