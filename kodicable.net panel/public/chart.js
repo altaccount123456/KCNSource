@@ -2,6 +2,8 @@ let statsChart;
 const callsign = window.location.pathname.split('/')[1];
 let xyValues = []
 
+let chartVis = false;
+
 
 export function initFetch() {
   console.log("Fetching data")
@@ -43,11 +45,17 @@ function updateChart(chart, newData) {
 }
 
 function initChart() {
+  const epoch = Date.now()
+  console.log(epoch)
+      if (chartVis) {
+        statsChart.destroy()
+        chartVis = false;
+      }
      statsChart = new Chart("streamStats", {
         type: "scatter",
         data: {
           datasets: [{
-            pointRadius: 4,
+            pointRadius: 6,
             showLine: true,
             pointBackgroundColor: "rgb(255,255,255)",
             borderColor: 'rgb(255 ,255 , 255)',
@@ -59,7 +67,10 @@ function initChart() {
                 x: {
                     type: 'time',
                     time: {
-                        parser: 'h:mm: a',
+                        parser: 'h:mm a',
+                    },
+                    ticks: {
+                      stepSize: 5,
                     }
                 },
                 y: {
@@ -78,7 +89,8 @@ function initChart() {
             },
           }
     })
+    chartVis = true;
 
     fetchDataUpdate()
-    setInterval(fetchDataUpdate, 5000)
+    const updateInterval = setInterval(fetchDataUpdate, 5000)
 }

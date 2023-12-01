@@ -1,4 +1,5 @@
 import { initFetch } from "./chart.js";
+import { videoVolumeSave } from "./volumesave.js";
 
 
 const callsign = window.location.pathname.split('/')[1];
@@ -100,7 +101,7 @@ function switchTab(){
 
 export let videoAppeneded = false;
 let notLiveAppeneded = false;
-let initFetchCalled = false;
+let volumeSavedCalled = false;
 
 function streamInfo(){
   fetch (`http://localhost:4000/api/streams`, {
@@ -144,10 +145,6 @@ function streamInfo(){
       console.log("Stream is live")
 
       if (!videoAppeneded) {
-        if (!initFetchCalled) {
-          initFetchCalled = true;
-          initFetch()
-        }
 
           const src = apiCallsign.url;
           const poster = apiCallsign.thumbnail;
@@ -170,6 +167,7 @@ function streamInfo(){
           video.setAttribute('poster', poster);
   
           videoContainer.innerHTML = '';
+          notLiveAppeneded = false;
 
   
           videoContainer.appendChild(video);
@@ -178,12 +176,19 @@ function streamInfo(){
             liveui: true,
             controlBar: {
               volumePanel: {
-                inline: false
+                inline: true,
               }
             }
           });
   
           videoAppeneded = true;
+
+          initFetch()
+
+          if (!volumeSavedCalled) {
+            videoVolumeSave()
+            volumeSavedCalled = true;
+          }
       }
 
       streamHealth.innerHTML = "Good"
@@ -198,15 +203,20 @@ function streamInfo(){
 
     } else {
       if (!notLiveAppeneded) {
+        videoContainer.innerHTML = '';
         $(videoContainer).append(`<i style="color:white; font-size:3rem;" class="fa-solid fa-ban"></i>
         <p style="color:white; font-size:1.2rem;">Stream is offline</p>`);
+
         notLiveAppeneded = true;
       }
       if (videoAppeneded) {
         const video = document.getElementById('my-video');
         videojs('my-video').dispose()
+
+        videoContainer.innerHTML = '';
         $(videoContainer).append(`<i style="color:white; font-size:3rem;" class="fa-solid fa-ban"></i>
         <p style="color:white; font-size:1.2rem;">Stream is offline</p>`);
+
         notLiveAppeneded = true;
         videoAppeneded = false;
       }
