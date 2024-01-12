@@ -507,7 +507,7 @@ const fileFilter = (req, file, cb) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '../kodicable.net website/public/images/channel_logos/')
+    cb(null, '../kodicable.net/public/images/channel_logos/')
   },
   filename: function (req, file, cb) {
     const callsign = req.body.callsign.toLowerCase();

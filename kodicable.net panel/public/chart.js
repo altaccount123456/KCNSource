@@ -75,9 +75,6 @@ function initChart() {
                     time: {
                         parser: 'h:mm a',
                     },
-                    ticks: {
-                      stepSize: 5,
-                    }
                 },
                 y: {
                   min: 0,
@@ -87,7 +84,7 @@ function initChart() {
                 },
             },
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true,
             plugins: {
               legend: {
                 display: false

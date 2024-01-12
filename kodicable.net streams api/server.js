@@ -1,5 +1,6 @@
 const express = require('express');
-const fetch = require('node-fetch');
+const fetch = require('node-fetch-retry');
+const axios = require('axios');
 require('dotenv').config();
 const fs = require('fs');
 const bodyParser = require('body-parser');
@@ -97,69 +98,62 @@ function populateViewerScatterData() {
 
 populateViewerScatterData()
 
-
-
 setInterval(() => {
   populateViewerScatterData()
 }, 3 * 60 * 1000); // Every 5 minutes
+   const fetchTimeout = 15000;
+   
 
-async function checkStreamAvailability(links) {
-  const availableStreams = {};
+   async function checkStreamAvailability(links) {
+    const availableStreams = {};
 
-  const callsigns = await readLinksFromDatabase();
+    for (const link of links) {
+        try {
+            const res = await axios.get(link.url);
+            let streamMetadata;
+            if (res.status === 200) {
+                streamMetadata = {
+                    name: link.name,
+                    description: link.description,
+                    url: link.url,
+                    rating: link.rating,
+                    viewers: link.viewers,
+                    live: 'Yes',
+                    title: link.title,
+                    thumbnail: link.thumbnail,
+                    viewer_stats: link.viewer_stats,
+                };
+            } else {
+                streamMetadata = {
+                    name: link.name,
+                    description: link.description,
+                    url: link.url,
+                    live: 'No',
+                    rating: link.rating,
+                    viewers: "0",
+                    title: link.title,
+                    thumbnail: link.thumbnail,
+                    viewer_stats: link.viewer_stats,
+                };
+            }
+            availableStreams[link.name] = streamMetadata;
 
-  for (const link of links) {
-    try {
-      const response = await fetch(link.url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
-        },
-      });
-
-      if (response.status === 200) {
-        const streamMetadata = {
-          name: link.name,
-          description: link.description,
-          url: link.url,
-          rating: link.rating,
-          viewers: link.viewers,
-          live: 'Yes',
-          title: link.title,
-          thumbnail: link.thumbnail,
-          viewer_stats: link.viewer_stats,
-      };
-        availableStreams[link.name] = streamMetadata;
-      } else {
-        const streamMetadata = {
-          name: link.name,
-          description: link.description,
-          url: link.url,
-          live: 'No',
-          rating: link.rating,
-          viewers: "0",
-          title: link.title,
-          thumbnail: link.thumbnail,
-          viewer_stats: link.viewer_stats,
-      };
-        availableStreams[link.name] = streamMetadata;
-      }
-    } catch (error) {
-      const streamMetadata = {
-        name: link.name,
-        description: link.description,
-        url: link.url,
-        live: 'No',
-        rating: link.rating,
-        viewers: "0",
-        title: link.title,
-        thumbnail: link.thumbnail,
-        viewer_stats: link.viewer_stats,
-    };
-      availableStreams[link.name] = streamMetadata;
+        } catch (error) {
+            availableStreams[link.name] = {
+                name: link.name,
+                description: link.description,
+                url: link.url,
+                live: 'No',
+                rating: link.rating,
+                viewers: "0",
+                title: link.title,
+                thumbnail: link.thumbnail,
+                viewer_stats: link.viewer_stats,
+            };
+        }
     }
-  }
 
-  return availableStreams;
+    return availableStreams;
 }
 
 async function readLinksFromDatabase() {
@@ -207,7 +201,7 @@ async function updateCachedStreams() {
   }
 }
 
-setInterval(updateCachedStreams, 5 * 1000);
+setInterval(updateCachedStreams, 10 * 1000);
 
 updateCachedStreams();
 
@@ -215,14 +209,7 @@ app.get('/api/streams', async (req, res) => {
   res.json({ streams: cachedStreams });
 });
 
-// ws server for viewer count 
 
+// listen on port 4000
+app.listen(port, () => console.log(`Listening on port ${port}`));
 
-
-
-
-
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-  console.log("API Server")
-});
