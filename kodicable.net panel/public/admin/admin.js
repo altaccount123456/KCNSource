@@ -44,6 +44,7 @@ const apiUrl = "http://localhost:4000"
 
 const panelApiUrl = "http://localhost:3500"
 
+const mainWebsiteUrl = "http://localhost:3000"
 
 
 let selectedStream;
@@ -352,7 +353,7 @@ fetch(`${apiUrl}/api/streams`, {
 })
 .then(data => {
     const apiCallsign = data.streams[callsign.toUpperCase()]
-    accountImg.src = `https://kodicable.net/images/channel_logos/${apiCallsign.name.toLowerCase()}.png`
+    accountImg.src = `${mainWebsiteUrl}/images/channel_logos/${apiCallsign.name.toLowerCase()}.png`
   })
   .catch(error => {
     console.error(error);

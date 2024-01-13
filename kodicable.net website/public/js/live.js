@@ -2,6 +2,8 @@ const liveDiv = document.querySelector('.live-wrapper');
 
 const apiUrl = 'http://localhost:4000/api/streams';
 
+
+
 const loadingSilhouette = document.querySelector('.loading-silhouette');
 
 
@@ -24,7 +26,6 @@ xhr.onload = () => {
 
      const responseObj = xhr.response;
      const keys = Object.keys(responseObj.streams);
-     console.log(responseObj);
  
      for (let i = 0; i < keys.length; i++) {
          let currentStream = responseObj.streams[keys[i]];
@@ -37,7 +38,6 @@ xhr.onload = () => {
          let title = currentStream.title;
          let thumbnail = currentStream.thumbnail;
  
-         console.log(title, url, rating, viewers, live);
 
 
       const streamDiv = document.createElement('div');
@@ -62,7 +62,7 @@ xhr.onload = () => {
 
 
 
-      imgLogo.setAttribute('src', `https://kodicable.net/images/channel_logos/${name.toLowerCase()}.png`);
+      imgLogo.setAttribute('src', `/images/channel_logos/${name.toLowerCase()}.png`);
 
 
 
@@ -118,13 +118,13 @@ xhr.onload = () => {
       if (live === 'Yes') {
         if (rating === "m")
         {
-            imgThumbnail.src = "https://kodicable.net/images/mature-content.png";
+            imgThumbnail.src = "/images/mature-content.png";
         } else {
             imgThumbnail.src = thumbnail;
         }
       } else {
 
-        imgThumbnail.src = "https://kodicable.net/images/channel_logos/Image_not_available.png";
+        imgThumbnail.src = "/images/channel_logos/Image_not_available.png";
 
       }
 

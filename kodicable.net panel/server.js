@@ -556,9 +556,9 @@ app.post("/admin/add-stream", upload.single('file'), verifyToken, checkIfAdmin, 
       
       
         
-        const query = "INSERT INTO user_pass_title (callsign, streamkey, password, title, rating, viewers, viewer_graph, roles) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        const query = "INSERT INTO user_pass_title (callsign, streamkey, password, title, description, rating, viewers, viewer_graph, roles) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
       
-        connection.query(query, [callsign, streamkey, streamkey, title, "e", 0, "[{}]", '{"admin": false, "participant": true}'], (err, results) => {
+        connection.query(query, [callsign, streamkey, streamkey, title, "", "e", 0, "[{}]", '{"admin": false, "participant": true}'], (err, results) => {
           if (err) {
             console.error(err)
             return res.status(500).send("err")

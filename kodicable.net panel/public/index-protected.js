@@ -10,6 +10,8 @@ export const apiUrl = "http://localhost:4000"
 
 export const panelApiUrl = "http://localhost:3500"
 
+export const mainWebsiteUrl = "http://localhost:3000"
+
 // Values are checked server side aswell BTW.
 let maxTitleCharCount = 100
 let maxDescCharCount = 2000
@@ -132,7 +134,7 @@ function streamInfo(){
 
     title.innerHTML = apiCallsign.title
     newTitleHolder.value = apiCallsign.title
-    accountImg.src = `https://kodicable.net/images/channel_logos/${apiCallsign.name.toLowerCase()}.png`
+    accountImg.src = `${mainWebsiteUrl}/images/channel_logos/${apiCallsign.name.toLowerCase()}.png`
     newDescHolder.innerHTML = apiCallsign.description
     viewerCount.innerHTML = apiCallsign.viewers
     contentRatingText.innerHTML = ratings[rating]

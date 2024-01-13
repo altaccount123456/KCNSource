@@ -78,7 +78,7 @@ fetch("http://localhost:4000/api/streams", {
   videoViewers.innerHTML = ` &nbsp ${viewerCount}`
   streamerName.innerHTML = callsignA
   videoDesc.innerHTML = streamDescription.replace(/\n/g, '<br>');
-  streamerPicture.src = `https://kodicable.net/images/channel_logos/${callsign}.png`
+  streamerPicture.src = `/images/channel_logos/${callsign}.png`
 
 
 
