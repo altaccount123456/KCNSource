@@ -5,6 +5,7 @@ const ftp = require('basic-ftp');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const rateLimit = require('express-rate-limit');  
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const fetch = require('node-fetch');
@@ -21,6 +22,15 @@ let maxDescCharCount = 2000
 let maxTitleCharCount = 100
 
 app.use(cors());
+
+const streamDetailsLimit = rateLimit({
+  windowMs: 15 * 1000,
+  max: 10,
+  headers: true,
+  handler: function (req, res) {
+    res.sendStatus(429);
+  },
+})
 
 
 const connection = mysql2.createConnection({
@@ -45,7 +55,6 @@ const generateSecretKey = (req, res, next) => {
 
 const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
-  console.log(token)
 
   if (!token) {
     return res.status(401).send('Access denied. No token provided.');
@@ -55,45 +64,11 @@ const verifyToken = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
     const { username } = decoded;
     req.user = { username };
-    console.log(req.user)
     next();
   } catch (err) {
     res.status(400).send('Invalid token.');
   }
 };
-const verifyToken2 = (req, res, next) => {
-  const token = req.cookies.token;
-
-  if (!token) {
-    return res.status(401).send('Access denied. No token provided.');
-  }
-
-  try {
-    const { username } = jwt.verify(token, process.env.SECRET_KEY);
-    req.user = { username };
-    next();
-  } catch (err) {
-   res.status(400).send(`Invalid token. ${err}`);
-  }
-};
-
-
-const verifyToken3 = (req, res, next) => {
-  const token = req.cookies.token;
-
-  if (!token) {
-    return res.status(401).send('Access denied. No token provided.');
-  }
-
-  try {
-    const { username } = jwt.verify(token, process.env.SECRET_KEY);
-    req.user = { username };
-    next();
-  } catch (err) {
-   res.status(400).send(`Invalid token. ${err}`);
-  }
-};
-
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -158,7 +133,7 @@ function sendEmbed(username, fieldName1, fieldName2, fieldValue1, fieldValue2) {
 
 
 // changes desc and title only
-app.post('/api/changedetails',verifyToken2, (req, res) => {
+app.post('/api/changedetails',verifyToken, streamDetailsLimit, (req, res) => {
   const fieldName1 = "Title"
   const fieldName2 = "Description"
   const { username, newTitle, newDesc } = req.body;
@@ -185,7 +160,7 @@ app.post("/api/checkcookie", verifyToken, (req, res) => {
 });
 
 
-app.post('/api/changerating',verifyToken2, (req, res) => {
+app.post('/api/changerating',verifyToken, streamDetailsLimit, (req, res) => {
   const { username } = req.body;
   const { newRating } = req.body;
   try{
@@ -203,7 +178,7 @@ app.post('/api/changerating',verifyToken2, (req, res) => {
   }
 });
 
-app.post('/api/getstreamkey', verifyToken3, (req, res) => {
+app.post('/api/getstreamkey', verifyToken, (req, res) => {
 
   const { username } = req.user;
 
@@ -222,7 +197,7 @@ app.post('/api/getstreamkey', verifyToken3, (req, res) => {
 });
 
 
-app.post('/api/sendMultistreamingPoints', verifyToken3, (req, res) => {
+app.post('/api/sendMultistreamingPoints', streamDetailsLimit, verifyToken, (req, res) => {
   const { username } = req.body;
   const { points } = req.body;
   
@@ -270,7 +245,7 @@ app.post('/api/sendMultistreamingPoints', verifyToken3, (req, res) => {
   }
 });
 
-app.post('/api/getMultistreamingPoints', verifyToken3, (req, res) => {
+app.post('/api/getMultistreamingPoints', verifyToken, (req, res) => {
 
   const { username } = req.body;
 
@@ -286,23 +261,7 @@ app.post('/api/getMultistreamingPoints', verifyToken3, (req, res) => {
 
 });
 
-app.post('/api/changerating', verifyToken2, (req, res) => {
-  const { username } = req.body;
-  const { newRating } = req.body;
-  try{
-    const query =  `UPDATE user_pass_title SET rating='${newRating}' WHERE callsign='${username}'`;
-    connection.query(query, (error, results, fields) => {
-      if (error) {
-        console.error(`Error updating rating for ${username}:`, error);
-        res.sendStatus(500);
-      } else {
-        res.sendStatus(200);
-      }
-    })
-  } catch(error){
-    res.sendStatus(500);
-  }
-});
+
 
 
 

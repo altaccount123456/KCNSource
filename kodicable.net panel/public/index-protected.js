@@ -323,6 +323,9 @@ function saveStreamDetails() {
         } else if (response.status === 200){
           console.log('Stream details updated successfully');
           showAlert("Stream details updated successfully!");
+        } else if (response.status === 429){
+          isError = true;
+          showAlert("You are being rate limited!", isError)
         } else {
           isError = true;
           showAlert("An error occurred", isError)
@@ -528,7 +531,14 @@ function saveMultistreamingPoints() {
             isError = true;
             showAlert("Failed to save multistreaming points due to one of the links being invalid!", isError)
             throw new Error('Failed to save multistreaming points');
-          } 
+          } else if (response.status === 429){
+            isError = true;
+            showAlert("You are being rate limited!", isError)
+          } else {
+            isError = true;
+            showAlert("An error occurred", isError)
+            throw new Error('Failed to save multistreaming points');
+          }
         } else {
           showAlert("Multistreaming Points Saved!")
           console.log('Multistreaming points saved successfully!');
@@ -599,6 +609,18 @@ function saveContentRating(){
   .then(response => {
     if (response.status === 200) {
       showAlert("Successfully saved content rating!")
+    } else if (response.status === 429){
+      isError = true;
+      showAlert("You are being rate limited!", isError)
+    } else if (response.status === 406) {
+      isError = true;
+      showAlert("Invalid content rating!", isError)
+    } else if (response.status === 500) {
+      isError = true;
+      showAlert("An internal server error occurred!", isError)
+    } else {
+      isError = true;
+      showAlert("There was an unknown error saving the content rating!", isError)
     }
   })
   .catch(error => {
