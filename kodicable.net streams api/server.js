@@ -64,6 +64,7 @@ function populateViewerScatterData() {
           const query = "UPDATE user_pass_title SET viewer_graph = ? WHERE callsign = ?";
 
           let viewerGraph = JSON.parse(currentViewerScatterData[callsigns.indexOf(callsign)]);
+          console.log(viewerGraph)
 
           if (viewerGraph.length < 30) {
             viewerGraph.push({

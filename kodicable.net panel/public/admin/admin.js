@@ -278,6 +278,10 @@ function adminRemoveStream() {
       adminOverlay.style.width = 0
       adminOverlay.style.height = 0
       showAlert("Removed Stream.")
+      // refresh page
+      setTimeout(() => {
+        location.reload()
+      }, 5000)
       return response.json()
   }
   })

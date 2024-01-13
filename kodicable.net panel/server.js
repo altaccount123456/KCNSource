@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const cors = require('cors');
 const ftp = require('basic-ftp');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
@@ -18,6 +19,8 @@ const webhookClient = new WebhookClient('1119420522900504607', 'TEaM_uCWqPcDzYdq
 
 let maxDescCharCount = 2000
 let maxTitleCharCount = 100
+
+app.use(cors());
 
 
 const connection = mysql2.createConnection({
@@ -42,6 +45,7 @@ const generateSecretKey = (req, res, next) => {
 
 const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
+  console.log(token)
 
   if (!token) {
     return res.status(401).send('Access denied. No token provided.');
@@ -51,7 +55,7 @@ const verifyToken = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
     const { username } = decoded;
     req.user = { username };
-
+    console.log(req.user)
     next();
   } catch (err) {
     res.status(400).send('Invalid token.');
@@ -244,7 +248,9 @@ app.post('/api/sendMultistreamingPoints', verifyToken3, (req, res) => {
         fetch("https://live.kodicable.net/api/sendMultistreamingPoints/ub4ivor5345", {
           method: 'POST',
           body: JSON.stringify(data),
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+             'Content-Type': 'application/json' 
+          },
         })
           .then(response => {
             if (!response.ok) {
@@ -331,6 +337,7 @@ const checkIfAdmin = (req, res, next) => {
 
 
     if (isAdmin === true) {
+      console.log("Admin Authenticated", callsign)
       next();
     } else {
       return res.status(403).send("False")
@@ -483,7 +490,20 @@ app.post("/admin/remove-stream", verifyToken, checkIfAdmin, (req, res) => {
       return res.status(500).send("An Internal Server Error Occurred")
     }
     if (results.affectedRows > 0) {
-      res.status(200).send("Remove successful");
+      fetch("https://live.kodicable.net/api/removeStream/ub4ivor5345", {
+        method: 'POST',
+        body: JSON.stringify({username: callsign}),
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then(response => {
+        if (!response.ok) {
+          console.error('Failed to remove stream');
+          console.log(response)
+          res.sendStatus(500);
+        } else {
+          res.status(200).send("Remove successful");
+        }
+      })
     } else {
       res.status(404).send("No records updated");
     }
@@ -492,7 +512,7 @@ app.post("/admin/remove-stream", verifyToken, checkIfAdmin, (req, res) => {
 
 
 const fileFilter = (req, file, cb) => {
-  const whitelist = ['image/png', 'image/jpeg']
+  const whitelist = ['image/png', 'image/jpeg', 'image/gif']
 
   if (whitelist.includes(file.mimetype)) {
     // accept file
@@ -503,11 +523,11 @@ const fileFilter = (req, file, cb) => {
   }
 }
 
-
+const fileDest = '../kodicable.net website/public/images/channel_logos/'
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '../kodicable.net/public/images/channel_logos/')
+    cb(null, fileDest)
   },
   filename: function (req, file, cb) {
     const callsign = req.body.callsign.toLowerCase();
@@ -527,7 +547,6 @@ app.post("/admin/add-stream", upload.single('file'), verifyToken, checkIfAdmin, 
 
   callsign = callsign.toLowerCase();
 
-  console.log(callsign, title, file)
 
 
   if (callsign !== "" && file !== undefined) {
@@ -578,14 +597,32 @@ app.post("/admin/add-stream", upload.single('file'), verifyToken, checkIfAdmin, 
       
       
         
-        const query = "INSERT INTO user_pass_title (callsign, streamkey, title, rating) VALUES (?, ?, ?, ?)"
+        const query = "INSERT INTO user_pass_title (callsign, streamkey, password, title, rating, viewers, viewer_graph, roles) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
       
-        connection.query(query, [callsign, streamkey, title, "e"], (err, results) => {
+        connection.query(query, [callsign, streamkey, streamkey, title, "e", 0, "[{}]", '{"admin": false, "participant": true}'], (err, results) => {
           if (err) {
             console.error(err)
             return res.status(500).send("err")
           }
-          res.status(200).send("Added")
+          // add stream into stream server
+          fetch("https://live.kodicable.net/api/addStream/ub4ivor5345", {
+            method: 'POST',
+            body: JSON.stringify({username: callsign}),
+            headers: { 'Content-Type': 'application/json' },
+          })
+          .then(response => {
+            if (!response.ok) {
+              console.error('Failed to add stream');
+              console.log(response)
+              res.sendStatus(500);
+            } else {
+              res.sendStatus(200);
+            }
+          })
+          .catch(error => {
+            console.error('Error during fetch request:', error);
+            res.sendStatus(500);
+          });
         })
       }
     }).catch((err) => {
@@ -642,7 +679,7 @@ app.get('/:username', verifyToken, (req, res) => {
   }
 });
 
-app.get("/:username/admin-panel", verifyToken, (req, res) => {
+app.get("/:username/admin-panel", verifyToken, checkIfAdmin, (req, res) => {
   checkAdminWeb(req, res)
 });
 
