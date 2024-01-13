@@ -293,7 +293,7 @@ a{
 
 /* INFO CARDS */
 .propaganda-card-wrapper{
-    height: 50%;
+    height: 550px;
     width: 100%;
     flex: none;
     display: flex;
@@ -394,6 +394,7 @@ a{
     height: 100%;
     margin: 0 auto;
     z-index: -2;
+    overflow: hidden;
   }
   
 .slideshow-image {
@@ -431,14 +432,21 @@ a{
 .callsign {
     font-size: 75%;
     color: rgba(255, 255, 255, 0.5);
+    word-break: break-all;
 }
 .logo{
     width: 60px;
     margin-top: 15px;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 60px;
+    object-fit: contain;
 }
 .thumbnail-holder{
     height: 132px;
     width: 235px;
+    border-top: 2px solid #212121;
+    border-bottom: 2px solid #212121;
     transition-duration: 0.6s;
 }
 .guide{
@@ -449,7 +457,7 @@ a{
   }
 .thumbnail{
     width: 235px;
-    height: 132px;
+    height: 128px;
     cursor: pointer;
 }
 .stream-details-container{
@@ -619,6 +627,9 @@ a{
 }
 /* Media Queries */
 @media (min-width: 2000px) {
+    .propaganda-card-wrapper{
+        height: 1250px;
+    }
     .info-card {
         height: 500px;
         width: 500px;
