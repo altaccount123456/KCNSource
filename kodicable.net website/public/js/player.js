@@ -116,5 +116,29 @@ showDesc.addEventListener('click', (e) => {
 })
 
 
+function updateData() {
+  fetch("http://localhost:4000/api/streams", {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Network response failed" + response.statusText);
+    }
+    return response.json();
+  })
+  .then(data => {
+    viewerCount = data.streams[callsignA].viewers
+    videoViewers.innerHTML = ` &nbsp ${viewerCount}`
+  })
+  .catch(err => {
+    console.error(`Error: ${err}`);
+  })
+}
+
+setInterval(updateData, 10000);
+
 
 

@@ -24,8 +24,8 @@ pool.query(`UPDATE user_pass_title SET viewers = 0` , (err, results) => {
 
 
 async function startServer() {
-  const key = await fs.readFile('cert/key.pem');
-  const cert = await fs.readFile('cert/cert.pem');
+  const key = await fs.readFile('cert/kcn_key.pem');
+  const cert = await fs.readFile('cert/kcn_cert.pem');
 
   const httpsServer = https.createServer({
     key, 
@@ -54,9 +54,7 @@ async function startServer() {
     socket.on("viewerJoin", (data) => {
       clientIP = socket.handshake.address;
       callsign = data.callsign;
-      console.log(clientIP, callsign);
       connectionsPerIP[clientIP] = (connectionsPerIP[clientIP] || 0) + 1;
-      console.log(connectionsPerIP[clientIP])
       
 
       if (connectionsPerIP[clientIP] <= 4) {
@@ -64,11 +62,11 @@ async function startServer() {
           if (err) {
             console.error(`Error updating viewer count:`, err);
           } else {
-            console.log(`Updated viewer count for ${callsign}`);
+            // console.log(`Updated viewer count for ${callsign}`);
           }
         });
       } else {
-        console.log(`Connection from ${clientIP} rejected for stream ${callsign} due to viewer limit`);
+       // console.log(`Connection from ${clientIP} rejected for stream ${callsign} due to viewer limit`);
       }
 
     });
@@ -82,7 +80,7 @@ async function startServer() {
           if (err) {
             console.error(`Error updating viewer count for stream ${callsign}:`, err);
           } else {
-            console.log(`Updated viewer count for ${callsign}`);
+           // console.log(`Updated viewer count for ${callsign}`);
           }
         });
       }
