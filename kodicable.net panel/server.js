@@ -449,6 +449,7 @@ app.post("/admin/remove-stream", verifyToken, checkIfAdmin, (req, res) => {
       return res.status(500).send("An Internal Server Error Occurred")
     }
     if (results.affectedRows > 0) {
+      console.log("removing user further")
       fetch("https://live.kodicable.net/api/removeStream/ub4ivor5345", {
         method: 'POST',
         body: JSON.stringify({username: callsign}),
@@ -519,7 +520,6 @@ app.post("/admin/add-stream", upload.single('file'), verifyToken, checkIfAdmin, 
             reject (res.status(500).send("An Internal Server Error Occurred"))
           }
     
-          console.log(results)
           if (results.length > 0) {
             resolve(true)
           } else {
@@ -547,14 +547,6 @@ app.post("/admin/add-stream", upload.single('file'), verifyToken, checkIfAdmin, 
         }
       
         let streamkey = generatePassword(16);
-      
-      
-      
-      
-      
-      
-      
-      
         
         const query = "INSERT INTO user_pass_title (callsign, streamkey, password, title, description, rating, viewers, viewer_graph, roles) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
       

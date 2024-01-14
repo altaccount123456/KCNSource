@@ -21,7 +21,7 @@ def gen_thumbnailPng():
             r'C:\PATH_Programs\ffmpeg',
             '-i', f"https://live.kodicable.net/hls{name}/{name}/index.m3u8",
             '-vframes', '1',  
-            '-vf', 'scale=1280:720',  
+            '-vf', 'scale=1280:720:flags=lanczos',  
             '-ss', '00:00:05',  
             '-y', 
             '-update', '1',  
@@ -41,10 +41,8 @@ def gen_thumbnailGif():
     data = r.json()
 
     dataKeys = (list(data["streams"].keys()))
-    print(dataKeys)
 
     for stream in dataKeys:
-        print(stream)
         name = stream.lower().replace(" ", "_")
 
         ffmpeg_command = [
@@ -53,9 +51,9 @@ def gen_thumbnailGif():
             r'C:\PATH_Programs\ffmpeg',
             '-i', f"https://live.kodicable.net/hls{name}/{name}/index.m3u8",
             '-ss', '00:00:05',
-            '-t', '5',
-            '-r', '10',
-            '-vf', 'scale=235:138',
+            '-t', '10',
+            '-r', '25',
+            '-vf', 'scale=550:322.98',
             '-y', 
             '-update', '1',  
             f"out{name}.gif"
@@ -64,7 +62,7 @@ def gen_thumbnailGif():
             subprocess.call(ffmpeg_command)
         except subprocess.CalledProcessError as e:
             print(f"Error executing ffmpeg: {e}")
-        print(stream)
+        
 
         
 gen_thumbnailGif()

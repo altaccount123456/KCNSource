@@ -1,6 +1,6 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-let callsign = urlParams.get('stream');
+let callsign = urlParams.get('stream').toLowerCase();
 let callsignA = callsign.toUpperCase()
     
 if (callsign === null) {

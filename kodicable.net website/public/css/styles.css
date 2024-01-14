@@ -661,6 +661,10 @@ a{
     .thumbnail-holder{
         width:0;
     }
+    .thumbnail-overlay{
+        width:0;
+        overflow: hidden;
+    }
     .info-logo{
         margin-right:1px;
     }

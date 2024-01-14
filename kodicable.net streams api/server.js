@@ -120,7 +120,10 @@ setInterval(() => {
                     viewers: link.viewers,
                     live: 'Yes',
                     title: link.title,
-                    thumbnail: link.thumbnail,
+                    thumbnail: {
+                      gif: link.thumbnail.gif,
+                      png: link.thumbnail.png,
+                    },
                     viewer_stats: link.viewer_stats,
                 };
             } else {
@@ -132,7 +135,10 @@ setInterval(() => {
                     rating: link.rating,
                     viewers: "0",
                     title: link.title,
-                    thumbnail: link.thumbnail,
+                    thumbnail: {
+                      gif: link.thumbnail.gif,
+                      png: link.thumbnail.png,
+                    },
                     viewer_stats: link.viewer_stats,
                 };
             }
@@ -147,7 +153,10 @@ setInterval(() => {
                 rating: link.rating,
                 viewers: "0",
                 title: link.title,
-                thumbnail: link.thumbnail,
+                thumbnail: {
+                  gif: link.thumbnail.gif,
+                  png: link.thumbnail.png,
+                },
                 viewer_stats: link.viewer_stats,
             };
         }
@@ -182,7 +191,10 @@ async function readLinksFromDatabase() {
       viewers: row.viewers,
       description: row.description,
       rating: row.rating,
-      thumbnail: `https://live.kodicable.net/hls${row.callsign}/out${row.callsign}.png`,
+      thumbnail: {
+        gif: `https://live.kodicable.net/hls${row.callsign}/out${row.callsign}.gif`,
+        png: `https://live.kodicable.net/hls${row.callsign}/out${row.callsign}.png`,
+      },
       viewer_stats: JSON.parse(row.viewer_graph),
     };
   });

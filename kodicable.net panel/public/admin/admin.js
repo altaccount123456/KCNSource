@@ -275,6 +275,11 @@ function adminRemoveStream() {
       isError = true
       showAlert("An Error has occurred while removing the stream", isError)
       throw new Error(response.status)
+  } else if(response.status === 500) {
+      isError = true
+      showAlert("An Internal Server Error has occurred while removing the stream", isError)
+      return response
+  
   } else {
       adminOverlay.style.width = 0
       adminOverlay.style.height = 0

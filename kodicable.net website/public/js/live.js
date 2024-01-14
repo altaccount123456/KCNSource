@@ -12,214 +12,87 @@ console.log("HELLO from kodicable");
 
 
 
-const xhr = new XMLHttpRequest();
+fetch(apiUrl, {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+})
+.then(response => response.json())
+.then(data => {
+  const streams = data.streams;
 
-xhr.open('GET', apiUrl);
-
-xhr.responseType = 'json';
-
-xhr.onload = () => {
-
-  if (xhr.status === 200) {
-
-     loadingSilhouette.style.display = 'none';
-
-     const responseObj = xhr.response;
-     const keys = Object.keys(responseObj.streams);
- 
-     for (let i = 0; i < keys.length; i++) {
-         let currentStream = responseObj.streams[keys[i]];
- 
-         let name = currentStream.name;
-         let url = currentStream.url;
-         let rating = currentStream.rating;
-         let viewers = currentStream.viewers;
-         let live = currentStream.live;
-         let title = currentStream.title;
-         let thumbnail = currentStream.thumbnail;
- 
+  let streamsList = (Object.keys(streams))
 
 
-      const streamDiv = document.createElement('div');
+  console.log(streamsList);
 
-      streamDiv.classList.add('live');
+  streamsList.forEach(stream => {
+      // get all data needed for each stream
+      let streamName = streams[stream].name;
+      let streamLive = streams[stream].live;
+      let streamTitle = streams[stream].title;
+      let thumbPng = streams[stream].thumbnail.png;
+      let thumbGif = streams[stream].thumbnail.gif;
+      let streamViewers = streams[stream].viewers;
 
+      let isLiveText = ""
+      let isLiveThumb = ""
+      let isLiveTitle = ""
 
-
-      const infoLogoDiv = document.createElement('div');
-
-      infoLogoDiv.classList.add('info-logo');
-
-
-
-      
-
-
-
-      const imgLogo = document.createElement('img');
-
-      imgLogo.classList.add('logo');
-
-
-
-      imgLogo.setAttribute('src', `/images/channel_logos/${name.toLowerCase()}.png`);
-
-
-
-      infoLogoDiv.appendChild(imgLogo);
-
-
-
-      const callsignP = document.createElement('p');
-
-      callsignP.id = 'callsign';
-
-      callsignP.classList.add('callsign');
-
-      callsignP.textContent = name;
-
-      infoLogoDiv.appendChild(callsignP);
-
-      streamDiv.appendChild(infoLogoDiv);
-
-
-
-      const thumbnailHolderDiv = document.createElement('div');
-
-      thumbnailHolderDiv.classList.add('thumbnail-holder');
-
-
-
-      const a = document.createElement('a');
-
-        a.addEventListener('click', (event) => {
-
-
-        event.preventDefault();
-
-
-        localStorage.setItem('callsign', name.toLowerCase());
-
-
-        window.location.href = 'player.html?stream=' + name.toLowerCase();
-
-      });
-
-      a.href = "player.html?stream=" + name;
-
-      thumbnailHolderDiv.appendChild(a);
-
-
-
-      const imgThumbnail = document.createElement('img');
-
-      imgThumbnail.classList.add('thumbnail');
-
-      if (live === 'Yes') {
-        if (rating === "m")
-        {
-            imgThumbnail.src = "/images/mature-content.png";
-        } else {
-            imgThumbnail.src = thumbnail;
-        }
+      if (streamLive == "Yes") {
+        isLiveText = "color: white;"
+        isLiveThumb = thumbPng
+        isLiveTitle = streamTitle
       } else {
-
-        imgThumbnail.src = "/images/channel_logos/Image_not_available.png";
-
+        isLiveText = "color: gray; font-size: 40px;"
+        isLiveThumb = "/images/channel_logos/Image_not_available.png"
+        isLiveTitle = "Stream is offline"
       }
 
-      a.appendChild(imgThumbnail);
-
-      streamDiv.appendChild(thumbnailHolderDiv);
-
-
-
-      const streamDetailsContainerDiv = document.createElement('div');
-
-      streamDetailsContainerDiv.classList.add('stream-details-container');
-
-
-
-      const streamDetailsDiv = document.createElement('div');
-
-      streamDetailsDiv.classList.add('stream-details');
-
-
-
-      const aTitle = document.createElement('a');
-
-      const viewerCount = document.createElement('p');
-
-      viewerCount.classList.add("fa-solid");
-
-      viewerCount.classList.add("fa-eye")
-
-      viewerCount.id = 'viewer-count';
-      viewerCount.classList.add('viewer-count');
-      viewerCount.innerHTML = ` &nbsp ${viewers}`;
-
-
-      aTitle.addEventListener('click', (event) => {
-
-        // Prevent the link from opening in a new tab
-
-        event.preventDefault();
-
-        // Store the callsign in local storage
-
-        localStorage.setItem('callsign', name);
-
-        // Redirect to player.html
-
-        window.location.href = 'player.html?stream=' + name.toLowerCase();
-
-      });
-
-
-      aTitle.href = 'player.html?stream=' + name.toLowerCase();
-
-
-
-      const titleH1 = document.createElement('h1');
-
-      titleH1.id = 'title';
-
-      if (live === 'Yes') {
-        titleH1.innerHTML = title;
-    } else {
-        titleH1.innerHTML = `Channel is off the air`;
-        titleH1.style.color = 'gray';
-    }
-
-      titleH1.style.fontSize = "40px";
-
-      aTitle.appendChild(titleH1);
-
-      streamDetailsDiv.appendChild(aTitle);
+      console.log(streamLive)
 
 
 
 
-      infoLogoDiv.appendChild(viewerCount);
+      const htmlCode = `
+        <div class="live">
+          <div class="info-logo">
+            <img class="logo" src="/images/channel_logos/${streamName.toLowerCase()}.png" alt="${streamName} logo">
+            <p class="callsign">${streamName}</p>
+            <p class="fa-solid fa-eye viewer-count">&nbsp ${streamViewers}</p>
+          </div>
 
-      streamDetailsContainerDiv.appendChild(streamDetailsDiv);
+          <div class="thumbnail-holder">
+            <a href="player.html?stream=${streamName}">
+              <img data-name="${streamName.toLowerCase()}" data-live=${streamLive} class="thumbnail" src="${isLiveThumb}" alt="${streamName} thumbnail">
+            </a>
+          </div>
 
-      streamDiv.appendChild(streamDetailsContainerDiv);
+          <div class="stream-details-container">
+            <div class="stream-details">
+              <a href="player.html?stream=${streamName}">
+                <h1 style="${isLiveText}">${isLiveTitle}</h1>
+              </a>
+            </div>
+          </div>
+        </div>
+      `
 
-      liveDiv.appendChild(streamDiv);
+      $(`#live-wrapper`).append(htmlCode)
 
+      $(`#loading-sil`).css("display", "none")
+    })
 
-      // START ON CARD VIEW
-    }
-
-  } else {
-
-    console.error('Request failed. ' + xhr.status);
-    alert('Request failed. Please try again later.')
-
-  }
-
-};
-
-xhr.send();
-
+    $(".thumbnail-holder").on("mouseenter", "img", function() {
+      const streamName = $(this).data("name")
+      if ($(this).data("live") == "Yes") {
+        $(this).attr("src", `https://live.kodicable.net/hls${streamName}/out${streamName}.gif`)
+      }
+    }).on("mouseleave", "img", function() {
+      const streamName = $(this).data("name")
+      if ($(this).data("live") == "Yes") {
+        $(this).attr("src", `https://live.kodicable.net/hls${streamName}/out${streamName}.png`)
+      }
+    })
+})
