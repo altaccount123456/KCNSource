@@ -11,12 +11,14 @@ const cookieParser = require('cookie-parser');
 const mysql = require('mysql2');
 const cors = require('cors');
 const client = require('discord.js')
+const expressWs = require('express-ws')(app);
 
 app.use(cors({
     origin: '*'
 }));
 
 module.exports = app;
+
 
 
 
@@ -220,6 +222,61 @@ updateCachedStreams();
 app.get('/api/streams', async (req, res) => {
   res.json({ streams: cachedStreams });
 });
+
+const connectionsPerIP = {};
+
+connection.query("UPDATE user_pass_title SET viewers = 0" , (err, results) => {
+  if (err) {
+    console.error(`Error updating viewer count:`, err);
+  } else {
+    console.log("reset viewers")
+  }
+});
+
+const incrementQuery = `UPDATE user_pass_title SET viewers = viewers + 1 WHERE callsign = ?`;
+const decrementQuery = `UPDATE user_pass_title SET viewers = viewers - 1 WHERE callsign = ?`;
+
+app.ws("/api/viewer/", (ws, req) => {
+  let ip = req.ip
+  let streamID;
+
+  ws.on("message", (msg) => {
+    streamID = msg
+  
+    connectionsPerIP[ip] = (connectionsPerIP[ip] || 0) + 1;
+
+
+    if (connectionsPerIP[ip] <= 4) {
+      connection.query(incrementQuery, [streamID], (err, results) => {
+        if (err) {
+          console.error(`Error updating viewer count:`, err);
+        } else {
+          //console.log("incremented viewers")
+        }
+      });
+    } else {
+      //console.log("too many connections")
+    }
+  });
+
+  ws.on("close", (msg) => {
+    connectionsPerIP[ip]--
+
+
+    if(connectionsPerIP[ip] < 4) {
+      connection.query(decrementQuery, [streamID], (err, results) => {
+        if (err) {
+          console.error(`Error updating viewer count:`, err);
+        } else {
+          //console.log("decremented viewers")
+        }
+      });
+    } else {
+     // console.log("too many connections")
+    }
+  });
+
+})
 
 
 // listen on port 4000

@@ -28,18 +28,17 @@ source.type = 'application/vnd.apple.mpegurl';
 
 video.appendChild(source);
 
-const socket = io(`wss://localhost:5000/`);
+const socket = new WebSocket(`ws://localhost:4000/api/viewer/`);
 
-socket.on('connect', () => {
-    console.log('Connected to server');
-    socket.emit('viewerJoin', { callsign });
+
+socket.onopen = ((event) => {
+
+  socket.send(callsign);
+})
+
+socket.onmessage = ((event) => {
+  console.log(event.data);
 });
-
-
-socket.on('disconnect', () => {
-    console.log('Disconnected from server');
-});
-
 
 
 
