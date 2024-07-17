@@ -1,76 +1,86 @@
 import time
 import schedule
-import subprocess
 import requests
+from PIL import Image
+from io import BytesIO
+import imageio
+import numpy as np
 
 
-def gen_thumbnailPng():
-    # get all the streams from API
-    url = f"http://localhost:4000/api/streams"
-    # do a request and get the json data
-    r = requests.get(url)
-    data = r.json()
-
-    dataKeys = (list(data["streams"].keys()))
-
-    for stream in dataKeys:
-        name = stream.lower().replace(" ", "_")
-        ffmpeg_command = [
-            # make a thumbnail with the res of 1280 x 720
-            # REPLACE WITH "ffmpeg" THIS IS JUST FOR DEVELOPMENT
-            r'C:\PATH_Programs\ffmpeg',
-            '-i', f"https://live.kodicable.net/hls{name}/{name}/index.m3u8",
-            '-vframes', '1',  
-            '-vf', 'scale=1280:720:flags=lanczos',  
-            '-ss', '00:00:05',  
-            '-y', 
-            '-update', '1',  
-            f"out{name}.png"
-        ] 
+def getthumb(url, frame_time):
+    try:
+        response = requests.get(url, stream=True)
+        response.raise_for_status()
         try:
-            subprocess.call(ffmpeg_command)
-        except subprocess.CalledProcessError as e:
-            print(f"Error executing ffmpeg: {e}")
-        print(stream)
+            with Image.open(response.raw) as img:
+                img.seek(frame_time)  # Move to the specific frame
+                return img
+        except Exception as e:
+            print(f"Error fetching frame: {e}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching stream: {e}")
+        return None
 
-def gen_thumbnailGif():
-    # get all the streams from API
-    url = f"http://localhost:4000/api/streams"
-    # do a request and get the json data
-    r = requests.get(url)
-    data = r.json()
 
-    dataKeys = (list(data["streams"].keys()))
+def genThumbnailPng():
+    try:
+        url = "http://localhost:4000/api/streams"
+        r = requests.get(url)
+        r.raise_for_status()
+        data = r.json()
+        data_keys = list(data["streams"].keys())
 
-    for stream in dataKeys:
-        name = stream.lower().replace(" ", "_")
+        for stream in data_keys:
+            name = stream.lower().replace(" ", "_")
+            stream_url = f"https://live.kodicable.net/hls{name}/{name}/index.m3u8"
 
-        ffmpeg_command = [
-            # make a thumbnail with the res of 1280 x 720 gif
-            # REPLACE WITH "ffmpeg" THIS IS JUST FOR DEVELOPMENT
-            r'C:\PATH_Programs\ffmpeg',
-            '-i', f"https://live.kodicable.net/hls{name}/{name}/index.m3u8",
-            '-ss', '00:00:05',
-            '-t', '10',
-            '-r', '25',
-            '-vf', 'scale=550:322.98',
-            '-y', 
-            '-update', '1',  
-            f"out{name}.gif"
-        ] 
-        try:
-            subprocess.call(ffmpeg_command)
-        except subprocess.CalledProcessError as e:
-            print(f"Error executing ffmpeg: {e}")
-        
+            frame = getthumb(stream_url, 5)
+            if frame:
+                frame = frame.resize((1280, 720), Image.LANCZOS)
+                frame.save(f"out{name}.png")
+            else:
+                print(f"Stream {stream} is not reachable for PNGs")
+            print(stream)
 
-        
-gen_thumbnailGif()
-gen_thumbnailPng()
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching API data: {e}")
 
-schedule.every(2.5).minutes.do(gen_thumbnailGif)
-schedule.every(2.5).minutes.do(gen_thumbnailPng)
 
+def genThumbnailGif():
+    try:
+        url = "http://localhost:4000/api/streams"
+        r = requests.get(url)
+        r.raise_for_status()
+        data = r.json()
+        data_keys = list(data["streams"].keys())
+
+        for stream in data_keys:
+            name = stream.lower().replace(" ", "_")
+            stream_url = f"https://live.kodicable.net/hls{name}/{name}/index.m3u8"
+
+            frames = []
+            for i in range(10):  # Capture 10 frames
+                frame = getthumb(stream_url, 5 + i)
+                if frame:
+                    frame = frame.resize((550, 323), Image.LANCZOS)
+                    frames.append(np.array(frame))
+
+            if frames:
+                imageio.mimsave(f"out{name}.gif", frames, duration=0.1)
+            else:
+                print(f"Stream {stream} is not reachable for GIFs")
+            print(stream)
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching API data: {e}")
+
+
+genThumbnailGif()
+genThumbnailPng()
+
+schedule.every(2.5).minutes.do(genThumbnailGif)
+schedule.every(2.5).minutes.do(genThumbnailPng)
 
 while True:
     schedule.run_pending()
