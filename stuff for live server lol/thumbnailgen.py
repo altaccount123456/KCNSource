@@ -6,6 +6,8 @@ from io import BytesIO
 import imageio
 import numpy as np
 
+## I don't even know why he committed this tbh
+
 
 def getthumb(url, frame_time):
     try:
