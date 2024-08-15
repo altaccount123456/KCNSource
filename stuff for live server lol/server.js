@@ -32,12 +32,12 @@ function generatePushBlock(points) {
 app.post("/api/sendMultistreamingPoints/ub4ivor5345", (req, res) => {
   const { username, points } = req.body;
 
-  // Validate the request data
+
   if (!username || !points || !Array.isArray(points)) {
     return res.status(400).send('Invalid request data');
   }
 
-  // Read the contents of the Nginx configuration file
+
   const nginxConfPath = `/etc/nginx/rtmp_confs/${username}.conf`;
   let nginxConfContent = `application ${username} {\n 
     live on;		# on|off. Enables this application and allowing live streaming to it. Default=on.	meta on;		# on|copy|off. Receive metadata packets containing predefined fields like width, height etc. Default=on.
@@ -66,7 +66,7 @@ app.post("/api/sendMultistreamingPoints/ub4ivor5345", (req, res) => {
       }	`;
 
 
-  // Save the updated configuration file
+
   try {
     fs.writeFileSync(nginxConfPath, nginxConfContent, 'utf8');
     res.send('Multistreaming points updated successfully');
@@ -75,7 +75,7 @@ app.post("/api/sendMultistreamingPoints/ub4ivor5345", (req, res) => {
     return res.status(500).send('Error writing Nginx configuration file');
   }
 
-  // Restart Nginx to apply the changes
+
   try {
     execSync('systemctl reload nginx');
   } catch (error) {
@@ -88,7 +88,7 @@ app.post("/api/sendMultistreamingPoints/ub4ivor5345", (req, res) => {
 
 app.post("/api/addStream/ub4ivor5345", (req, res) => {
   let {username} = req.body;
-  // remove any spaces from username
+
   username = username.replace(/ /g, "_");
   const nginxConfPath = `/etc/nginx/rtmp_confs/${username}.conf`
   
@@ -96,7 +96,7 @@ app.post("/api/addStream/ub4ivor5345", (req, res) => {
     return res.status(400).send('Invalid request data');
   }
 
-  // gen new conf file for nginx
+
 
   if(fs.existsSync(`/etc/nginx/rtmp_confs/${username}.conf`)) {
     return res.sendStatus(400);
