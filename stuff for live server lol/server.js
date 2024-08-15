@@ -1,3 +1,9 @@
+// This was a left pocket dogshit way of doing ts. Just make sure you don't code like I did back then jesus.
+
+
+
+
+
 const express = require('express');
 const app = express();
 const mysql = require("mysql2")
