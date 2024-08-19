@@ -156,6 +156,7 @@ app.post("/api/addStream/ub4ivor5345", (req, res) => {
   }
 });
 
+// so uh yea, this whole time, to remove a stream, it was behind this endpoint!!! (NO PASSWORD PROTECTION!!!! Well I guess the URL kinda counts itself) This was supposed to be temporary but, I think I just forgot about it lol. (still kinda protected if you think about it)
 app.post("/api/removeStream/ub4ivor5345", (req, res) => {
   let {username} = req.body;
   username = username.replace(/ /g, "_");
